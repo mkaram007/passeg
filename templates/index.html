@@ -5,12 +5,12 @@
 
 {% block body %}
     <div class="main-block">
-	<h2 align=center> Passwords </h2>
+	<h1> Passwords </h1>
 	<table>
 		<tr>
 			<th>Name</th>
 			<th>Username</th>
-			<th>Password</th>
+			<th type="password">Password</th>
 		</tr>
 		{% for record in records %}
 			<tr>
@@ -27,7 +27,9 @@
 		{% endfor %}
 	</table>
 	<br>
+	<div class="btn-block">
 		<a style= "width:50%; horizontal-align:middle; text-align:center;" href="/add">Add Password</a>
+	</div>
 
     </div>
 {% endblock %}
