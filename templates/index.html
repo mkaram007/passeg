@@ -5,27 +5,6 @@
 
 {% block body %}
     <div class="main-block">
-      <h1>Add Password</h1>
-      <form action="/" method="POST">
-        <hr>
-        <div class="account-type">
-          <input type="radio" value="none" id="radioOne" name="account" checked/>
-          <label for="radioOne" class="radio">Personal</label>
-          <input type="radio" value="none" id="radioTwo" name="account" />
-          <label for="radioTwo" class="radio">Enterprise</label>
-        </div>
-        <hr>
-        <label id="icon" for="name"><i class="fas fa-user"></i></label>
-        <input type="text" name="name" id="name" placeholder="Name" />
-        <label id="icon" for="name"><i class="fas fa-envelope"></i></label>
-        <input type="text" name="username" id="name" placeholder="Username" required/>
-        <label id="icon" for="name"><i class="fas fa-unlock-alt"></i></label>
-        <input type="password" name="password" id="name" placeholder="Password" required/>
-        <div class="btn-block">
-          <button type="submit" href="/">Add</button>
-        </div>
-      </form>
-
 	<h2 align=center> Passwords </h2>
 	<table>
 		<tr>
@@ -47,6 +26,8 @@
 			</tr>
 		{% endfor %}
 	</table>
+	<br>
+		<a style= "width:50%; horizontal-align:middle; text-align:center;" href="/add">Add Password</a>
 
     </div>
 {% endblock %}

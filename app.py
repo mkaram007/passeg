@@ -30,9 +30,9 @@ def index():
             return redirect('/')
         except:
             return 'There was an issue adding the new password'
-#    else:
-    records = Record.query.order_by(Record.date_created).all()
-    return render_template('index.html', records=records)
+    else:
+        records = Record.query.order_by(Record.date_created).all()
+        return render_template('index.html', records=records)
 
 @app.route('/delete/<int:Id>')
 def delete(Id):
@@ -43,6 +43,10 @@ def delete(Id):
         return redirect('/')
     except:
         return 'There was a problem deleting this password'
+
+@app.route('/add')
+def add():
+    return render_template('add.html')
 
 if __name__ == "__main__":
     app.run (port = 8000,debug = True)
