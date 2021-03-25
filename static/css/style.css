@@ -1,9 +1,15 @@
-    <link href="https://fonts.googleapis.com/css?family=Tangerine" rel="stylesheet">
-    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.4.1/css/all.css" integrity="sha384-5sAR7xN1Nv6T6+dT2mhtzEpVJvfS3NScPQTrOxhwjIuvcA67KV2R5Jz6kr4abQsz" crossorigin="anonymous">
+
       html, body {
       display: flex;
       justify-content: center;
       height: 100%;
+      }
+      table, th, td {
+      border: 1px solid black;
+      border-collapse: collapse;
+      } 
+      th, td {
+	text-align: center;
       }
       body, div, h1, form, input, p { 
       padding: 0;
@@ -110,7 +116,7 @@
       text-align: center;
       }
       button {
-      width: 50%;
+      width: 100%;
       padding: 10px 0;
       margin: 10px auto;
       border-radius: 5px; 
@@ -123,3 +129,16 @@
       button:hover {
       background: #26a9e0;
       }
+a:link, a:visited {
+	  background-color: #1c87c9;
+	    color: #fff;
+	      padding: 10px 0;
+	        text-align: center;
+		  text-decoration: none;
+		  width: 80%;
+		    display: inline-block;
+	    }
+
+	    a:hover, a:active {
+		      background-color: #26a9e0;
+	      }
