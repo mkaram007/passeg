@@ -4,32 +4,43 @@
 {% endblock %}
 
 {% block body %}
-    <div class="main-block">
+    <div class="main-block" style="width: 700px">
 	<h1> Passwords </h1>
 	<table>
 		<tr>
 			<th>Name</th>
 			<th>Username</th>
 			<th type="password">Password</th>
+			<th style="width:60px">Control</th>
 		</tr>
 		{% for record in records %}
 			<tr>
-				<td>{{ record.Name }}</td>
-				<td>{{ record.Username }}</td>
-				<td>{{ record.Password }}</td>
+						<td>{{ record.Name }}</td>
+						<td style="max-width: 200px">{{ record.Username }}</td>
+						<td>{{ record.Password }}</td>
 
 				<td>
-		  <a href="/">Update</a>
-		  <a href="/delete/{{record.Id}}">Delete</a>
-		</td>
+				  <form style="margin:auto" action="/" method="POST">
+					  <button style="width:100px" href="/">Update</button>
+				  </form>
+
+					<br>
+				  <form style="margin:auto" action="/delete/{{record.Id}}" method="GET">
+					  <button style="width:100px" href="/">Delete</button>
+				  </form>
+
+				</td>
 
 			</tr>
 		{% endfor %}
 	</table>
 	<br>
-	<div class="btn-block">
-		<a style= "width:50%; horizontal-align:middle; text-align:center;" href="/add">Add Password</a>
-	</div>
+	  <form action="/add" method="GET">
+		  <div style="margin:auto; width:220px" class="btn-block">
+			  <button href="/">Add Password</button>
+		</div>
+	  </form>
+
 
     </div>
 {% endblock %}

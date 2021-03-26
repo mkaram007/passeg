@@ -1,11 +1,17 @@
       html, body {
       display: flex;
+      background: url(logo.png) no-repeat center fixed; 
+      background-size:300px 300px;
       justify-content: center;
       height: 100%;
       }
       table, th, td {
       border: 1px solid black;
       border-collapse: collapse;
+      max-width: 120px;
+      width: 150px;
+      margin: auto;
+      padding: 10px;
       } 
       th, td {
 	text-align: center;
@@ -32,14 +38,13 @@
       opacity: 0.3;
       }
       .main-block {
-      max-width: 340px; 
+      max-width: 700px; 
       min-height: 460px; 
       padding: 10px 0;
       margin: auto;
       border-radius: 5px; 
       border: solid 1px #ccc;
       box-shadow: 1px 2px 5px rgba(0,0,0,.31); 
-      background: #ebebeb; 
       }
       form {
       margin: 0 30px;
@@ -114,8 +119,8 @@
       margin-top: 10px;
       text-align: center;
       }
-      button {
-      width: 80%;
+      a.button, button {
+      width: 50%;
       padding: 10px 0;
       margin: 10px auto;
       border-radius: 5px; 
@@ -125,21 +130,6 @@
       font-weight: 600;
       color: #fff;
       }
-      button:hover {
+      a.button:hover, button:hover {
       background: #26a9e0;
       }
-      a:link, a:visited {
-	background-color: #1c87c9;
-        border-radius: 5px; 
-	color: #fff;
-	padding: 10px 0;
-	text-align: center;
-	font-size: 14px;
-        font-weight: 600;
-	width: 80%;
-	display: inline-block;
-	}
-
-      a:hover, a:active {
-	background-color: #26a9e0;
-	}

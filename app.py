@@ -34,7 +34,7 @@ def index():
         records = Record.query.order_by(Record.date_created).all()
         return render_template('index.html', records=records)
 
-@app.route('/delete/<int:Id>')
+@app.route('/delete/<int:Id>', methods=['GET', 'POST'])
 def delete(Id):
     password_to_delete = Record.query.get_or_404(Id)
     try:
@@ -43,6 +43,15 @@ def delete(Id):
         return redirect('/')
     except:
         return 'There was a problem deleting this password'
+
+@app.route('/update/<int:Id>', methods=['GET', 'POST'])
+def update(Id):
+    password_to_update = Record.query.get_or_404(Id)
+    try:
+        db.session.commit()
+        return redirect('/')
+    except:
+        return "There was a problem updating this password"
 
 @app.route('/add')
 def add():
