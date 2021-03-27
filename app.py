@@ -53,6 +53,10 @@ def update(Id):
     except:
         return "There was a problem updating this password"
 
+@app.route('/clipboard.min.js')
+def js():
+    return render_template('clipboard.min.js')
+
 @app.route('/add')
 def add():
     return render_template('add.html')
