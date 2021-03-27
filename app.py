@@ -46,12 +46,19 @@ def delete(Id):
 
 @app.route('/update/<int:Id>', methods=['GET', 'POST'])
 def update(Id):
-    password_to_update = Record.query.get_or_404(Id)
-    try:
-        db.session.commit()
-        return redirect('/')
-    except:
-        return "There was a problem updating this password"
+    record_to_update = Record.query.get_or_404(Id)
+    if request.method == 'POST':
+        record_to_update.Name = request.form['Name']
+        record_to_update.Username = request.form['Username']
+        record_to_update.Password = request.form['Password']
+        try:
+            db.session.commit()
+            return redirect('/')
+        except:
+            return "There was a problem updating this password"
+
+    else:
+        return render_template('update.html', record=record_to_update)
 
 @app.route('/clipboard.min.js')
 def js():

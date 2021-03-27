@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+{% block head%}
+<style>
+body{
+background-position: right top;
+}
+</style>
+{% endblock %}
+{% block body %}
+<div class="main-block" style= "max-width:340px;">
+<h1>Update Password</h1>
+<form action="/update/{{record.Id}}" method="POST">
+        <hr>
+        <div class="account-type">
+          <input type="radio" value="none" id="radioOne" name="account" checked/>
+          <label for="radioOne" class="radio">Personal</label>
+          <input type="radio" value="none" id="radioTwo" name="account" />
+          <label for="radioTwo" class="radio">Enterprise</label>
+        </div>
+        <hr>
+        <label id="icon" for="name"><i class="fas fa-user"></i></label>
+	<input type="text" name="Name" id="Name" placeholder="Name" value={{record.Name}}>
+        <label id="icon" for="name"><i class="fas fa-envelope"></i></label>
+	<input value={{record.Username}} type="text" name="Username" id="Username" placeholder="Username" required/>
+        <label id="icon" for="name"><i class="fas fa-unlock-alt"></i></label>
+	<input value={{record.Password}} type="password" name="Password" id="Password" placeholder="Password" required/>
+        <div class="btn-block">
+		<button type="submit">Confirm</button>
+        </div>
+      </form>
+	  <form action="/" method="GET">
+		  <div class="btn-block">
+			  <button style="margin:0" href="/">Back</button>
+		</div>
+	  </form>
+
+</div>
+{% endblock %}
