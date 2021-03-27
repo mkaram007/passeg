@@ -4,6 +4,8 @@
 {% endblock %}
 
 {% block body %}
+    <script src="dist/clipboard.min.js"></script>
+    <script> var clipboard = new ClipboardJS('.btn'); </script>
     <div class="main-block" style="width: 700px">
 	<h1> Passwords </h1>
 	<table>
@@ -17,7 +19,15 @@
 			<tr>
 						<td>{{ record.Name }}</td>
 						<td style="max-width: 200px">{{ record.Username }}</td>
-						<td>{{ record.Password }}</td>
+						<td>
+							
+					  <form style="margin:auto"  method="GET">
+						  <button class="btn" data-clipboard-action="copy" data-clipboard-text="asdasd" style="width:100px" href="/">Copy</button>
+				  </form>
+						
+							
+							
+							</td>
 
 				<td>
 				  <form style="margin:auto" action="/" method="POST">
