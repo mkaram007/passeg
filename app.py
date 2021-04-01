@@ -12,6 +12,7 @@ class Record(db.Model):
     Username = db.Column(db.String(500), nullable= False)
     Password = db.Column(db.String(500), nullable= False)
     date_created = db.Column(db.DateTime, default=datetime.utcnow)
+    date_modified = db.Column(db.DateTime, default=datetime.utcnow)
 
     def __repr__(self):
         return "Password created"
@@ -51,6 +52,7 @@ def update(Id):
         record_to_update.Name = request.form['Name']
         record_to_update.Username = request.form['Username']
         record_to_update.Password = request.form['Password']
+        record_to_update.date_modified = datetime.utcnow()
         try:
             db.session.commit()
             return redirect('/')

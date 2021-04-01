@@ -5,7 +5,7 @@
 
 {% block body %}
     <script> var clipboard = new ClipboardJS('.btn'); </script>
-    <div class="main-block" style="width: 700px">
+    <div class="main-block" style="width: 1500px">
 	<h1> Passwords </h1>
 	<table>
 		<tr>
@@ -13,10 +13,13 @@
 			<th>Username</th>
 			<th type="password">Password</th>
 			<th style="width:60px">Control</th>
+			<th>Date Created</th>
+
+			<th>Date Modified</th>
 		</tr>
 		{% for record in records %}
 			<tr>
-						<td>{{ record.Name }}</td>
+						<td  style="max-width:80px" >{{ record.Name }}</td>
 						<td style="max-width: 200px">{{ record.Username }}</td>
 						<td>
 							
@@ -34,6 +37,8 @@
 				  </form>
 
 				</td>
+				<td style="max-width:140px">{{ record.date_created }}</td>
+				<td style="max-width:140px">{{ record.date_modified }}</td>
 
 			</tr>
 		{% endfor %}
