@@ -91,6 +91,8 @@ def add():
         name = request.form['name']
         username = request.form['username']
         password = request.form['password']
+        if username == None or password == None:
+            return "Username and password can't be empty"
         new_record = Record(Name=name, Username=username, Password=password)
         try:
             db.session.add(new_record)

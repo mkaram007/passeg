@@ -95,7 +95,11 @@
       input[type=radio]:checked + label:after {
       opacity: 1;
       }
-      input[type=text], input[type=password], input[type=email] {
+
+      input[type=text], input[type=password]{
+      width: calc(100% - 57px);
+      }
+      input[type=text], input[type=password] ,input[type=email] {
       width: calc(100% - 57px);
       height: 36px;
       margin: 13px 0 0 -5px;
@@ -104,6 +108,9 @@
       border: solid 1px #cbc9c9; 
       box-shadow: 1px 2px 5px rgba(0,0,0,.09); 
       background: #fff; 
+      }
+      input[type=email] {
+	      width: calc(99% - 56px);
       }
       input[type=password] {
       margin-bottom: 15px;
