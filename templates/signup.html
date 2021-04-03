@@ -1,30 +1,36 @@
 {% extends "base.html" %}
 
 {% block body %}
-<div class="column is-4 is-offset-4">
-    <h3 class="title">Sign Up</h3>
-    <div class="box">
+<div class="main-block">
+    <h1>Sign Up</h1>
+    <br><br><br>
+    <div>
         <form method="POST" action="/signup">
-            <div class="field">
-                <div class="control">
-                    <input type="email" name="Username" placeholder="Username">
-                </div>
-            </div>
-
-            <div class="field">
-                <div class="control">
+            <div>
+		    <label id="icon" for="name"><i class="fas fa-user"></i></label>
                     <input type="text" name="name" placeholder="Name">
-                </div>
             </div>
 
-            <div class="field">
-                <div class="control">
+            <div>
+		    <label id="icon" for="name"><i class="fas fa-envelope"></i></label>
+                    <input type="email" name="Username" placeholder="Username">
+            </div>
+
+            <div>
+                    <label id="icon" for="name"><i class="fas fa-unlock-alt"></i></label>
                     <input type="password" name="Password" placeholder="Password">
-                </div>
             </div>
 
-            <button class="button is-block is-info is-large is-fullwidth">Sign Up</button>
-        </form>
+	    <div class="btn-block">
+		    <button>Sign Up</button>
+	    </div>
+	</form>
+	<form action="/">
+	    <div class="btn-block">
+		    <button>Back</button>
+	    </div>
+		
+	</form>
     </div>
 </div>
 {% endblock %}
