@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+
+{% block body %}
+<div class="main-block">
+    <h1 class="title">Sign In</h1>
+    <div class="box">
+        <form method="POST" action="/home">
+            <div class="field">
+		<label id="icon" for="name"><i class="fas fa-envelope"></i></label>
+                <input type="email" name="Username" placeholder="Email">
+            </div>
+
+            <div class="field">
+		    <label id="icon" for="name"><i class="fas fa-unlock-alt"></i></label>
+                    <input type="password" name="Password" placeholder="Password">
+            </div>
+
+	    <div class="btn-block">
+		    <button type="submit" class="">Sign In</button>
+	    </div>
+
+        </form>
+	<form action="/signup" method="GET">
+	    <div class="btn-block">
+		    <button>Sign Up</button>
+	    </div>
+	 </form>
+
+    </div>
+</div>
+{% endblock %}

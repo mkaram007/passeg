@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+
+{% block body %}
+<div class="column is-4 is-offset-4">
+    <h3 class="title">Sign Up</h3>
+    <div class="box">
+        <form method="POST" action="/signup">
+            <div class="field">
+                <div class="control">
+                    <input type="email" name="Username" placeholder="Username">
+                </div>
+            </div>
+
+            <div class="field">
+                <div class="control">
+                    <input type="text" name="name" placeholder="Name">
+                </div>
+            </div>
+
+            <div class="field">
+                <div class="control">
+                    <input type="password" name="Password" placeholder="Password">
+                </div>
+            </div>
+
+            <button class="button is-block is-info is-large is-fullwidth">Sign Up</button>
+        </form>
+    </div>
+</div>
+{% endblock %}
