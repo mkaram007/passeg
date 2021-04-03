@@ -1,10 +1,42 @@
-from flask import Flask, render_template, url_for, request, redirect
+from flask import Flask, render_template, url_for, request, redirect, flash
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
+from flask_login import LoginManager
 
 app = Flask (__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///records.db'
 db = SQLAlchemy(app)
+login_manager = LoginManager()
+login_manager.init_app(app)
+app.config['SECRET_KEY'] = b'\xe1\x8dzK\xee\xeb\xb0\x86s\xd5\x014\xae2\xcaC'
+
+@login_manager.user_loader
+def load_user(user_id):
+    return User.get(user_id)
+
+class User(db.Model):
+    #Id = db.Column(db.Unicode, primary_key=True)
+    Username = db.Column(db.String(500), nullable= False, primary_key=True)
+    Master_Password = db.Column(db.String(500), nullable=False)
+
+    def __repr__(self):
+        return "User Created"
+
+@app.route('/signup', methods=['POST','GET'])
+def sign_up():
+    if request.method == 'POST':
+        username = request.form['Username']
+        password = request.form['Password']
+        return password
+        new_user = User(Username = username, Master_Password = password)
+        #try:
+        db.session.add(new_user)
+        db.session.commit()
+        return "User Created"
+        #except:
+        #    return "There was an issue signing up"
+    else:
+        return render_template('signup.html')
 
 class Record(db.Model):
     Id = db.Column(db.Integer, primary_key=True)
@@ -17,23 +49,10 @@ class Record(db.Model):
     def __repr__(self):
         return "Password created"
 
-@app.route('/', methods=['POST','GET'])
+@app.route('/home', methods=['POST','GET'])
 def index():
-    if request.method == 'POST':
-
-        name = request.form['name']
-        username = request.form['username']
-        password = request.form['password']
-        new_record = Record(Name=name, Username=username, Password=password)
-        try:
-            db.session.add(new_record)
-            db.session.commit()
-            return redirect('/')
-        except:
-            return 'There was an issue adding the new password'
-    else:
-        records = Record.query.order_by(Record.date_created).all()
-        return render_template('index.html', records=records)
+    records = Record.query.order_by(Record.date_created).all()
+    return render_template('index.html', records=records)
 
 @app.route('/delete/<int:Id>', methods=['GET', 'POST'])
 def delete(Id):
@@ -55,10 +74,9 @@ def update(Id):
         record_to_update.date_modified = datetime.utcnow()
         try:
             db.session.commit()
-            return redirect('/')
+            return redirect('/home')
         except:
             return "There was a problem updating this password"
-
     else:
         return render_template('update.html', record=record_to_update)
 
@@ -66,9 +84,36 @@ def update(Id):
 def js():
     return render_template('clipboard.min.js')
 
-@app.route('/add')
+@app.route('/add', methods=['GET','POST'])
 def add():
-    return render_template('add.html')
+    if request.method == 'POST':
+
+        name = request.form['name']
+        username = request.form['username']
+        password = request.form['password']
+        new_record = Record(Name=name, Username=username, Password=password)
+        try:
+            db.session.add(new_record)
+            db.session.commit()
+            return redirect('/home')
+        except:
+            return 'There was an issue adding the new password'
+    else:
+        return render_template('add.html')
+
+@app.route('/', methods=['GET','POST'])
+def sign_in():
+    if request.method == 'POST':
+        username = request.form['Username']
+        password = request.form['Password']
+        user = User.query.get_or_404(username)
+        if user.Master_Password == password:
+            flash('Logged in successfully.')
+            return render_template('index.html')
+        else:
+            return 'Incorrect username or password'
+    else:
+        return render_template('signin.html')
 
 if __name__ == "__main__":
     app.run (port = 8000,debug = True)
