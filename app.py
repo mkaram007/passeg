@@ -27,14 +27,14 @@ def sign_up():
     if request.method == 'POST':
         username = request.form['Username']
         password = request.form['Password']
-        return password
         new_user = User(Username = username, Master_Password = password)
-        #try:
-        db.session.add(new_user)
-        db.session.commit()
-        return "User Created"
-        #except:
-        #    return "There was an issue signing up"
+        try:
+            db.session.add(new_user)
+            db.session.commit()
+            flash("User Created")
+            return "User Created"
+        except:
+            return "There was an issue signing up"
     else:
         return render_template('signup.html')
 
@@ -54,13 +54,13 @@ def index():
     records = Record.query.order_by(Record.date_created).all()
     return render_template('index.html', records=records)
 
-@app.route('/delete/<int:Id>', methods=['GET', 'POST'])
+@app.route('/delete/<int:Id>')
 def delete(Id):
     password_to_delete = Record.query.get_or_404(Id)
     try:
         db.session.delete(password_to_delete)
         db.session.commit()
-        return redirect('/')
+        return redirect('/home')
     except:
         return 'There was a problem deleting this password'
 
@@ -106,11 +106,17 @@ def sign_in():
     if request.method == 'POST':
         username = request.form['Username']
         password = request.form['Password']
-        user = User.query.get_or_404(username)
-        if user.Master_Password == password:
-            flash('Logged in successfully.')
-            return render_template('index.html')
-        else:
+        try:
+            user = User.query.get(username)
+        except NameError:
+            return 'Incorrect username or password'
+        try:
+            if user.Master_Password == password:
+                flash('Logged in successfully.')
+                return redirect('/home')
+            else:
+                return 'Incorrect username or password'
+        except NameError and AttributeError:
             return 'Incorrect username or password'
     else:
         return render_template('signin.html')
