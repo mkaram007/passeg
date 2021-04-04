@@ -40,6 +40,7 @@ def sign_up():
 
 class Record(db.Model):
     Id = db.Column(db.Integer, primary_key=True)
+    AccountType = db.Column(db.String(10), nullable=False)
     Name = db.Column(db.String(200), nullable= True)
     Username = db.Column(db.String(500), nullable= False)
     Password = db.Column(db.String(500), nullable= False)
@@ -68,6 +69,7 @@ def delete(Id):
 def update(Id):
     record_to_update = Record.query.get_or_404(Id)
     if request.method == 'POST':
+        record_to_update.AccountType = request.form['account']
         record_to_update.Name = request.form['Name']
         record_to_update.Username = request.form['Username']
         record_to_update.Password = request.form['Password']
@@ -88,12 +90,13 @@ def js():
 def add():
     if request.method == 'POST':
 
+        accountType = request.form['account']
         name = request.form['name']
         username = request.form['username']
         password = request.form['password']
         if username == None or password == None:
             return "Username and password can't be empty"
-        new_record = Record(Name=name, Username=username, Password=password)
+        new_record = Record(AccountType = accountType, Name=name, Username=username, Password=password)
         try:
             db.session.add(new_record)
             db.session.commit()

@@ -1,10 +1,5 @@
 {% extends 'base.html' %}
 {% block head%}
-<style>
-body{
-background-position: right top;
-}
-</style>
 {% endblock %}
 {% block body %}
 <div class="main-block" style= "max-width:340px;">
@@ -12,11 +7,25 @@ background-position: right top;
 <form action="/update/{{record.Id}}" method="POST">
         <hr>
         <div class="account-type">
-          <input type="radio" value="none" id="radioOne" name="account" checked/>
+
+          <input type="radio" value="personal" id="radioOne" name="account" checked>
           <label for="radioOne" class="radio">Personal</label>
-          <input type="radio" value="none" id="radioTwo" name="account" />
+          <input type="radio" value="enterprise" id="radioTwo" name="account" >
           <label for="radioTwo" class="radio">Enterprise</label>
+
         </div>
+<script>
+	var x = '{{ record.AccountType  }}';
+      function setChecked() {
+	   document.getElementById('radioOne').removeAttribute('checked');
+	   document.getElementById('radioTwo').setAttribute('checked','checked');
+  }
+if (x == "enterprise"){
+		setChecked();
+	}
+
+</script>
+
         <hr>
         <label id="icon" for="name"><i class="fas fa-user"></i></label>
 	<input style="width:70%" type="text" name="Name" id="Name" placeholder="Name" value={{record.Name}}>
