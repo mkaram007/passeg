@@ -126,5 +126,8 @@ def sign_in():
     else:
         return render_template('signin.html')
 
+@app.route('/about')
+def about():
+    return 'Egirna Technologies'
 if __name__ == "__main__":
     app.run (port = 8000,debug = True)
