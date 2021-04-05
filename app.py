@@ -2,14 +2,14 @@ from flask import Flask, render_template, url_for, request, redirect, flash
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
 from flask_login import LoginManager
+import main_settings
 
 app = Flask (__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///records.db'
 db = SQLAlchemy(app)
 login_manager = LoginManager()
 login_manager.init_app(app)
-app.config['SECRET_KEY'] = b'\xe1\x8dzK\xee\xeb\xb0\x86s\xd5\x014\xae2\xcaC'
-
+app.config['SECRET_KEY'] = main_settings.SECRET_KEY 
 @login_manager.user_loader
 def load_user(user_id):
     return User.get(user_id)
