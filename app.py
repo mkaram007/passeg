@@ -32,7 +32,8 @@ def sign_up():
             db.session.add(new_user)
             db.session.commit()
             flash("User Created")
-            return "User Created"
+            
+            return redirect('/')
         except:
             return "There was an issue signing up"
     else:
