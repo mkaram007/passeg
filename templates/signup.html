@@ -1,6 +1,12 @@
-{% extends "base.html" %}
-
-{% block body %}
+<!DOCTYPE html>
+<html>
+	  <head>
+		      <script src="clipboard.min.js"></script>
+		          <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+			      <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700"> 
+			          <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.4.1/css/all.css" integrity="sha384-5sAR7xN1Nv6T6+dT2mhtzEpVJvfS3NScPQTrOxhwjIuvcA67KV2R5Jz6kr4abQsz" crossorigin="anonymous">
+	  </head>
+	  <body>
 <div class="main-block">
     <h1>Sign Up</h1>
     <br><br><br>
@@ -22,7 +28,8 @@
             </div>
 
 	    <div class="btn-block">
-		    <button>Sign Up</button>
+		    <button onclick="window.alert('Signed Up, redirecting to the login screen');"  >Sign Up</button>
+		    <script> </script>
 	    </div>
 	</form>
 	<form action="/">
@@ -33,4 +40,4 @@
 	</form>
     </div>
 </div>
-{% endblock %}
+	  </body>
