@@ -27,6 +27,8 @@ def sign_up():
     if request.method == 'POST':
         username = request.form['Username']
         password = request.form['Password']
+        if len(username) == 0 or len(password) == 0:
+            return "Inproper username or password"
         new_user = User(Username = username, Master_Password = password)
         try:
             db.session.add(new_user)
