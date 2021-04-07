@@ -17,14 +17,26 @@
 		</tr>
 		{% for record in records %}
 			<tr>
-						<td style="max-width:80px" >{{ record.Name }}</td>
-						<td style="max-width: 200px">{{ record.Username }}</td>
+						<td style="max-width:80px" >
+							<div style="overflow-x:auto">
+								{{ record.Name }}
+							</div>
+						
+						</td>
+						<td style="max-width: 200px"> 
+							
+							
+						<div style="overflow-x:auto">
+							{{ record.Username }}
+						</div>
+</td>
 						<td>
 							
 						  <button class="btn" data-clipboard-action="copy" data-clipboard-text={{record.Password}} style="width:100px">Copy</button>
 							</td>
 
 				<td>
+				
 				  <form style="margin:auto" action="/update/{{record.Id}}" method="GET">
 					  <button style="width:100px">Update</button>
 				  </form>
