@@ -11,9 +11,6 @@
 			<th>Username</th>
 			<th type="password">Password</th>
 			<th style="width:60px">Control</th>
-			<th>Date Created</th>
-
-			<th>Date Modified</th>
 		</tr>
 		{% for record in records %}
 			<tr>
@@ -41,15 +38,15 @@
 					  <button style="width:100px">Update</button>
 				  </form>
 
-					<br>
 				  <form style="margin:auto" action="/delete/{{record.Id}}" method="GET">
 					  <button style="width:100px">Delete</button>
 				  </form>
 
-				</td>
-				<td style="max-width:140px">{{ record.date_created }}</td>
-				<td style="max-width:140px">{{ record.date_modified }}</td>
+				  <form style="margin:auto" action="/details/{{record.Id}}" method="GET">
+					  <button style="width:100px">Show details</button>
+				  </form>
 
+				</td>
 			</tr>
 		{% endfor %}
 	</table>
