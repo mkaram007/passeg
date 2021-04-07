@@ -3,6 +3,7 @@ from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
 from flask_login import LoginManager
 from lib.main_settings import *
+import random
 
 app = Flask (__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///records.db'
@@ -132,5 +133,19 @@ def sign_in():
 @app.route('/about')
 def about():
     return 'Egirna Technologies'
+
+@app.route('/details/<int:Id>')
+def details(Id):
+    record_to_update = Record.query.get_or_404(Id)
+    return render_template('details.html', record = record_to_update)
+
+@app.route('/random')
+def randomGen():
+    chars = 'AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz!@#$%^&*()*/-+.1234567890{}]['
+    password = ''
+    for c in randge(16):
+        password += random.choice(chars)
+    return render_template('add.html', password)
+
 if __name__ == "__main__":
     app.run (port = 8000,debug = True)
