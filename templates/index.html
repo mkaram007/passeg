@@ -13,41 +13,35 @@
 			<th style="width:60px">Control</th>
 		</tr>
 		{% for record in records %}
-			<tr>
-						<td style="max-width:80px" >
-							<div style="overflow:auto">
-								{{ record.Name }}
-							</div>
-						
-						</td>
-						<td style="max-width: 200px"> 
-							
-							
-						<div style="overflow:auto">
-							{{ record.Username }}
-						</div>
-</td>
-						<td>
-							
-						  <button class="btn" data-clipboard-action="copy" data-clipboard-text={{record.Password}} style="width:100px">Copy</button>
-							</td>
+		<tr>
+		<td style="max-width:80px" >
+			<div style="overflow:auto">{{ record.Name }}</div>
+		</td>
+		<td style="max-width: 200px"> 
+		<div style="overflow:auto">{{ record.Username }}
+		</div>
+		</td>
+		<td>
+			
+		  <button class="btn" data-clipboard-action="copy" data-clipboard-text={{record.Password}} style="width:100px">Copy</button>
+		</td>
 
-				<td>
-				
-				  <form style="margin:auto" action="/update/{{record.Id}}" method="GET">
-					  <button style="width:100px">Update</button>
-				  </form>
+		<td>
+		
+		  <form style="margin:auto" action="/update/{{record.Id}}" method="GET">
+			  <button style="width:100px">Update</button>
+		  </form>
 
-				  <form style="margin:auto" action="/delete/{{record.Id}}" method="GET">
-					  <button style="width:100px">Delete</button>
-				  </form>
+		  <form style="margin:auto" action="/delete/{{record.Id}}" method="GET">
+			  <button style="width:100px">Delete</button>
+		  </form>
 
-				  <form style="margin:auto" action="/details/{{record.Id}}" method="GET">
-					  <button style="width:100px">Show details</button>
-				  </form>
+		  <form style="margin:auto" action="/details/{{record.Id}}" method="GET">
+			  <button style="width:100px">Show details</button>
+		  </form>
 
-				</td>
-			</tr>
+		</td>
+		</tr>
 		{% endfor %}
 	</table>
 	<br>
@@ -56,7 +50,5 @@
 			  <button>Add Password</button>
 		</div>
 	  </form>
-
-
     </div>
 {% endblock %}
