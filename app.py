@@ -1,4 +1,4 @@
-from flask import Flask, render_template, url_for, request, redirect, flash
+from flask import Flask, render_template, url_for, request, redirect, flash, Response
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
 from flask_login import LoginManager
@@ -143,9 +143,10 @@ def details(Id):
 def randomGen():
     chars = 'AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz!@#$%^&*()*/-+.1234567890{}]['
     password = ''
-    for c in randge(16):
+    for c in range(16):
         password += random.choice(chars)
-    return render_template('add.html', password)
+    return render_template('add.html', password = password)
+
 
 if __name__ == "__main__":
     app.run (port = 8000,debug = True)
