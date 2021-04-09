@@ -18,10 +18,10 @@ background-position: right top;
         </div>
         <hr>
         <label id="icon" for="name"><i class="fas fa-user"></i></label>
-        <input style="width:70%" type="text" name="name" id="name" placeholder="Name" />
+        <input style="width:70%" type="text" name="name" id="name" placeholder="Name" onkeyup='saveValue(this);'/>
 	<br>
-        <label id="icon" for="name"><i class="fas fa-envelope"></i></label>
-        <input style="width:70%" type="text" name="username" id="name" placeholder="Username" required/>
+        <label id="icon" for="username"><i class="fas fa-envelope"></i></label>
+        <input style="width:70%" type="email" name="username" id="username" placeholder="Username" required onkeyup='saveValue(this);'/>
 	<br>
 
 	<div style="display: flex; flex-direction:row;">
@@ -36,10 +36,29 @@ background-position: right top;
 			location.href="/random";
 
 		};
-	
-
-document.getElementById("pass").value = '{{password}}';
 	</script>
+	<script type="text/javascript">
+		document.getElementById("name").value = getSavedValue("name");    // set the value to this input
+		document.getElementById("username").value = getSavedValue("username");   // set the value to this input
+        
+
+	
+        function saveValue(e){
+	    var id = e.id; 
+	    var value = e.value;
+	    localStorage.setItem(id, value);
+	}
+
+        
+	function getSavedValue  (v){
+	    if (!localStorage.getItem(v)) {
+	    return "";
+	}
+	    return localStorage.getItem(v);
+	}
+	document.getElementById("pass").value = '{{password}}';
+	</script>
+
 
 		</div>
 
