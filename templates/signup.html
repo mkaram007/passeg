@@ -1,13 +1,13 @@
-<!DOCTYPE html>
-<html>
-	  <head>
-		      <script src="clipboard.min.js"></script>
-		          <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
-			      <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700"> 
-			          <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.4.1/css/all.css" integrity="sha384-5sAR7xN1Nv6T6+dT2mhtzEpVJvfS3NScPQTrOxhwjIuvcA67KV2R5Jz6kr4abQsz" crossorigin="anonymous">
-	  </head>
-	  <body>
-<div class="main-block">
+{% extends "base.html"  %}
+{% block head  %}
+	<style>
+		.topnav{
+			display:none;
+		}
+	</style>
+{% endblock  %}
+{%  block body %}
+
     <h1>Sign Up</h1>
     <br><br><br>
     <div>
@@ -37,6 +37,4 @@
 	    </div>
 		
 	</form>
-    </div>
-</div>
-	  </body>
+{% endblock  %}
