@@ -26,11 +26,18 @@
 		</div>
 		<div>
 			<button id="random" type="button" style="width:70px">Random</button>
-	<script type="text/javascript">
-		document.getElementById("random").onclick = function (){
-			location.href="/random";
 
-		};
+	<script type="text/javascript">
+		$('#random').on('click', function getRandomPassword(){
+			$.ajax({
+				type: 'GET',
+				url: '/random',
+				success: function(passwords){
+					$.each(passwords, function(i, password){
+						$('#pass').val(password);
+					});
+				}});
+			});
 	</script>
 	<script type="text/javascript">
 		document.getElementById("name").value = getSavedValue("name");    // set the value to this input

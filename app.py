@@ -1,7 +1,7 @@
 from flask import Flask, render_template, url_for, request, redirect, flash, Response
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
-from flask_login import LoginManager
+from flask_login import LoginManager, login_required, current_user
 from lib.main_settings import *
 import random
 
@@ -76,7 +76,7 @@ def update(Id):
         record_to_update.AccountType = request.form['account']
         record_to_update.Name = request.form['Name']
         record_to_update.Username = request.form['Username']
-        record_to_update.Password = request.form['Password']
+        record_to_update.Password = request.form['password']
         record_to_update.date_modified = datetime.utcnow()
         try:
             db.session.commit()
@@ -119,14 +119,15 @@ def sign_in():
             user = User.query.get(username)
         except NameError:
             return 'Incorrect username or password'
-        try:
-            if user.Master_Password == password:
-                flash('Logged in successfully.')
-                return redirect('/home')
-            else:
-                return 'Incorrect username or password'
-        except NameError and AttributeError:
+        #try:
+        if user.Master_Password == password:
+            current_user.is_authenticated = True
+            flash('Logged in successfully.')
+            return redirect('/home')
+        else:
             return 'Incorrect username or password'
+        #except NameError and AttributeError:
+         #   return 'Incorrect username or password'
     else:
         return render_template('signin.html')
 
@@ -145,7 +146,7 @@ def randomGen():
     password = ''
     for c in range(16):
         password += random.choice(chars)
-    return render_template('add.html', password = password)
+    return {'password':password}
 
 
 if __name__ == "__main__":
