@@ -39,29 +39,6 @@
 				}});
 			});
 	</script>
-	<script type="text/javascript">
-		document.getElementById("name").value = getSavedValue("name");    // set the value to this input
-		document.getElementById("username").value = getSavedValue("username");   // set the value to this input
-        
-
-	
-        function saveValue(e){
-	    var id = e.id; 
-	    var value = e.value;
-	    localStorage.setItem(id, value);
-	}
-
-        
-	function getSavedValue  (v){
-	    if (!localStorage.getItem(v)) {
-	    return "";
-	}
-	    return localStorage.getItem(v);
-	}
-	document.getElementById("pass").value = '{{password}}';
-	</script>
-
-
 		</div>
 
 	</div>

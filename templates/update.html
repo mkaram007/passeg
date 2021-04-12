@@ -3,10 +3,9 @@
 {% endblock %}
 {% block body %}
 <h1>Update Password</h1>
-<form action="/update/{{record.Id}}" method="POST">
+      <form action="/update/{{record.Id}}" method="POST">
         <hr>
         <div class="account-type">
-
           <input type="radio" value="personal" id="radioOne" name="account" checked>
           <label for="radioOne" class="radio">Personal</label>
           <input type="radio" value="enterprise" id="radioTwo" name="account" >
@@ -15,7 +14,8 @@
         </div>
 <script>
 	var x = '{{ record.AccountType  }}';
-      function setChecked() {
+	localStorage.setItem ('type','{{ record.AccountType  }}'
+        function setChecked() {
 	   document.getElementById('radioOne').removeAttribute('checked');
 	   document.getElementById('radioTwo').setAttribute('checked','checked');
   }
@@ -27,13 +27,39 @@ if (x == "enterprise"){
 
         <hr>
         <label id="icon" for="name"><i class="fas fa-user"></i></label>
-	<input style="width:70%" type="text" name="Name" id="Name" placeholder="Name" value={{record.Name}}>
+	<input style="width:70%" type="text" name="Name" id="Name" placeholder="Name" value={{record.Name}} onkeyup='saveValue(this);'>
+
 	<br>
         <label id="icon" for="name"><i class="fas fa-envelope"></i></label>
-	<input style="width:70%" value={{record.Username}} type="text" name="Username" id="Username" placeholder="Username" required/>
+	<input style="width:70%" type="email" name="Username" id="Username" placeholder="Username" onkeyup='saveValue(this);' value={{record.Username}} required/>
+
 	<br>
-        <label id="icon" for="name"><i class="fas fa-unlock-alt"></i></label>
-	<input style="width:70%" value={{record.Password}} type="password" name="Password" id="Password" placeholder="Password" required/>
+
+        <div style="display: flex; flex-direction:row;">
+	<div style="width:190px">
+	<label id="icon" for="name"><i class="fas fa-unlock-alt"></i></label>
+	<input id="pass" style="width:60%" type="password" name="password" placeholder="Password" value={{record.Password}} required/>
+	</div>
+	<div>
+	<button id="random" type="button" style="width:70px">Random</button>
+	<script type="text/javascript">
+		$('#random').on('click', function getRandomPassword(){
+			$.ajax({
+			type: 'GET',
+			url: '/random',
+			success: function(passwords){
+				$.each(passwords, function(i, password){
+				$('#pass').val(password);
+			});
+		}});
+	});
+        </script>
+
+	</div>
+	</div>
+	<br>
+
+
         <div class="btn-block">
 		<button type="submit" >Confirm</button>
         </div>
