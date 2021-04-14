@@ -4,6 +4,7 @@ from datetime import datetime
 from flask_login import LoginManager, login_required, current_user
 from lib.main_settings import *
 import random
+from werkzeug.security import generate_password_hash
 
 app = Flask (__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///records.db'
@@ -30,7 +31,7 @@ def sign_up():
         password = request.form['Password']
         if len(username) == 0 or len(password) == 0:
             return "Inproper username or password"
-        new_user = User(Username = username, Master_Password = password)
+        new_user = User(Username = username, Master_Password = generate_password_hash(password, method='sha256'))
         try:
             db.session.add(new_user)
             db.session.commit()
@@ -100,7 +101,7 @@ def add():
         password = request.form['password']
         if username == None or password == None:
             return "Username and password can't be empty"
-        new_record = Record(AccountType = accountType, Name=name, Username=username, Password=password)
+        new_record = Record(AccountType = accountType, Name=name, Username=username, Password=generate_password_hash(password, method='sha256'))
         try:
             db.session.add(new_record)
             db.session.commit()
@@ -119,17 +120,14 @@ def sign_in():
             user = User.query.get(username)
         except NameError:
             return 'Incorrect username or password'
-        #try:
-        if user.Master_Password == password:
-            current_user.is_authenticated = True
             flash('Logged in successfully.')
-            return redirect('/home')
-        else:
-            return 'Incorrect username or password'
+    return redirect('/home')
+    #else:
+     #   return 'Incorrect username or password'
         #except NameError and AttributeError:
          #   return 'Incorrect username or password'
-    else:
-        return render_template('signin.html')
+   # else:
+   #     return render_template('signin.html')
 
 @app.route('/about')
 def about():
