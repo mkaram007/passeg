@@ -13,6 +13,8 @@ db = SQLAlchemy(app)
 login_manager = LoginManager()
 login_manager.init_app(app)
 login_manager.login_view = '/'
+login_manager.login_message = "Login required"
+login_manager.login_message_category = "error"
 app.config['SECRET_KEY'] = SECRET_KEY 
 @login_manager.user_loader
 def load_user(user_id):
@@ -59,6 +61,7 @@ class Record(UserMixin, db.Model):
         return "Password created"
 
 @app.route('/home', methods=['POST','GET'])
+@login_required
 def index():
     records = Record.query.order_by(Record.date_created).all()
     return render_template('index.html', records=records)
@@ -95,6 +98,7 @@ def js():
     return render_template('clipboard.min.js')
 
 @app.route('/add', methods=['GET','POST'])
+@login_required
 def add():
     if request.method == 'POST':
 
@@ -145,8 +149,13 @@ def login_post():
     else:
         flash('Incorrect username or password')
         return redirect ('/')
-    """
 
+@LoginManager.unauthorized_handler
+def unauthorized():
+    flash ('Login required', 'error')
+    return a_response
+
+    """
 @app.route('/')
 def login():
     return render_template('signin.html')
@@ -168,6 +177,11 @@ def randomGen():
         password += random.choice(chars)
     return {'password':password}
 
+@app.route('/logout')
+@login_required
+def logout():
+    logout_user()
+    return redirect(url_for('index'))
 
 if __name__ == "__main__":
     app.run (port = 8000,debug = True)
