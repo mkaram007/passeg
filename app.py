@@ -116,18 +116,12 @@ def add():
 
 @app.route('/', methods=['POST'])
 def login_post():
-    with open ('File.json', 'w') as fp:
-        #json.dump(user.toJSON(), fp)
-        json.dump({"asdasd":"hello"}, fp)
-
-    fp.close()
-
     username = request.form['Username']
     password = request.form['Password']
     user = User.query.filter_by(Username=username).first()
     try:
-        if not user and not check_password_hash(user.Master_Password, password):
-            flash('Please check your login details and try again.')
+        if not user or not check_password_hash(user.Master_Password, password):
+            flash('Invalid username or password', 'error')
             return redirect(url_for('login'))
 
         login_user(user)
