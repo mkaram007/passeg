@@ -1,24 +1,27 @@
 from flask import Flask, render_template, url_for, request, redirect, flash, Response
+import json
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
-from flask_login import LoginManager, login_required, current_user
+from flask_login import LoginManager, login_required, current_user, UserMixin, login_user, logout_user
 from lib.main_settings import *
 import random
-from werkzeug.security import generate_password_hash
+from werkzeug.security import generate_password_hash, check_password_hash
 
 app = Flask (__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///records.db'
 db = SQLAlchemy(app)
 login_manager = LoginManager()
 login_manager.init_app(app)
+login_manager.login_view = '/'
 app.config['SECRET_KEY'] = SECRET_KEY 
 @login_manager.user_loader
 def load_user(user_id):
-    return User.get(user_id)
+    return User.query.get(int(user_id))
 
-class User(db.Model):
-    #Id = db.Column(db.Unicode, primary_key=True)
-    Username = db.Column(db.String(500), nullable= False, primary_key=True)
+
+class User(UserMixin, db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    Username = db.Column(db.String(500), nullable= False, unique=True)
     Master_Password = db.Column(db.String(500), nullable=False)
 
     def __repr__(self):
@@ -32,18 +35,18 @@ def sign_up():
         if len(username) == 0 or len(password) == 0:
             return "Inproper username or password"
         new_user = User(Username = username, Master_Password = generate_password_hash(password, method='sha256'))
-        try:
-            db.session.add(new_user)
-            db.session.commit()
-            flash("User Created")
-            
-            return redirect('/')
-        except:
-            return "There was an issue signing up"
+        #try:
+        db.session.add(new_user)
+        db.session.commit()
+        flash("User Created")
+        
+        return redirect('/')
+        #except:
+        #    return "There was an issue signing up"
     else:
         return render_template('signup.html')
 
-class Record(db.Model):
+class Record(UserMixin, db.Model):
     Id = db.Column(db.Integer, primary_key=True)
     AccountType = db.Column(db.String(10), nullable=False)
     Name = db.Column(db.String(200), nullable= True)
@@ -111,23 +114,48 @@ def add():
     else:
         return render_template('add.html')
 
-@app.route('/', methods=['GET','POST'])
-def sign_in():
-    if request.method == 'POST':
-        username = request.form['Username']
-        password = request.form['Password']
-        try:
-            user = User.query.get(username)
-        except NameError:
-            return 'Incorrect username or password'
-            flash('Logged in successfully.')
-    return redirect('/home')
-    #else:
-     #   return 'Incorrect username or password'
-        #except NameError and AttributeError:
-         #   return 'Incorrect username or password'
-   # else:
-   #     return render_template('signin.html')
+@app.route('/', methods=['POST'])
+def login_post():
+    with open ('File.json', 'w') as fp:
+        #json.dump(user.toJSON(), fp)
+        json.dump({"asdasd":"hello"}, fp)
+
+    fp.close()
+
+    username = request.form['Username']
+    password = request.form['Password']
+    user = User.query.filter_by(Username=username).first()
+    try:
+        if not user and not check_password_hash(user.Master_Password, password):
+            flash('Please check your login details and try again.')
+            return redirect(url_for('login'))
+
+        login_user(user)
+
+        return redirect(url_for('index'))
+    
+    except AttributeError:
+        flash('Please check your login details and try again.')
+        return ('incorrect')
+        return redirect(url_for('login'))
+    
+    
+
+    """
+    except NameError:
+        return 'Incorrect username or password'
+        flash('Logged in successfully.')
+    if user.Master_Password == password:
+
+        return redirect('/home')
+    else:
+        flash('Incorrect username or password')
+        return redirect ('/')
+    """
+
+@app.route('/')
+def login():
+    return render_template('signin.html')
 
 @app.route('/about')
 def about():
