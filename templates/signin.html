@@ -10,6 +10,17 @@
 <h1>Sign In</h1>
     <br><br><br><br>
     <div>
+	    {% with errors = get_flashed_messages(category_filter=["error"]) %}
+{% if errors %}
+<div class="error">
+  <ul>
+    {%- for msg in errors %}
+    <li>{{ msg }}</li>
+    {% endfor -%}
+  </ul>
+</div>
+{% endif %}
+{% endwith %}
         <form method="POST" action="/">
             <div>
 		<label id="icon" for="name"><i class="fas fa-envelope"></i></label>
