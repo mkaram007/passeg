@@ -42,20 +42,16 @@
       color: #a9a9a9;
       opacity: 0.3;
       }
-      .main-block {
+      .main-block, .main {
       max-width: 900px; 
       min-height: 460px; 
       padding: 10px 10px;
       margin: auto;
+      }
+      .main-block {
       border-radius: 5px; 
       border: solid 1px #ccc;
       box-shadow: 1px 2px 5px rgba(0,0,0,.31); 
-      }
-      .main {
-      max-width: 900px; 
-      min-height: 460px; 
-      padding: 10px 10px;
-      margin: auto;
       }
      
       form {
@@ -131,6 +127,10 @@
       .btn-block {
       margin-top: 10px;
       text-align: center;
+      }
+      .btn {
+	      border-radius:5px;
+	      min-width:90px;
       }
       a.button, button {
       border: none;

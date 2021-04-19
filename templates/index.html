@@ -31,21 +31,21 @@
 		</td>
 		<td>
 			
-		  <button class="btn btn-primary btn-sm" data-clipboard-action="copy" data-clipboard-text={{record.Password}} style="width:70px;">Copy</button>
+		  <button class="btn btn-primary btn-sm" data-clipboard-action="copy" data-clipboard-text={{record.Password}} style="width:70px; margin:41px 0px;">Copy</button>
 		</td>
 
 		<td>
 		
 		  <form style="margin:auto" action="/update/{{record.Id}}" method="GET">
-			  <button  class="btn btn-primary btn-sm" >Update</button>
+			  <button  class="btn btn-warning btn-sm" >Update</button>
 		  </form>
 
-		  <form style="margin:auto; padding:10px" action="/delete/{{record.Id}}" method="GET">
-			  <button class="btn btn-primary btn-sm">Delete</button>
+		  <form style="margin:auto; padding:10px 0px" action="/delete/{{record.Id}}" method="GET">
+			  <button class="btn btn-danger btn-sm">Delete</button>
 		  </form>
 
-		  <form style="margin:auto" action="/details/{{record.Id}}" method="GET">
-			  <button style="width:110px" class="btn btn-warning btn-sm">Show details</button>
+		  <form style="margin:auto; padding:0px" action="/details/{{record.Id}}" method="GET">
+			  <button class="btn btn-primary btn-sm">Details</button>
 		  </form>
 
 		</td>

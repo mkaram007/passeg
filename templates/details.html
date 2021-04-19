@@ -2,6 +2,11 @@
 {% block head  %}
 <title>
 	Details </title>
+<style>
+.main-block,.main{
+	width:820px;
+}
+</style>
 {% endblock  %}
 {% block body  %}
 <br>
@@ -29,15 +34,15 @@
 			</div>
 		</td>
 		<td>
-			<button class="btn" data-clipboard-action="copy" data-clipboard-text={{record.Password}} style="width:100px">Copy</button>
+			<button class="btn btn-primary btn-sm" data-clipboard-action="copy" data-clipboard-text={{record.Password}} style="width:100px">Copy</button>
 		</td>
 		<td>
 			<form style="margin:auto" action="/update/{{record.Id}}" method="GET">
-			<button style="width:100px">Update</button>
+			<button class="btn btn-warning btn-sm" style="width:100px">Update</button>
 			</form>
 
 			<form style="margin:auto" action="/delete/{{record.Id}}" method="GET">
-			<button style="width:100px">Delete</button>
+			<button class="btn btn-danger btn-sm" style="width:100px; margin:5px 0px">Delete</button>
 			</form>
 		</td>
 		<td style="max-width:140px">{{ record.date_created }}</td>
@@ -46,7 +51,7 @@
 </table>
 <br><br>
 <form class='btn-block' style="margin:auto" action="/home" method="GET">
-<button style="width:100px">Back</button>
+<button class="btn btn-primary">Back</button>
 
 </form>
 
