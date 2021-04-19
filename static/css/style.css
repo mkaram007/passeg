@@ -6,13 +6,15 @@
       height: 100%;
       }
       table, th, td {
-      border: 1px solid black;
-      border-collapse: collapse;
       max-width: 120px;
       width: 150px;
       margin: auto;
       padding: 10px;
       } 
+      tr, td{
+      border: 1px solid black;
+      border-collapse: collapse;
+      }
       th, td {
 	text-align: center;
 	text-wrap: normal;
@@ -91,8 +93,8 @@
       label.radio:after {
       content: "";
       position: absolute;
-      width: 9px;
-      height: 4px;
+      width: 12px;
+      height: 8px;
       top: 8px;
       left: 4px;
       border: 3px solid #fff;
@@ -105,21 +107,15 @@
       opacity: 1;
       }
 
-      input[type=text], input[type=password]{
-      width: calc(100% - 57px);
-      }
       input[type=text], input[type=password] ,input[type=email] {
-      width: calc(100% - 57px);
-      height: 36px;
-      margin: 13px 0 0 -5px;
+      width: 232px;
+      height: 42px;
+      margin: 13px 0 0 -7px;
       padding-left: 10px; 
       border-radius: 0 5px 5px 0;
       border: solid 1px #cbc9c9; 
       box-shadow: 1px 2px 5px rgba(0,0,0,.09); 
       background: #fff; 
-      }
-      input[type=email] {
-	      width: calc(99% - 56px);
       }
       input[type=password] {
       margin-bottom: 15px;
@@ -137,10 +133,6 @@
       text-align: center;
       }
       a.button, button {
-      width: 50%;
-      padding: 10px 0;
-      margin: 10px auto;
-      border-radius: 5px; 
       border: none;
       background: #1c87c9; 
       font-size: 14px;

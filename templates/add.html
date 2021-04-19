@@ -13,19 +13,19 @@
         </div>
         <hr>
         <label id="icon" for="name"><i class="fas fa-user"></i></label>
-        <input style="width:70%" type="text" name="name" id="name" placeholder="Name" onkeyup='saveValue(this);'/>
+        <input type="text" name="name" id="name" placeholder="Name"/>
 	<br>
         <label id="icon" for="username"><i class="fas fa-envelope"></i></label>
-        <input style="width:70%" type="email" name="username" id="username" placeholder="Username" required onkeyup='saveValue(this);'/>
+        <input type="email" name="username" id="username" placeholder="Username" required/>
 	<br>
 
 	<div style="display: flex; flex-direction:row;">
 		<div style="width:190px">
-			<label id="icon" for="name"><i class="fas fa-unlock-alt"></i></label>
-			<input id="pass" style="width:60%" type="password" name="password" placeholder="Password" required/>
+	<label id="icon" for="password"><i class="fas fa-unlock-alt"></i></label>
+			<input id="pass" style="width:60%;" type="password" name="password" placeholder="Password" required/>
 		</div>
 		<div>
-			<button id="random" type="button" style="width:70px">Random</button>
+			<button class="btn btn-primary btn-sm" id="random" type="button" style="width:80px; margin:16px 0px">Random</button>
 
 	<script type="text/javascript">
 		$('#random').on('click', function getRandomPassword(){
@@ -46,14 +46,14 @@
 	<br>
         <div class="btn-block">
 		<form>
-		  <button type="submit" >Add</button>
+		  <button  class="btn btn-primary" type="submit" >Add</button>
 		</form>
         </div>
       </form>
 	  <form action="/home" method="GET">
-		  <div class="btn-block">
-			  <button style="margin:0">Back</button>
-		</div>
+		  <div style='text-align:center; margin-top: 10px'>
+			  <button class="btn btn-primary" style="margin:0">Back</button>
+			  <div>
 	  </form>
 
 </div>

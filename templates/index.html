@@ -2,7 +2,7 @@
 {% block head %}
 <style>
 	.main{
-		padding: 0px;
+		padding: 85px;
 	}
 </style>
     <title>Password Manager</title>
@@ -10,13 +10,16 @@
 
 {% block body %}
 	<h1> Passwords </h1>
-	<table>
-		<tr>
-			<th>Name</th>
-			<th>Username</th>
-			<th type="password">Password</th>
-			<th style="width:60px">Control</th>
-		</tr>
+	<table class="table table-striped table-hover table-bordered">
+		<thead>
+			<tr>
+				<th>Name</th>
+				<th>Username</th>
+				<th type="password">Password</th>
+				<th style="width:60px">Control</th>
+			</tr>
+		</thead>
+		<tbody>
 		{% for record in records %}
 		<tr>
 		<td style="max-width:80px" >
@@ -28,31 +31,32 @@
 		</td>
 		<td>
 			
-		  <button class="btn" data-clipboard-action="copy" data-clipboard-text={{record.Password}} style="width:100px">Copy</button>
+		  <button class="btn btn-primary btn-sm" data-clipboard-action="copy" data-clipboard-text={{record.Password}} style="width:70px;">Copy</button>
 		</td>
 
 		<td>
 		
 		  <form style="margin:auto" action="/update/{{record.Id}}" method="GET">
-			  <button style="width:100px">Update</button>
+			  <button  class="btn btn-primary btn-sm" >Update</button>
 		  </form>
 
-		  <form style="margin:auto" action="/delete/{{record.Id}}" method="GET">
-			  <button style="width:100px">Delete</button>
+		  <form style="margin:auto; padding:10px" action="/delete/{{record.Id}}" method="GET">
+			  <button class="btn btn-primary btn-sm">Delete</button>
 		  </form>
 
 		  <form style="margin:auto" action="/details/{{record.Id}}" method="GET">
-			  <button style="width:100px">Show details</button>
+			  <button style="width:110px" class="btn btn-warning btn-sm">Show details</button>
 		  </form>
 
 		</td>
 		</tr>
 		{% endfor %}
+		</tbody>
 	</table>
 	<br>
 	  <form action="/add" method="GET">
-		  <div style="margin:auto; width:220px" class="btn-block">
-			  <button>Add Password</button>
+		  <div  style="margin:auto; width:220px" class="btn-block">
+			  <button class="btn btn-primary"  >Add Password</button>
 		</div>
 	  </form>
     </div>

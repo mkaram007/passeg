@@ -27,11 +27,11 @@ if (x == "enterprise"){
 
         <hr>
         <label id="icon" for="name"><i class="fas fa-user"></i></label>
-	<input style="width:70%" type="text" name="Name" id="Name" placeholder="Name" value={{record.Name}} onkeyup='saveValue(this);'>
+	<input type="text" name="Name" id="Name" placeholder="Name" value={{record.Name}}>
 
 	<br>
         <label id="icon" for="name"><i class="fas fa-envelope"></i></label>
-	<input style="width:70%" type="email" name="Username" id="Username" placeholder="Username" onkeyup='saveValue(this);' value={{record.Username}} required/>
+	<input type="email" name="Username" id="Username" placeholder="Username" value={{record.Username}} required/>
 
 	<br>
 
@@ -41,7 +41,7 @@ if (x == "enterprise"){
 	<input id="pass" style="width:60%" type="password" name="password" placeholder="Password" value={{record.Password}} required/>
 	</div>
 	<div>
-	<button id="random" type="button" style="width:70px">Random</button>
+	<button class="btn btn-primary btn-sm" id="random" type="button" style="width:80px; margin:16px 0px">Random</button>
 	<script type="text/javascript">
 		$('#random').on('click', function getRandomPassword(){
 			$.ajax({
@@ -60,13 +60,13 @@ if (x == "enterprise"){
 	<br>
 
 
-        <div class="btn-block">
-		<button type="submit" >Confirm</button>
-        </div>
+	<div class="btn-block">
+		<button class="btn btn-primary" type="submit" >Confirm</button>
+	</div>
       </form>
 	  <form action="/home" method="GET">
 		  <div class="btn-block">
-			  <button style="margin:0" >Back</button>
+			  <button class="btn btn-primary" style="margin:0" >Back</button>
 		</div>
 	  </form>
 

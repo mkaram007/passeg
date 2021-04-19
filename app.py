@@ -108,7 +108,7 @@ def add():
         password = request.form['password']
         if username == None or password == None:
             return "Username and password can't be empty"
-        new_record = Record(AccountType = accountType, Name=name, Username=username, Password=generate_password_hash(password, method='sha256'))
+        new_record = Record(AccountType = accountType, Name=name, Username=username, Password=password)
         try:
             db.session.add(new_record)
             db.session.commit()
@@ -133,29 +133,15 @@ def login_post():
         return redirect(url_for('index'))
     
     except AttributeError:
-        flash('Please check your login details and try again.')
-        return ('incorrect')
+        flash('Invalid username or password', 'error')
         return redirect(url_for('login'))
     
-    
-
-    """
-    except NameError:
-        return 'Incorrect username or password'
-        flash('Logged in successfully.')
-    if user.Master_Password == password:
-
-        return redirect('/home')
-    else:
-        flash('Incorrect username or password')
-        return redirect ('/')
-
+"""    
 @LoginManager.unauthorized_handler
 def unauthorized():
     flash ('Login required', 'error')
     return a_response
-
-    """
+"""
 @app.route('/')
 def login():
     return render_template('signin.html')
@@ -181,7 +167,7 @@ def randomGen():
 @login_required
 def logout():
     logout_user()
-    return redirect(url_for('index'))
+    return redirect('/')
 
 if __name__ == "__main__":
     app.run (port = 8000,debug = True)
