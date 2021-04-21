@@ -1,11 +1,11 @@
 [Unit]
-Description=Test Service
+Description=Password manager service
 After=syslog.target network-online.target remote-fs.target nss-lookup.target
 Wants=network-online.target
 
 [Service]
 Type=simple
-ExecStart=/opt/Password-Manager/venv/bin/python3 /home/karam/Password-Manager/app.py
+ExecStart=/opt/passeg/venv/bin/python3 /opt/passeg/app.py
 
 [Install]
 WantedBy=multi-user.target
