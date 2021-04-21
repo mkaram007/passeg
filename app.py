@@ -53,6 +53,7 @@ def sign_up():
 
 class Record(UserMixin, db.Model):
     Id = db.Column(db.Integer, primary_key=True)
+    Owner_Id = db.Column(db.Integer, nullable=False)
     AccountType = db.Column(db.String(10), nullable=False)
     Name = db.Column(db.String(200), nullable= True)
     Username = db.Column(db.String(500), nullable= False)
@@ -61,12 +62,12 @@ class Record(UserMixin, db.Model):
     date_modified = db.Column(db.DateTime, default=datetime.utcnow)
 
     def __repr__(self):
-        return "Password created"
+        return ("Can't create password", "error")
 
 @app.route('/home', methods=['POST','GET'])
 @login_required
 def index():
-    records = Record.query.order_by(Record.date_created).all()
+    records = Record.query.order_by(Record.date_created).filter_by(Owner_Id=current_user.get_id())
     return render_template('index.html', records=records)
 
 @app.route('/delete/<int:Id>')
@@ -111,7 +112,10 @@ def add():
         password = request.form['password']
         if username == None or password == None:
             return "Username and password can't be empty"
-        new_record = Record(AccountType = accountType, Name=name, Username=username, Password=password)
+        if current_user.is_authenticated:
+            Owner_Id = current_user.get_id()
+
+        new_record = Record(AccountType = accountType, Name=name, Username=username, Password=password, Owner_Id=Owner_Id)
         try:
             db.session.add(new_record)
             db.session.commit()
