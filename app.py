@@ -27,7 +27,7 @@ class User(UserMixin, db.Model):
     Master_Password = db.Column(db.String(500), nullable=False)
 
     def __repr__(self):
-        return "User Created"
+        return ("User Created", "info")
 
 @app.route('/signup', methods=['POST','GET'])
 def sign_up():
@@ -43,7 +43,7 @@ def sign_up():
         #try:
         db.session.add(new_user)
         db.session.commit()
-        flash("User Created")
+        flash("User Created Successfully", "info")
         
         return redirect('/')
         #except:
@@ -170,6 +170,7 @@ def randomGen():
 @login_required
 def logout():
     logout_user()
+    flash ('Logged out', 'info')
     return redirect('/')
 
 if __name__ == "__main__":
