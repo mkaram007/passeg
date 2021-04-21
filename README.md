@@ -2,10 +2,10 @@
 ## Installation
 sudo su -  
 cd /opt  
-git clone https://github.com/mkaram007/passeg.git  
-apt install python3  
-apt install python3-pip  
-pip3 install virtualenv  
+git clone https://github.com/mkaram007/passeg.git 
+apt install python3 
+apt install python3-pip 
+pip3 install virtualenv 
 cd passeg  
 ## Activate the virtual environment
 source venv/bin/activate  
