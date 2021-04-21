@@ -14,7 +14,7 @@ login_manager = LoginManager()
 login_manager.init_app(app)
 login_manager.login_view = '/'
 login_manager.login_message = "Login required"
-login_manager.login_message_category = "error"
+login_manager.login_message_category = "warning"
 app.config['SECRET_KEY'] = SECRET_KEY 
 @login_manager.user_loader
 def load_user(user_id):
@@ -128,7 +128,7 @@ def login_post():
     user = User.query.filter_by(Username=username).first()
     #try:
     if not user or not check_password_hash(user.Master_Password, password):
-        flash('Invalid username or password', 'warning')
+        flash('Invalid username or password', 'danger')
         return redirect(url_for('login'))
 
     login_user(user)

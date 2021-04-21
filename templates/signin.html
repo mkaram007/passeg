@@ -1,11 +1,4 @@
 {% extends "base.html"  %}    
-{% block head  %}
-<style>
-	.topnav{
-		display:none;
-	}
-</style>
-{% endblock  %}
 {% block body %}
 <h1>Sign In</h1>
     <br><br><br><br>
@@ -13,12 +6,27 @@
 {% if errors %}
     {% for msg in errors %}
     <div id="alertBox" class="alert alert-{{ msg[0]  }} alert-dismissible fade show" style="width:351px; height:59px; font-size:15px; padding-right:0px;">
-	    <strong>{{ msg[0]  }}</strong> {{ msg[1] }}
+	    <strong id='alertType'></strong> {{ msg[1] }}
+
 		    <button style="float: right; background-color: Transparent; outline:none; color:#055160" type="button" onclick="document.getElementById('alertBox').style.display='none'">&times;</button>
 </div>
+	    	<script>
+		switch ("{{ msg[0] }}"){
+
+			case "warning":
+				document.getElementById('alertType').innerHTML = "Warning!";
+				break;
+			case "danger":
+				document.getElementById('alertType').innerHTML = "Error!";
+				break;
+
+		};
+	</script>
+
     {% endfor %}
 {% endif %}
 {% endwith %}
+
         <form method="POST" action="/">
             <div>
 		<label id="icon" for="name"><i class="fas fa-envelope"></i></label>
@@ -31,7 +39,7 @@
             </div>
 
 	    <div class="btn-block">
-		    <button class="btn btn-primary" type="submit" class="">Sign In</button>
+		    <button class="btn btn-primary" type="submit">Sign In</button>
 	    </div>
 
         </form>
