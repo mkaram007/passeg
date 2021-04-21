@@ -3,9 +3,9 @@
   <head>
     <script src= "{{ url_for('static', filename='js/clipboard.min.js') }}"  ></script>
     <script src= "{{ url_for('static', filename='js/jquery-3.6.0.min.js') }}"  ></script>
-    <script src= "{{ url_for('static', filename='js/bootstrap.min.js') }}"  ></script>
+    <script src= "{{ url_for('static', filename='bootstrap-4.3.1-dist/js/bootstrap.min.js') }}"  ></script>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700"> 
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.min.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='bootstrap-4.3.1-dist/css/bootstrap.min.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.4.1/css/all.css" integrity="sha384-5sAR7xN1Nv6T6+dT2mhtzEpVJvfS3NScPQTrOxhwjIuvcA67KV2R5Jz6kr4abQsz" crossorigin="anonymous">
     {% block head %}{% endblock %}
@@ -28,7 +28,7 @@
       <a class="nav-link" href="/about">About Us</a>
     </li>
   </ul>
-  <ul class="navbar-nav ms-auto" style= "margin-right:15px">
+  <ul class="navbar-nav ml-auto" style= "margin-right:15px">
     <li>
       <a style="color:white; background-color:#f36c38; border-radius:5px;" class="nav-link" href="/logout">Logout</a>
     </li>

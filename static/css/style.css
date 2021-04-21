@@ -22,7 +22,7 @@
       }
       body, div, h1, form, input, p { 
       outline: none;
-      font-family: Tangerine;
+      font-family: "sans-serif";
       font-size: 16px;
       color: #666;
       padding: 0;
