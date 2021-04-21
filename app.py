@@ -31,6 +31,9 @@ class User(UserMixin, db.Model):
 
 @app.route('/signup', methods=['POST','GET'])
 def sign_up():
+    if current_user.is_authenticated:
+        flash ("Logout to register a new user", "Error!")
+        return redirect(url_for('login'))
     if request.method == 'POST':
         username = request.form['Username']
         password = request.form['Password']
@@ -123,19 +126,19 @@ def login_post():
     username = request.form['Username']
     password = request.form['Password']
     user = User.query.filter_by(Username=username).first()
-    try:
-        if not user or not check_password_hash(user.Master_Password, password):
-            flash('Invalid username or password', 'error')
-            return redirect(url_for('login'))
-
-        login_user(user)
-
-        return redirect(url_for('index'))
-    
-    except AttributeError:
-        flash('Invalid username or password', 'error')
+    #try:
+    if not user or not check_password_hash(user.Master_Password, password):
+        flash('Invalid username or password', 'warning')
         return redirect(url_for('login'))
-    
+
+    login_user(user)
+
+    return redirect(url_for('index'))
+    """ 
+    except AttributeError:
+        flash('Invalid username or password', 'Error!')
+        return redirect(url_for('login'))
+    """
 """    
 @LoginManager.unauthorized_handler
 def unauthorized():

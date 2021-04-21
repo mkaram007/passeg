@@ -9,11 +9,11 @@
 {% block body %}
 <h1>Sign In</h1>
     <br><br><br><br>
-	    {% with errors = get_flashed_messages(category_filter=["error"]) %}
+	    {% with errors = get_flashed_messages(with_categories=true) %}
 {% if errors %}
     {% for msg in errors %}
-    <div id="alertBox" class="alert alert-danger alert-dismissible fade show" style="width:351px; height:59px; font-size:15px; padding-right:0px;">
-		    <strong>Error!</strong> {{ msg }}
+    <div id="alertBox" class="alert alert-{{ msg[0]  }} alert-dismissible fade show" style="width:351px; height:59px; font-size:15px; padding-right:0px;">
+	    <strong>{{ msg[0]  }}</strong> {{ msg[1] }}
 		    <button style="float: right; background-color: Transparent; outline:none; color:#055160" type="button" onclick="document.getElementById('alertBox').style.display='none'">&times;</button>
 </div>
     {% endfor %}
@@ -27,7 +27,7 @@
 
             <div>
 		    <label id="icon" for="name"><i class="fas fa-unlock-alt"></i></label>
-                    <input style="height:42px" type="password" name="Password" placeholder="Password">
+                    <input style="height:42px" type="password" name="Password" placeholder="Master Password">
             </div>
 
 	    <div class="btn-block">
