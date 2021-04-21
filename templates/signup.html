@@ -10,6 +10,31 @@
 
     <h1>Sign Up</h1>
     <br><br><br>
+{% with errors = get_flashed_messages(with_categories=true) %}
+{% if errors %}
+    {% for msg in errors %}
+    <div id="alertBox" class="alert alert-{{ msg[0]  }} alert-dismissible fade show" style="width:351px; height:59px; font-size:15px; padding-right:0px;">
+	    <strong id='alertType'></strong> {{ msg[1] }}
+	    <button style="float: right; background-color: Transparent; outline:none; color:#055160" type="button" onclick="document.getElementById('alertBox').style.display='none'">&times;</button>
+</div>
+	    	<script>
+		switch ("{{ msg[0] }}"){
+			case "warning":
+				document.getElementById('alertType').innerHTML = "Warning!";
+				break;
+			case "danger":
+				document.getElementById('alertType').innerHTML = "Error!";
+				break;
+			case "info":
+				document.getElementById('alertType').innerHTML = "Success!";
+				break;
+
+		};
+	</script>
+    {% endfor %}
+{% endif %}
+{% endwith %}
+
     <div>
         <form method="POST" action="/signup">
             <div>

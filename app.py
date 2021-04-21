@@ -1,6 +1,7 @@
 from flask import Flask, render_template, url_for, request, redirect, flash, Response
 import json
 from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy import func, exc
 from datetime import datetime
 from flask_login import LoginManager, login_required, current_user, UserMixin, login_user, logout_user
 from lib.main_settings import *
@@ -35,21 +36,26 @@ def sign_up():
         flash ("Logout to register a new user", "Error!")
         return redirect(url_for('login'))
     if request.method == 'POST':
-        username = request.form['Username']
-        password = request.form['Password']
-        if len(username) == 0 or len(password) == 0:
-            return "Inproper username or password"
-        new_user = User(Username = username, Master_Password = generate_password_hash(password, method='sha256'))
-        #try:
-        db.session.add(new_user)
-        db.session.commit()
-        flash("User Created Successfully", "info")
-        
-        return redirect('/')
-        #except:
-        #    return "There was an issue signing up"
+        try:
+            username = request.form['Username']
+            password = request.form['Password']
+            if len(username) == 0 or len(password) == 0:
+                return "Inproper username or password"
+            new_user = User(Username = username, Master_Password = generate_password_hash(password, method='sha256'))
+            #try:
+            db.session.add(new_user)
+            db.session.commit()
+            flash("User Created Successfully", "info")
+            
+            return redirect('/')
+            #except:
+            #    return "There was an issue signing up"
+        except exc.IntegrityError:
+            flash("This username already exists", "danger")
+            return redirect (url_for('sign_up'))
     else:
         return render_template('signup.html')
+
 
 class Record(UserMixin, db.Model):
     Id = db.Column(db.Integer, primary_key=True)
@@ -108,7 +114,7 @@ def add():
 
         accountType = request.form['account']
         name = request.form['name']
-        username = request.form['username']
+        username = func.lower(request.form['username'])
         password = request.form['password']
         if username == None or password == None:
             return "Username and password can't be empty"
@@ -127,9 +133,9 @@ def add():
 
 @app.route('/', methods=['POST'])
 def login_post():
-    username = request.form['Username']
+    username = func.lower(request.form['Username'])
     password = request.form['Password']
-    user = User.query.filter_by(Username=username).first()
+    user = User.query.filter_by(Username = username).first()
     #try:
     if not user or not check_password_hash(user.Master_Password, password):
         flash('Invalid username or password', 'danger')
