@@ -31,7 +31,7 @@
   <ul class="navbar-nav ml-auto" style= "margin-right:15px">
 	  <li><p  style="margin:12px" ><strong id='welcome'></strong></p></li>
     <li>
-      <a style="color:white; background-color:#f36c38; border-radius:5px;" class="nav-link" href="/logout">Logout</a>
+      <a style="display:none; color:white; background-color:#f36c38; border-radius:5px;" id="logout" class="nav-link" href="/logout">Logout</a>
     </li>
   </ul>
           <script type="text/javascript">
@@ -42,10 +42,12 @@
 	                     success: function(username){
 	                     $.each(username, function(i, username){
 	                     $('#welcome').html(username);
+			     if (username != "")
+				document.getElementById('logout').style.display='block';
 	                 });
 	            }});
 	        });
-        </script>
+	  </script>
 
 </nav>
 
