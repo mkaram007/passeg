@@ -24,6 +24,7 @@ def load_user(user_id):
 
 class User(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
+    Name = db.Column(db.String(500), nullable= True)
     Username = db.Column(db.String(500), nullable= False, unique=True)
     Master_Password = db.Column(db.String(500), nullable=False)
 
@@ -37,11 +38,12 @@ def sign_up():
         return redirect(url_for('login'))
     if request.method == 'POST':
         try:
+            name = request.form['Name']
             username = request.form['Username']
             password = request.form['Password']
             if len(username) == 0 or len(password) == 0:
                 return "Inproper username or password"
-            new_user = User(Username = username, Master_Password = generate_password_hash(password, method='sha256'))
+            new_user = User(Name = name, Username = username, Master_Password = generate_password_hash(password, method='sha256'))
             #try:
             db.session.add(new_user)
             db.session.commit()
@@ -116,11 +118,10 @@ def add():
         name = request.form['name']
         username = func.lower(request.form['username'])
         password = request.form['password']
-        if username == None or password == None:
-            return "Username and password can't be empty"
-        if current_user.is_authenticated:
-            Owner_Id = current_user.get_id()
-
+        if request.form['username'] == None or password == None:
+            alert("Username and password can't be empty", 'danger')
+            return redirect(url_for(add))
+        Owner_Id = current_user.get_id()
         new_record = Record(AccountType = accountType, Name=name, Username=username, Password=password, Owner_Id=Owner_Id)
         try:
             db.session.add(new_record)
@@ -182,6 +183,16 @@ def logout():
     logout_user()
     flash ('Logged out', 'info')
     return redirect('/')
+
+@app.route('/getUsername')
+def getUsername():
+    if current_user.is_authenticated:
+        if current_user.Name:
+            return {'username':"Welcome, "+current_user.Name+"!"}
+        else:
+            return {'username':"Welcome, "+current_user.Username+"!"}
+    else:
+        return {'username':''}
 
 if __name__ == "__main__":
     app.run (port = 8000,debug = True)
