@@ -37,24 +37,25 @@ def sign_up():
         flash ("Logout to register a new user", "Error!")
         return redirect(url_for('login'))
     if request.method == 'POST':
-        try:
-            name = request.form['Name']
-            username = request.form['Username']
-            password = request.form['Password']
-            if len(username) == 0 or len(password) == 0:
-                return "Inproper username or password"
-            new_user = User(Name = name, Username = username, Master_Password = generate_password_hash(password, method='sha256'))
-            #try:
-            db.session.add(new_user)
-            db.session.commit()
-            flash("User Created Successfully", "info")
-            
-            return redirect('/')
-            #except:
-            #    return "There was an issue signing up"
-        except exc.IntegrityError:
+        name = request.form['Name']
+        username = request.form['Username']
+        password = request.form['Password']
+        if len(username) == 0 or len(password) == 0:
+            return "Inproper username or password"
+        username = func.lower(username)
+        if User.query.filter_by(Username = username).first():
             flash("This username already exists", "danger")
             return redirect (url_for('sign_up'))
+
+        new_user = User(Name = name, Username = username, Master_Password = generate_password_hash(password, method='sha256'))
+        #try:
+        db.session.add(new_user)
+        db.session.commit()
+        flash("User Created Successfully", "info")
+        
+        return redirect('/')
+        #except:
+        #    return "There was an issue signing up"
     else:
         return render_template('signup.html')
 
