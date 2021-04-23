@@ -80,6 +80,7 @@ def index():
     return render_template('index.html', records=records)
 
 @app.route('/delete/<int:Id>')
+@login_required
 def delete(Id):
     password_to_delete = Record.query.get_or_404(Id)
     try:
@@ -90,6 +91,7 @@ def delete(Id):
         return 'There was a problem deleting this password'
 
 @app.route('/update/<int:Id>', methods=['GET', 'POST'])
+@login_required
 def update(Id):
     record_to_update = Record.query.get_or_404(Id)
     if request.method == 'POST':
@@ -170,6 +172,7 @@ def about():
     return 'Egirna Technologies'
 
 @app.route('/details/<int:Id>')
+@login_required
 def details(Id):
     record_to_update = Record.query.get_or_404(Id)
     return render_template('details.html', record = record_to_update)
