@@ -34,7 +34,7 @@
 			</div>
 		</td>
 		<td>
-			<button class="btn btn-primary btn-sm" data-clipboard-action="copy" data-clipboard-text={{record.Password}} style="width:100px">Copy</button>
+			<button class="btn btn-primary btn-sm" data-clipboard-action="copy" data-clipboard-text={{record.Password}} style="width:100px" onclick= "this.innerHTML='Copied';">Copy</button>
 		</td>
 		<td>
 			<form style="margin:auto" action="/update/{{record.Id}}" method="GET">
