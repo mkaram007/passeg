@@ -169,7 +169,7 @@ def login():
 
 @app.route('/about')
 def about():
-    return 'Egirna Technologies'
+    return 'Developed by Egirna Technologies'
 
 @app.route('/details/<int:Id>')
 @login_required
