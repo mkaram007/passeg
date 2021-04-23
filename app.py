@@ -1,4 +1,4 @@
-from flask import Flask, render_template, url_for, request, redirect, flash, Response
+from flask import Flask, render_template, url_for, request, redirect, flash, Response, session
 import json
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import func, exc
@@ -134,7 +134,7 @@ def add():
         return render_template('add.html')
 
 @app.route('/', methods=['POST'])
-def login_post():
+def signin_post():
     username = func.lower(request.form['Username'])
     password = request.form['Password']
     user = User.query.filter_by(Username = username).first()
@@ -144,6 +144,10 @@ def login_post():
         return redirect(url_for('login'))
 
     login_user(user)
+    if user.Name:
+        session['current_username']='Welcome '+user.Name+'!'
+    else:
+        session['current_username']='Welcome '+user.Username+'!'
 
     return redirect(url_for('index'))
     """ 
@@ -183,17 +187,8 @@ def randomGen():
 def logout():
     logout_user()
     flash ('Logged out', 'info')
+    session['current_username'] = ''
     return redirect('/')
-
-@app.route('/getUsername')
-def getUsername():
-    if current_user.is_authenticated:
-        if current_user.Name:
-            return {'username':"Welcome, "+current_user.Name+"!"}
-        else:
-            return {'username':"Welcome, "+current_user.Username+"!"}
-    else:
-        return {'username':''}
 
 if __name__ == "__main__":
     app.run (port = 8000,debug = True)
