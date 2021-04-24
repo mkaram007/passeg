@@ -1,11 +1,12 @@
-{% extends "base.html"  %}    
+{% extends "base.html"  %}
 {% block body %}
+<br>
 <h1>Sign In</h1>
-    <br><br><br><br>
+    <br><br><br>
 	    {% with errors = get_flashed_messages(with_categories=true) %}
 {% if errors %}
     {% for msg in errors %}
-    <div id="alertBox" class="alert alert-{{ msg[0]  }} alert-dismissible fade show" style="width:351px; height:59px; font-size:15px; padding-right:0px;">
+    <div id="alertBox" class="alert alert-{{ msg[0]  }} alert-dismissible fade show" style="width:351px; height:59px; font-size:15px; margin:auto; padding-right:0px;">
 	    <strong id='alertType'></strong> {{ msg[1] }}
 
 		    <button style="float: right; background-color: Transparent; outline:none; color:#055160" type="button" onclick="document.getElementById('alertBox').style.display='none'">&times;</button>
@@ -27,7 +28,7 @@
     {% endfor %}
 {% endif %}
 {% endwith %}
-
+<div style="text-align:center">
         <form method="POST" action="/">
             <div>
 		<label id="icon" for="name"><i class="fas fa-envelope"></i></label>

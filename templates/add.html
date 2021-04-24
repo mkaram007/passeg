@@ -3,6 +3,7 @@
 {% endblock %}
 {% block body %}
 <h1>Add Password</h1>
+<div style="text-align:center">
       <form action="/add" method="POST">
         <hr>
         <div class="account-type">
@@ -18,14 +19,13 @@
         <label id="icon" for="username"><i class="fas fa-envelope"></i></label>
         <input type="email" name="username" id="username" placeholder="Username" required/>
 	<br>
-
-	<div style="display: flex; flex-direction:row;">
+	<div style="display: flex; flex-direction:row; margin-left:155px;">
 		<div style="width:190px">
 	<label id="icon" for="password"><i class="fas fa-unlock-alt"></i></label>
 			<input id="pass" style="width:60%;" type="password" name="password" placeholder="Password" required/>
 		</div>
 		<div>
-			<button class="btn btn-primary btn-sm" id="random" type="button" style="width:80px; margin:16px 0px">Random</button>
+			<button class="btn btn-primary btn-sm" id="random" type="button" style="width:80px; margin-top:17px;">Random</button>
 
 	<script type="text/javascript">
 		$('#random').on('click', function getRandomPassword(){
@@ -41,8 +41,8 @@
 	</script>
 		</div>
 
-	</div>
 
+	</div>
 	<br>
         <div class="btn-block">
 		<form>
@@ -50,6 +50,7 @@
 		</form>
         </div>
       </form>
+</div>
 	  <form action="/home" method="GET">
 		  <div style='text-align:center; margin-top: 10px'>
 			  <button class="btn btn-primary" style="margin:0">Back</button>

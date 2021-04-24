@@ -3,6 +3,7 @@
 {% endblock %}
 {% block body %}
 <h1>Update Password</h1>
+<div style="text-align:center">
       <form action="/update/{{record.Id}}" method="POST">
         <hr>
         <div class="account-type">
@@ -35,7 +36,7 @@ if (x == "enterprise"){
 
 	<br>
 
-        <div style="display: flex; flex-direction:row;">
+        <div style="display: flex; flex-direction:row; margin-left:155px">
 	<div style="width:190px">
 	<label id="icon" for="name"><i class="fas fa-unlock-alt"></i></label>
 	<input id="pass" style="width:60%" type="password" name="password" placeholder="Password" value={{record.Password}} required/>

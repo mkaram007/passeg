@@ -1,15 +1,9 @@
 {% extends "base.html"  %}
-{% block head  %}
-	<style>
-		.topnav{
-			display:none;
-		}
-	</style>
-{% endblock  %}
 {%  block body %}
 
+    <br>
     <h1>Sign Up</h1>
-    <br><br><br>
+    <br><br>
 {% with errors = get_flashed_messages(with_categories=true) %}
 {% if errors %}
     {% for msg in errors %}
