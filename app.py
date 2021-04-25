@@ -1,3 +1,5 @@
+import werkzeug
+import os
 from flask import Flask, render_template, url_for, request, redirect, flash, Response, session
 import json
 from flask_sqlalchemy import SQLAlchemy
@@ -7,19 +9,57 @@ from flask_login import LoginManager, login_required, current_user, UserMixin, l
 from lib.main_settings import *
 import random
 from werkzeug.security import generate_password_hash, check_password_hash
+from validate_email import validate_email
+from itsdangerous import URLSafeTimedSerializer
+from flask_mail import Message, Mail
+from flask_bcrypt import Bcrypt
+
+
 
 app = Flask (__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///records.db'
 db = SQLAlchemy(app)
+mail = Mail(app)
+bcrypt = Bcrypt(app)
 login_manager = LoginManager()
 login_manager.init_app(app)
 login_manager.login_view = '/'
 login_manager.login_message = "Login required"
 login_manager.login_message_category = "warning"
 app.config['SECRET_KEY'] = SECRET_KEY 
+app.config['SECURITY_PASSWORD_SALT'] = SECURITY_PASSWORD_SALT
+app.config['MAIL_DEFAULT_SENDER'] = MAIL_DEFAULT_SENDER
 @login_manager.user_loader
 def load_user(user_id):
     return User.query.get(int(user_id))
+
+
+
+def generate_confirmation_token(username):
+    serializer = URLSafeTimedSerializer(app.config['SECRET_KEY'])
+    return serializer.dumps(username, salt=app.config['SECURITY_PASSWORD_SALT'])
+
+
+def confirm_token(token, expiration=3600):
+    serializer = URLSafeTimedSerializer(app.config['SECRET_KEY'])
+    try:
+        email = serializer.loads(
+        token,
+        salt=app.config['SECURITY_PASSWORD_SALT'],
+        max_age=expiration
+        )
+    except:
+        return False
+    return email
+
+def send_email(to, subject, template):
+        msg = Message(
+            subject,
+            recipients=[to],
+            html=template,
+            sender=app.config['MAIL_DEFAULT_SENDER']
+        )
+        mail.send(msg)
 
 
 class User(UserMixin, db.Model):
@@ -27,6 +67,7 @@ class User(UserMixin, db.Model):
     Name = db.Column(db.String(500), nullable= True)
     Username = db.Column(db.String(500), nullable= False, unique=True)
     Master_Password = db.Column(db.String(500), nullable=False)
+    Confirmed = db.Column(db.Boolean, nullable=False, default=False)
 
     def __repr__(self):
         return ("User Created", "info")
@@ -47,12 +88,22 @@ def sign_up():
             flash("This username already exists", "danger")
             return redirect (url_for('sign_up'))
 
-        new_user = User(Name = name, Username = username, Master_Password = generate_password_hash(password, method='sha256'))
+        new_user = User(Name = name, Username = username, Master_Password = generate_password_hash(password, method='sha256'), Confirmed = False)
         #try:
         db.session.add(new_user)
         db.session.commit()
-        flash("User Created Successfully", "info")
-        
+
+        token = generate_confirmation_token(request.form['Username'])
+#        try:
+        confirm_url = url_for('confirm_email', token=token, _external=True)
+#        except werkzeug.routing.BuildError:
+#            return token
+        html = render_template('activate.html', confirm_url=confirm_url)
+        subject = "Please confirm your email"
+        send_email(username, subject, html)
+        login_user(new_user)
+        flash('A confirmation email has been sent via email.', 'success')
+
         return redirect('/')
         #except:
         #    return "There was an issue signing up"
@@ -192,6 +243,23 @@ def logout():
     flash ('Logged out', 'info')
     session['current_username'] = ''
     return redirect('/')
+
+@app.route('/confirm/<token>')
+@login_required
+def confirm_email(token):
+    try:
+        username = confirm_token(token)
+    except:
+        flash('The confirmation link is invalid or has expired.', 'danger')
+        user = User.query.filter_by(Username=username).first_or_404()
+        if user.Confirmed:
+            flash('Account already confirmed. Please login.', 'success')
+        else:
+            user.Confirmed = True
+            db.session.add(user)
+            db.session.commit()
+            flash('You have confirmed your account. Thanks!', 'success')
+        return redirect(url_for('index'))
 
 if __name__ == "__main__":
     app.run (port = 8000,debug = True)
