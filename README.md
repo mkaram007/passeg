@@ -30,3 +30,21 @@ Press CTRL + D
 
 ## Now open the browser and enter the following URL:  
   localhost:8000
+
+
+
+Progress steps in passeg project:
+1-Sign up functionality
+2-User authentication functionality (login, logout)
+3-Restricting pages access without login
+4-Add password records
+5-Update password details
+6-Delete password record
+7-Random password generation for a record
+8-Password details page
+9-Alerts when an error arises
+10-Separating each user's data (Password records)
+11-Navigation bar
+12-Password copy button
+13-e-mail validation
+14-Working on email confirmation
