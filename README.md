@@ -2,8 +2,11 @@
 # Installation
 
 ## Switch to the root user
-```sudo su -```
+```sudo su -```  
 
+## Update your system packages
+```apt update ```  
+```apt upgrade ```
 ## Run the following commands to clone the repository and install dependancies
 ```  
 cd /opt  
