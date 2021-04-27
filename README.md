@@ -15,6 +15,19 @@ apt install python3
 apt install python3-pip  
 apt-get install python3-venv
 ```
+
+## Create your own virtual environment
+```
+cd passeg
+rm -rf venv
+python3 -m venv venv
+```
+
+## Install the requirements
+```
+venv/bin/pip3 install -r lib/requirements.txt
+```
+
 ## Return back to your user
 Press CTRL + D
 
@@ -32,7 +45,7 @@ Press CTRL + D
 ```sudo systemctl enable passeg  ```
 
 
-## Now open the browser and enter the following URL:  
+## Now open the browser and enter the following URL (If passeg has been installed on your local machine):  
   localhost:8000
 
 
