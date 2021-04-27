@@ -75,7 +75,7 @@ class User(UserMixin, db.Model):
 @app.route('/signup', methods=['POST','GET'])
 def sign_up():
     if current_user.is_authenticated:
-        flash ("Logout to register a new user", "Error!")
+        flash ("Logout to register a new user", "danger")
         return redirect(url_for('login'))
     if request.method == 'POST':
         name = request.form['Name']
@@ -92,7 +92,9 @@ def sign_up():
         #try:
         db.session.add(new_user)
         db.session.commit()
-
+        flash("Registeration completed", "info")
+        return redirect('/')
+        '''
         token = generate_confirmation_token(request.form['Username'])
 #        try:
         confirm_url = url_for('confirm_email', token=token, _external=True)
@@ -107,6 +109,7 @@ def sign_up():
         return redirect('/')
         #except:
         #    return "There was an issue signing up"
+        '''
     else:
         return render_template('signup.html')
 
