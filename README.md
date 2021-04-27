@@ -5,7 +5,8 @@
 ```sudo su -```
 
 ## Run the following commands to clone the repository and install dependancies
-```cd /opt  
+```  
+cd /opt  
 git clone https://github.com/mkaram007/passeg.git  
 apt install python3  
 apt install python3-pip  
