@@ -220,16 +220,18 @@ def index():
     records = Record.query.order_by(Record.date_created).filter_by(Owner_Id=current_user.get_id())
     return render_template('index.html', records=records)
 
-@app.route('/delete/<int:Id>')
-@login_required
+@app.route('/delete/<int:Id>', methods=['POST'])
 def delete(Id):
-    password_to_delete = Record.query.get_or_404(Id)
+    if current_user.is_authenticated:
+        password_to_delete = Record.query.get_or_404(Id)
+    else:
+        return failure ("Login required")
     try:
         db.session.delete(password_to_delete)
         db.session.commit()
-        return redirect('/home')
+        return success (Id)
     except:
-        return 'There was a problem deleting this password'
+        return failure('There was a problem deleting this password')
 
 @app.route('/getPasswordId/<string:username>')
 def getPasswordId(username):
