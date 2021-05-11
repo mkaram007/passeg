@@ -244,7 +244,9 @@ def update(Id):
 
 @app.route('/getPassword/<int:Id>')
 def getPassword(Id):
-    password = Record.query.get_or_404(Id)
+    password = Record.query.get(Id)
+    if not password:
+        return failure("Password not found")
     return {"status":"success", "Name":password.Name, "Username":password.Username, "Password":password.Password}
 
 @app.route('/clipboard.min.js')
