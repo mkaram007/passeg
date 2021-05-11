@@ -179,23 +179,16 @@ def update(Id):
     record_to_update = Record.query.get_or_404(Id)
     if request.method == 'POST':
         data = request.json
-
-        #record_to_update.Name = request.form['Name']
         record_to_update.Name = data.get('Name')
-        #record_to_update.Username = request.form['Username']
         record_to_update.Username = data.get('Username')
-        #record_to_update.Password = request.form['password']
         record_to_update.Password = data.get('Password')
-        #record_to_update.date_modified = datetime.utcnow()
         record_to_update.date_modified = datetime.utcnow()
         try:
             db.session.commit()
-            #return redirect('/home')
             return success("Password has been updated successfully")
         except:
             return failure ("There was a problem updating this password")
     else:
-        #return render_template('update.html', record=record_to_update)
         return success ("Password exists")
 
 @app.route('/getPassword/<int:Id>')
@@ -223,8 +216,10 @@ def add():
         password = data.get("Password")
         if data.get('Username') == None or password == None:
             return failure ("Username and password can't be empty")
-        #Owner_Id = current_user.get_id()
-        new_record = Record(Name=name, Username=username, Password=password, Owner_Id=1, AccountType = 'Personal')
+        if Record.query.filter_by(Username = username).first():
+            return failure ("This username already exists")
+        Owner_Id = current_user.get_id()
+        new_record = Record(Name=name, Username=username, Password=password, Owner_Id=Owner_Id, AccountType = 'Personal')
         try:
             db.session.add(new_record)
             db.session.commit()
