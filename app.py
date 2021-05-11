@@ -28,11 +28,25 @@ db = SQLAlchemy(app)
 login_manager = LoginManager()
 login_manager.init_app(app)
 login_manager.login_view = '/'
-login_manager.login_message = "Login required"
-login_manager.login_message_category = "warning"
+login_manager.login_message = {'status':'failure','data':"Login required"}
+#login_manager.login_message_category = "warning"
 app.config['SECRET_KEY'] = SECRET_KEY 
 app.config['SECURITY_PASSWORD_SALT'] = SECURITY_PASSWORD_SALT
 app.config['MAIL_DEFAULT_SENDER'] = MAIL_DEFAULT_SENDER
+
+
+@app.errorhandler(404)
+def not_found(error):
+        #return make_response(jsonify(failure('not found')), 404)
+        return failure("Not Found")
+
+
+@app.errorhandler(401)
+def unauthorized(error):
+        #return make_response(jsonify(failure('unauthorized')), 401)
+        return failure("Login required")
+
+
 @login_manager.user_loader
 def load_user(user_id):
     return User.query.get(int(user_id))
@@ -244,7 +258,10 @@ def update(Id):
 
 @app.route('/getPassword/<int:Id>')
 def getPassword(Id):
-    password = Record.query.get(Id)
+
+    if not current_user.is_authenticated:
+        return failure ("Login required")
+    password = Record.query.get_or_404(Id)
     if not password:
         return failure("Password not found")
     return {"status":"success", "Name":password.Name, "Username":password.Username, "Password":password.Password}
@@ -275,21 +292,20 @@ def add():
 
 @app.route('/', methods=['POST'])
 def signin_post():
-    username = func.lower(request.form['Username'])
-    password = request.form['Password']
+    data = request.json
+    username = func.lower(data.get('Username'))
+    password = data.get('Password')
     user = User.query.filter_by(Username = username).first()
     #try:
     if not user or not check_password_hash(user.Master_Password, password):
-        flash('Invalid username or password', 'danger')
-        return redirect(url_for('login'))
-
+        return failure('Invalid username or password')
     login_user(user)
     if user.Name:
         session['current_username']='Welcome '+user.Name+'!'
     else:
         session['current_username']='Welcome '+user.Username+'!'
 
-    return redirect(url_for('index'))
+    return success ("Logged in successfully")
     """ 
     except AttributeError:
         flash('Invalid username or password', 'Error!')
