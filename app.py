@@ -251,28 +251,25 @@ def getPassword(Id):
 def js():
     return render_template('clipboard.min.js')
 
-@app.route('/add', methods=['GET','POST'])
-@login_required
+@app.route('/add', methods=['POST'])
 def add():
     if request.method == 'POST':
+        data = request.json
 
-        accountType = request.form['account']
-        name = request.form['name']
-        username = func.lower(request.form['username'])
-        password = request.form['password']
-        if request.form['username'] == None or password == None:
-            alert("Username and password can't be empty", 'danger')
-            return redirect(url_for(add))
-        Owner_Id = current_user.get_id()
-        new_record = Record(AccountType = accountType, Name=name, Username=username, Password=password, Owner_Id=Owner_Id)
+
+        name = data.get('Name')
+        username = func.lower(data.get('Username'))
+        password = data.get("Password")
+        if data.get('Username') == None or password == None:
+            return failure ("Username and password can't be empty")
+        #Owner_Id = current_user.get_id()
+        new_record = Record(Name=name, Username=username, Password=password, Owner_Id=1, AccountType = 'Personal')
         try:
             db.session.add(new_record)
             db.session.commit()
-            return redirect('/home')
+            return success ("Password has been added successfully")
         except:
-            return 'There was an issue adding the new password'
-    else:
-        return render_template('add.html')
+            return failure ('There was an issue adding the new password')
 
 @app.route('/', methods=['POST'])
 def signin_post():
