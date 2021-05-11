@@ -218,22 +218,29 @@ def delete(Id):
         return 'There was a problem deleting this password'
 
 @app.route('/update/<int:Id>', methods=['GET', 'POST'])
-@login_required
+#@login_required
 def update(Id):
     record_to_update = Record.query.get_or_404(Id)
     if request.method == 'POST':
-        record_to_update.AccountType = request.form['account']
-        record_to_update.Name = request.form['Name']
-        record_to_update.Username = request.form['Username']
-        record_to_update.Password = request.form['password']
+        data = request.json
+
+        #record_to_update.Name = request.form['Name']
+        record_to_update.Name = data.get('Name')
+        #record_to_update.Username = request.form['Username']
+        record_to_update.Username = data.get('Username')
+        #record_to_update.Password = request.form['password']
+        record_to_update.Password = data.get('Password')
+        #record_to_update.date_modified = datetime.utcnow()
         record_to_update.date_modified = datetime.utcnow()
         try:
             db.session.commit()
-            return redirect('/home')
+            #return redirect('/home')
+            return success("Password has been updated successfully")
         except:
-            return "There was a problem updating this password"
+            return failure ("There was a problem updating this password")
     else:
-        return render_template('update.html', record=record_to_update)
+        #return render_template('update.html', record=record_to_update)
+        return success ("Password exists")
 
 @app.route('/clipboard.min.js')
 def js():
