@@ -11,16 +11,20 @@ import random
 from werkzeug.security import generate_password_hash, check_password_hash
 from validate_email import validate_email
 from itsdangerous import URLSafeTimedSerializer
-from flask_mail import Message, Mail
-from flask_bcrypt import Bcrypt
+#from flask_mail import Message, Mail
+#from flask_bcrypt import Bcrypt
+
+
+success  = lambda resp: {'status':'success','data':resp}
+failure  = lambda resp: {'status':'failure','data':resp}
 
 
 
 app = Flask (__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///records.db'
 db = SQLAlchemy(app)
-mail = Mail(app)
-bcrypt = Bcrypt(app)
+#mail = Mail(app)
+#bcrypt = Bcrypt(app)
 login_manager = LoginManager()
 login_manager.init_app(app)
 login_manager.login_view = '/'
@@ -72,6 +76,8 @@ class User(UserMixin, db.Model):
     def __repr__(self):
         return ("User Created", "info")
 
+
+"""
 @app.route('/signup', methods=['POST','GET'])
 def sign_up():
     if current_user.is_authenticated:
@@ -110,6 +116,73 @@ def sign_up():
         #except:
         #    return "There was an issue signing up"
         '''
+    else:
+        return render_template('signup.html')
+"""
+
+@app.route('/signup', methods=['POST','GET'])
+def sign_up():
+    if current_user.is_authenticated:
+        #flash ("Logout to register a new user", "danger")
+        #return redirect(url_for('login'))
+        return failure("Logout to register a new user")
+        #return "Logout to register a new user"
+    if request.method == 'POST':
+
+        #data = {"Name":"" , "Username":"", "Password":""}
+        data = request.json
+        #if data is None:
+        #    abort (400)
+        #name = request.form['Name']
+        name = data.get('Name')
+        #username = request.form['Username']
+        username = data.get('Username')
+        #password = request.form['Password']
+        password = data.get('Password')
+        try:
+            if len(username) == 0 or len(password) == 0:
+                return failure("Inproper username or password")
+                #return "Inproper username or password"
+                #flash ("Inproper username or password")
+                #return redirect (url_for('sign_up'))
+        except TypeError:
+            return failure("Inproper username or password")
+            #flash ("Inproper username or password")
+            #return redirect (url_for('sign_up'))
+        username = func.lower(username)
+        if User.query.filter_by(Username = username).first():
+            #flash("This username already exists", "danger")
+            #return redirect (url_for('sign_up'))
+            return failure('This username already exists')
+            #return 'This username already exists'
+
+        new_user = User(Name = name, Username = username, Master_Password = generate_password_hash(password, method='sha256'), Confirmed = False)
+        #try:
+        db.session.add(new_user)
+        db.session.commit()
+        #flash("Registeration completed", "info")
+        #return redirect('/')
+        user_id = User.query.filter_by(Username = username).first().id
+        return success ("Registeration completed with ID: "+ user_id)
+        #return ("Registeration completed with ID: "+ user_id)
+        '''
+        token = generate_confirmation_token(request.form['Username'])
+#        try:
+        confirm_url = url_for('confirm_email', token=token, _external=True)
+#        except werkzeug.routing.BuildError:
+#            return token
+        html = render_template('activate.html', confirm_url=confirm_url)
+        subject = "Please confirm your email"
+        send_email(username, subject, html)
+        login_user(new_user)
+
+        flash('A confirmation email has been sent via email.', 'success')
+
+        return redirect('/')
+        #except:
+        #    return "There was an issue signing up"
+        '''
+        #return redirect (url_for(login))
     else:
         return render_template('signup.html')
 
