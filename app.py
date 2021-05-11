@@ -242,6 +242,11 @@ def update(Id):
         #return render_template('update.html', record=record_to_update)
         return success ("Password exists")
 
+@app.route('/getPassword/<int:Id>')
+def getPassword(Id):
+    password = Record.query.get_or_404(Id)
+    return {"status":"success", "Name":password.Name, "Username":password.Username, "Password":password.Password}
+
 @app.route('/clipboard.min.js')
 def js():
     return render_template('clipboard.min.js')
