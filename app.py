@@ -231,6 +231,15 @@ def delete(Id):
     except:
         return 'There was a problem deleting this password'
 
+@app.route('/getPasswordId/<string:username>')
+def getPasswordId(username):
+    record = Record.query.filter_by(Username = username).first()
+    if record:
+        return success (record.Id)
+    else:
+        return failure ("Password not found")
+
+
 @app.route('/update/<int:Id>', methods=['GET', 'POST'])
 #@login_required
 def update(Id):
