@@ -91,115 +91,46 @@ class User(UserMixin, db.Model):
         return ("User Created", "info")
 
 
-"""
-@app.route('/signup', methods=['POST','GET'])
+
+@app.route('/signup', methods=['POST'])
 def sign_up():
     if current_user.is_authenticated:
-        flash ("Logout to register a new user", "danger")
-        return redirect(url_for('login'))
-    if request.method == 'POST':
-        name = request.form['Name']
-        username = request.form['Username']
-        password = request.form['Password']
-        if len(username) == 0 or len(password) == 0:
-            return "Inproper username or password"
-        username = func.lower(username)
-        if User.query.filter_by(Username = username).first():
-            flash("This username already exists", "danger")
-            return redirect (url_for('sign_up'))
-
-        new_user = User(Name = name, Username = username, Master_Password = generate_password_hash(password, method='sha256'), Confirmed = False)
-        #try:
-        db.session.add(new_user)
-        db.session.commit()
-        flash("Registeration completed", "info")
-        return redirect('/')
-        '''
-        token = generate_confirmation_token(request.form['Username'])
-#        try:
-        confirm_url = url_for('confirm_email', token=token, _external=True)
-#        except werkzeug.routing.BuildError:
-#            return token
-        html = render_template('activate.html', confirm_url=confirm_url)
-        subject = "Please confirm your email"
-        send_email(username, subject, html)
-        login_user(new_user)
-        flash('A confirmation email has been sent via email.', 'success')
-
-        return redirect('/')
-        #except:
-        #    return "There was an issue signing up"
-        '''
-    else:
-        return render_template('signup.html')
-"""
-
-@app.route('/signup', methods=['POST','GET'])
-def sign_up():
-    if current_user.is_authenticated:
-        #flash ("Logout to register a new user", "danger")
-        #return redirect(url_for('login'))
         return failure("Logout to register a new user")
-        #return "Logout to register a new user"
-    if request.method == 'POST':
-
-        #data = {"Name":"" , "Username":"", "Password":""}
-        data = request.json
-        #if data is None:
-        #    abort (400)
-        #name = request.form['Name']
-        name = data.get('Name')
-        #username = request.form['Username']
-        username = data.get('Username')
-        #password = request.form['Password']
-        password = data.get('Password')
-        try:
-            if len(username) == 0 or len(password) == 0:
-                return failure("Inproper username or password")
-                #return "Inproper username or password"
-                #flash ("Inproper username or password")
-                #return redirect (url_for('sign_up'))
-        except TypeError:
+    data = request.json
+    name = data.get('Name')
+    username = data.get('Username')
+    password = data.get('Password')
+    try:
+        if len(username) == 0 or len(password) == 0:
             return failure("Inproper username or password")
-            #flash ("Inproper username or password")
-            #return redirect (url_for('sign_up'))
-        username = func.lower(username)
-        if User.query.filter_by(Username = username).first():
-            #flash("This username already exists", "danger")
-            #return redirect (url_for('sign_up'))
-            return failure('This username already exists')
-            #return 'This username already exists'
+    except TypeError:
+        return failure("Inproper username or password")
+    username = func.lower(username)
+    if User.query.filter_by(Username = username).first():
+        return failure('This username already exists')
 
-        new_user = User(Name = name, Username = username, Master_Password = generate_password_hash(password, method='sha256'), Confirmed = False)
-        #try:
-        db.session.add(new_user)
-        db.session.commit()
-        #flash("Registeration completed", "info")
-        #return redirect('/')
-        user_id = User.query.filter_by(Username = username).first().id
-        return success ("Registeration completed with ID: "+ user_id)
-        #return ("Registeration completed with ID: "+ user_id)
-        '''
-        token = generate_confirmation_token(request.form['Username'])
+    new_user = User(Name = name, Username = username, Master_Password = generate_password_hash(password, method='sha256'), Confirmed = False)
+    db.session.add(new_user)
+    db.session.commit()
+    user_id = User.query.filter_by(Username = username).first().id
+    return success ("Registeration completed with ID: "+ str(user_id))
+    '''
+    token = generate_confirmation_token(request.form['Username'])
 #        try:
-        confirm_url = url_for('confirm_email', token=token, _external=True)
+    confirm_url = url_for('confirm_email', token=token, _external=True)
 #        except werkzeug.routing.BuildError:
 #            return token
-        html = render_template('activate.html', confirm_url=confirm_url)
-        subject = "Please confirm your email"
-        send_email(username, subject, html)
-        login_user(new_user)
+    html = render_template('activate.html', confirm_url=confirm_url)
+    subject = "Please confirm your email"
+    send_email(username, subject, html)
+    login_user(new_user)
 
-        flash('A confirmation email has been sent via email.', 'success')
+    flash('A confirmation email has been sent via email.', 'success')
 
-        return redirect('/')
-        #except:
-        #    return "There was an issue signing up"
-        '''
-        #return redirect (url_for(login))
-    else:
-        return render_template('signup.html')
-
+    return redirect('/')
+    #except:
+    #    return "There was an issue signing up"
+    '''
 
 class Record(UserMixin, db.Model):
     Id = db.Column(db.Integer, primary_key=True)
@@ -351,12 +282,12 @@ def randomGen():
     return {'password':password}
 
 @app.route('/logout')
-@login_required
 def logout():
-    logout_user()
-    flash ('Logged out', 'info')
-    session['current_username'] = ''
-    return redirect('/')
+    if current_user.is_authenticated:
+        logout_user()
+        return success ("Logged out successfully")
+    else:
+        return failure ("Login required")
 
 @app.route('/confirm/<token>')
 @login_required
