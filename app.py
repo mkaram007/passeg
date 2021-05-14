@@ -97,6 +97,9 @@ class User(UserMixin, db.Model):
     def __repr__(self):
         return ("User Created", "info")
 
+@app.route('/getCurrentUser')
+def getCurrentUser():
+    return success(current_user.get_id())
 
 
 @app.route('/signup', methods=['POST'])
