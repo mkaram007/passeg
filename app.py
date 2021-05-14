@@ -99,7 +99,10 @@ class User(UserMixin, db.Model):
 
 @app.route('/getCurrentUser')
 def getCurrentUser():
-    return success(current_user.get_id())
+    if current_user.is_authenticated:
+        return success(current_user.get_id())
+    else:
+        return failure("Login required")
 
 
 @app.route('/signup', methods=['POST'])
@@ -184,6 +187,18 @@ def getPasswordId(username):
         return success (record.Id)
     else:
         return failure ("Password not found")
+
+@app.route('/getPasswords')
+def getPasswords():
+    if not current_user.is_authenticated:
+        return failure ("Login required")
+    records = Record.query.filter_by(Owner_Id = current_user.get_id())
+    record = records[0]
+    recs = []
+    for record in records:
+        recs.append(str({"id":record.Id, "Name":record.Name, "Username":record.Username, "Password":record.Password}))
+    ','.join(recs)
+    return success (recs)
 
 
 @app.route('/update/<int:Id>', methods=['GET', 'POST'])
