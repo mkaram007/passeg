@@ -13,6 +13,7 @@ from validate_email import validate_email
 from itsdangerous import URLSafeTimedSerializer
 #from flask_mail import Message, Mail
 #from flask_bcrypt import Bcrypt
+import re
 
 
 success  = lambda resp: {'status':'success','data':resp}
@@ -28,7 +29,7 @@ db = SQLAlchemy(app)
 login_manager = LoginManager()
 login_manager.init_app(app)
 login_manager.login_view = '/'
-login_manager.login_message = {'status':'failure','data':"Login required"}
+#login_manager.login_message = {'status':'failure','data':"Login required"}
 #login_manager.login_message_category = "warning"
 app.config['SECRET_KEY'] = SECRET_KEY 
 app.config['SECURITY_PASSWORD_SALT'] = SECURITY_PASSWORD_SALT
@@ -56,6 +57,12 @@ def load_user(user_id):
 def generate_confirmation_token(username):
     serializer = URLSafeTimedSerializer(app.config['SECRET_KEY'])
     return serializer.dumps(username, salt=app.config['SECURITY_PASSWORD_SALT'])
+
+
+def verify_email(username):
+    if not re.match(r"[^@]+@[^@]+\.[^@]+", username):
+        return False
+    return True
 
 
 def confirm_token(token, expiration=3600):
@@ -99,6 +106,9 @@ def sign_up():
     data = request.json
     name = data.get('Name')
     username = data.get('Username')
+    #if len(username.split('@')) == 1 or len(username.split('@')[1].split('.')) ==1:
+    if not verify_email(username):
+        return failure ("Invalid username, example username: username@example.com")
     password = data.get('Password')
     try:
         if len(username) == 0 or len(password) == 0:
@@ -144,13 +154,13 @@ class Record(UserMixin, db.Model):
 
     def __repr__(self):
         return ("Can't create password", "error")
-
+"""
 @app.route('/home', methods=['POST','GET'])
 @login_required
 def index():
     records = Record.query.order_by(Record.date_created).filter_by(Owner_Id=current_user.get_id())
     return render_template('index.html', records=records)
-
+"""
 @app.route('/delete/<int:Id>', methods=['POST'])
 def delete(Id):
     if current_user.is_authenticated:
@@ -180,7 +190,10 @@ def update(Id):
     if request.method == 'POST':
         data = request.json
         record_to_update.Name = data.get('Name')
-        record_to_update.Username = data.get('Username')
+        username = data.get('Username')
+        if not verify_email(username):
+            return failure ("Invalid username, example username: username@example.com")
+        record_to_update.Username = username
         record_to_update.Password = data.get('Password')
         record_to_update.date_modified = datetime.utcnow()
         try:
@@ -201,34 +214,39 @@ def getPassword(Id):
         return failure("Password not found")
     return {"status":"success", "Name":password.Name, "Username":password.Username, "Password":password.Password}
 
+"""
 @app.route('/clipboard.min.js')
 def js():
     return render_template('clipboard.min.js')
-
+"""
 @app.route('/add', methods=['POST'])
 def add():
-    if request.method == 'POST':
-        data = request.json
-
-
-        name = data.get('Name')
-        username = func.lower(data.get('Username'))
-        password = data.get("Password")
-        if data.get('Username') == None or password == None:
-            return failure ("Username and password can't be empty")
-        if Record.query.filter_by(Username = username).first():
-            return failure ("This username already exists")
-        Owner_Id = current_user.get_id()
-        new_record = Record(Name=name, Username=username, Password=password, Owner_Id=Owner_Id, AccountType = 'Personal')
-        try:
-            db.session.add(new_record)
-            db.session.commit()
-            return success ("Password has been added successfully")
-        except:
-            return failure ('There was an issue adding the new password')
+    if not current_user.is_authenticated:
+        return failure ("Login required")
+    data = request.json
+    name = data.get('Name')
+    username = func.lower(data.get('Username'))
+    if not verify_email(data.get('Username')):
+        return failure ("Invalid username, example username: username@example.com")
+    password = data.get("Password")
+    if data.get('Username') == None or password == None:
+        return failure ("Username and password can't be empty")
+    if Record.query.filter_by(Username = username).first():
+        return failure ("This username already exists")
+    Owner_Id = current_user.get_id()
+    new_record = Record(Name=name, Username=username, Password=password, Owner_Id=Owner_Id, AccountType = 'Personal')
+    try:
+        db.session.add(new_record)
+        db.session.commit()
+        password_id = Record.query.filter_by(Username = username).first().Id
+        return success (str(password_id))
+    except:
+        return failure ('There was an issue adding the new password')
 
 @app.route('/', methods=['POST'])
 def signin_post():
+    if current_user.is_authenticated:
+        return failure ("Already logged in")
     data = request.json
     username = func.lower(data.get('Username'))
     password = data.get('Password')
@@ -248,25 +266,22 @@ def signin_post():
         flash('Invalid username or password', 'Error!')
         return redirect(url_for('login'))
     """
-"""    
-@LoginManager.unauthorized_handler
-def unauthorized():
-    flash ('Login required', 'error')
-    return a_response
 """
 @app.route('/')
 def login():
     return render_template('signin.html')
-
+"""
 @app.route('/about')
 def about():
     return 'Developed by Egirna Technologies'
 
+"""
 @app.route('/details/<int:Id>')
 @login_required
 def details(Id):
     record_to_update = Record.query.get_or_404(Id)
     return render_template('details.html', record = record_to_update)
+"""
 
 @app.route('/random')
 def randomGen():
@@ -274,7 +289,7 @@ def randomGen():
     password = ''
     for c in range(16):
         password += random.choice(chars)
-    return {'password':password}
+    return success(password)
 
 @app.route('/logout')
 def logout():
