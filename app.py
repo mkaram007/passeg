@@ -193,7 +193,6 @@ def getPasswords():
     if not current_user.is_authenticated:
         return failure ("Login required")
     records = Record.query.filter_by(Owner_Id = current_user.get_id())
-    record = records[0]
     recs = []
     for record in records:
         recs.append(str({"id":record.Id, "Name":record.Name, "Username":record.Username, "Password":record.Password}))
