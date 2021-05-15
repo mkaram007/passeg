@@ -104,6 +104,11 @@ def getCurrentUser():
     else:
         return failure("Login required")
 
+@app.route('/editUser', methods = ['POST'])
+def editUser():
+    if current_user.is_authenticated:
+        return True
+
 
 @app.route('/signup', methods=['POST'])
 def sign_up():
@@ -147,6 +152,7 @@ def sign_up():
     #except:
     #    return "There was an issue signing up"
     '''
+
 
 class Record(UserMixin, db.Model):
     Id = db.Column(db.Integer, primary_key=True)
@@ -203,6 +209,8 @@ def getPasswords():
 @app.route('/update/<int:Id>', methods=['GET', 'POST'])
 #@login_required
 def update(Id):
+    if not current_user.is_authenticated:
+        return failure ("Login required")
     record_to_update = Record.query.get_or_404(Id)
     if request.method == 'POST':
         data = request.json
