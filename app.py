@@ -104,10 +104,26 @@ def getCurrentUser():
     else:
         return failure("Login required")
 
-@app.route('/editUser', methods = ['POST'])
-def editUser():
-    if current_user.is_authenticated:
-        return True
+@app.route('/editUser/<string:username>', methods = ['POST'])
+def editUser(username):
+    if not current_user.is_authenticated:
+        return failure('Login required')
+    data = request.json
+    newName = data.get('Name')
+    newUsername = data.get('Username')
+
+
+    userToEdit = User.query.filter_by(Username = username).first()
+    if not userToEdit:
+        return failure ("This user doesn't exist")
+    userToEdit.Username = newUsername
+    userToEdit.Name = newName
+    try:
+        db.session.commit()
+        return success("User details modified successfully")
+    except:
+        return failure ("There was a problem updating this user details")
+
 
 
 @app.route('/signup', methods=['POST'])
