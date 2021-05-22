@@ -97,9 +97,25 @@ class User(UserMixin, db.Model):
     def __repr__(self):
         return ("User Created", "info")
 
-#@app.route('/shareWith')
-#def shareWith():
-#    if current_user.is_authenticated:
+@app.route('/shareWith/<int:id>/<int:userId>', methods=['POST'])
+@login_required
+def shareWith(id, userId):
+    user = User.query.get(userId)
+    if not user:
+        return failure("User doesn't exist")
+    record = Record.query.get(id)
+    if not record:
+        return failure("Record doesn't exists")
+    shared_with = list(record.shared_with)
+    shared_with.append(userId)
+    record.shared_with = shared_with
+    try:
+        db.session.commit()
+        return success (record.shared_with)
+    except:
+        return failure("An error occured")
+
+    
 
 @app.route('/getCurrentUser')
 @login_required
@@ -223,10 +239,10 @@ def getPasswords():
     return success (recs)
 
 
-@app.route('/update/<int:Id>', methods=['GET', 'POST'])
+@app.route('/update/<int:id>', methods=['GET', 'POST'])
 @login_required
-def update(Id):
-    record_to_update = Record.query.get_or_404(Id)
+def update(id):
+    record_to_update = Record.query.get_or_404(id)
     if request.method == 'POST':
         data = request.json
         record_to_update.Name = data.get('Name')
@@ -272,8 +288,7 @@ def add():
     if Record.query.filter_by(Username = username).first():
         return failure ("This username already exists")
     Owner_Id = current_user.get_id()
-    shared_with=[]
-    shared_with.append(current_user.get_id())
+    shared_with.append(int(current_user.get_id()))
     new_record = Record(Name=name, Username=username, Password=password, Owner_Id=Owner_Id, AccountType = 'Personal', shared_with = shared_with)
 #    try:
     db.session.add(new_record)
