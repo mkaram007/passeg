@@ -180,6 +180,7 @@ class Record(UserMixin, db.Model):
     Password = db.Column(db.String(500), nullable= False)
     date_created = db.Column(db.DateTime, default=datetime.utcnow)
     date_modified = db.Column(db.DateTime, default=datetime.utcnow)
+    shared_with = db.Column(db.PickleType, nullable= False)
 
     def __repr__(self):
         return ("Can't create password", "error")
@@ -254,7 +255,7 @@ def getPassword(Id):
     password = Record.query.get_or_404(Id)
     if not password:
         return failure("Password not found")
-    return {"status":"success", "Name":password.Name, "Username":password.Username, "Password":password.Password}
+    return {"status":"success", "Name":password.Name, "Username":password.Username, "Password":password.Password, "Shared with":password.shared_with}
 
 """
 @app.route('/clipboard.min.js')
@@ -276,14 +277,16 @@ def add():
     if Record.query.filter_by(Username = username).first():
         return failure ("This username already exists")
     Owner_Id = current_user.get_id()
-    new_record = Record(Name=name, Username=username, Password=password, Owner_Id=Owner_Id, AccountType = 'Personal')
-    try:
-        db.session.add(new_record)
-        db.session.commit()
-        password_id = Record.query.filter_by(Username = username).first().Id
-        return success (str(password_id))
-    except:
-        return failure ('There was an issue adding the new password')
+    shared_with=[]
+    shared_with.append(current_user.get_id())
+    new_record = Record(Name=name, Username=username, Password=password, Owner_Id=Owner_Id, AccountType = 'Personal', shared_with = shared_with)
+#    try:
+    db.session.add(new_record)
+    db.session.commit()
+    password_id = Record.query.filter_by(Username = username).first().Id
+    return success (str(password_id))
+#    except:
+#        return failure ('There was an issue adding the new password')
 
 @app.route('/', methods=['POST'])
 def signin_post():
