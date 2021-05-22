@@ -43,8 +43,8 @@ def not_found(error):
 
 
 @app.errorhandler(401)
-def unauthorized(error):
-        #return make_response(jsonify(failure('unauthorized')), 401)
+@login_manager.unauthorized_handler
+def unauthorized():
         return failure("Login required")
 
 
@@ -97,12 +97,14 @@ class User(UserMixin, db.Model):
     def __repr__(self):
         return ("User Created", "info")
 
+#@app.route('/shareWith')
+#def shareWith():
+#    if current_user.is_authenticated:
+
 @app.route('/getCurrentUser')
+@login_required
 def getCurrentUser():
-    if current_user.is_authenticated:
-        return success(current_user.get_id())
-    else:
-        return failure("Login required")
+    return success(current_user.get_id())
 
 @app.route('/editUser/<string:username>', methods = ['POST'])
 def editUser(username):
@@ -192,11 +194,9 @@ def index():
     return render_template('index.html', records=records)
 """
 @app.route('/delete/<int:Id>', methods=['POST'])
+@login_required
 def delete(Id):
-    if current_user.is_authenticated:
-        password_to_delete = Record.query.get_or_404(Id)
-    else:
-        return failure ("Login required")
+    password_to_delete = Record.query.get_or_404(Id)
     try:
         db.session.delete(password_to_delete)
         db.session.commit()
@@ -213,9 +213,8 @@ def getPasswordId(username):
         return failure ("Password not found")
 
 @app.route('/getPasswords')
+@login_required
 def getPasswords():
-    if not current_user.is_authenticated:
-        return failure ("Login required")
     records = Record.query.filter_by(Owner_Id = current_user.get_id())
     recs = []
     for record in records:
@@ -225,10 +224,8 @@ def getPasswords():
 
 
 @app.route('/update/<int:Id>', methods=['GET', 'POST'])
-#@login_required
+@login_required
 def update(Id):
-    if not current_user.is_authenticated:
-        return failure ("Login required")
     record_to_update = Record.query.get_or_404(Id)
     if request.method == 'POST':
         data = request.json
@@ -248,10 +245,9 @@ def update(Id):
         return success ("Password exists")
 
 @app.route('/getPassword/<int:Id>')
+@login_required
 def getPassword(Id):
 
-    if not current_user.is_authenticated:
-        return failure ("Login required")
     password = Record.query.get_or_404(Id)
     if not password:
         return failure("Password not found")
@@ -263,9 +259,8 @@ def js():
     return render_template('clipboard.min.js')
 """
 @app.route('/add', methods=['POST'])
+@login_required
 def add():
-    if not current_user.is_authenticated:
-        return failure ("Login required")
     data = request.json
     name = data.get('Name')
     username = func.lower(data.get('Username'))
