@@ -106,6 +106,8 @@ def shareWith(id, userId):
     record = Record.query.get(id)
     if not record:
         return failure("Record doesn't exists")
+    if int(current_user.get_id()) != record.Owner_Id:
+        return failure("You're not allowed to share this password")
     shared_with = list(record.shared_with)
     shared_with.append(userId)
     record.shared_with = list(set(shared_with))
@@ -247,6 +249,9 @@ def getPasswords():
 @login_required
 def update(id):
     record_to_update = Record.query.get_or_404(id)
+    currentUser = int(current_user.get_id())
+    if record_to_update.Owner_Id != currentUser or currentUser not in record_to_update.shared_with:
+        return failure("You're not allowed to update this password")
     if request.method == 'POST':
         data = request.json
         record_to_update.Name = data.get('Name')
@@ -286,8 +291,9 @@ def add():
         return failure ("Username and password can't be empty")
     if Record.query.filter_by(Username = username).first():
         return failure ("This username already exists")
-    Owner_Id = current_user.get_id()
-    shared_with.append(int(current_user.get_id()))
+    Owner_Id = int(current_user.get_id())
+    shared_with = []
+    shared_with.append(current_user.get_id())
     new_record = Record(Name=name, Username=username, Password=password, Owner_Id=Owner_Id, AccountType = 'Personal', shared_with = shared_with)
 #    try:
     db.session.add(new_record)
