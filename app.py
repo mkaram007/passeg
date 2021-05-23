@@ -148,6 +148,8 @@ def revokeOwner(passwordId, userId):
     owners = list(record.Owner_Id)
     try:
         owners.remove(userId)
+        if len(owners) == 0:
+            return failure("You are the only owner of this password")
     except ValueError:
         return failure('This user is already not an owner of this password')
     record.Owner_Id = owners
@@ -227,7 +229,8 @@ def editUser(username):
     if not userToEdit:
         return failure ("This user doesn't exist")
     if check_password_hash(userToEdit.Master_Password, password):
-        userToEdit.Username = newUsername
+        if newUsername:
+            userToEdit.Username = newUsername
         userToEdit.Name = newName
         try:
             db.session.commit()
@@ -302,6 +305,7 @@ def delete(Id):
 
 @app.route('/getPasswordId/<string:username>')
 def getPasswordId(username):
+    username = func.lower(username)
     record = Record.query.filter_by(Username = username).first()
     if record:
         return success (record.Id)
