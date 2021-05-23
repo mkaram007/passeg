@@ -108,7 +108,7 @@ def shareWith(id, userId):
         return failure("Record doesn't exists")
     shared_with = list(record.shared_with)
     shared_with.append(userId)
-    record.shared_with = shared_with
+    record.shared_with = list(set(shared_with))
     try:
         db.session.commit()
         return success (record.shared_with)
@@ -202,13 +202,7 @@ class Record(UserMixin, db.Model):
 
     def __repr__(self):
         return ("Can't create password", "error")
-"""
-@app.route('/home', methods=['POST','GET'])
-@login_required
-def index():
-    records = Record.query.order_by(Record.date_created).filter_by(Owner_Id=current_user.get_id())
-    return render_template('index.html', records=records)
-"""
+
 @app.route('/delete/<int:Id>', methods=['POST'])
 @login_required
 def delete(Id):
@@ -231,10 +225,20 @@ def getPasswordId(username):
 @app.route('/getPasswords')
 @login_required
 def getPasswords():
-    records = Record.query.filter_by(Owner_Id = current_user.get_id())
+    #records = Record.query.filter_by( any(Record.shared_with) = current_user.get_id())
+    #records = Record.query.filter(int(current_user.get_id()).in_([1])).all()
+    ##records = Record.query.filter(Record.Owner_Id.in_([current_user.get_id(),])).all()
+    records = []
+    allRecords = Record.query.all()
+    for record in allRecords:
+        if int(current_user.get_id()) in record.shared_with:
+            records.append(record)
+
+    #records = Record.query.filter_by(Record.shared_with.any_(shared_with = current_user.get_id()))
+    #records = Record.query.filter(Record.shared_with.has(current_user.get_id()))
     recs = []
     for record in records:
-        recs.append(str({"id":record.Id, "Name":record.Name, "Username":record.Username, "Password":record.Password}))
+        recs.append(str({"id":record.Id, "Name":record.Name, "Username":record.Username, "Password":record.Password, "Owner":record.Owner_Id, "Shared with":record.shared_with}))
     ','.join(recs)
     return success (recs)
 
@@ -269,11 +273,6 @@ def getPassword(Id):
         return failure("Password not found")
     return {"status":"success", "Name":password.Name, "Username":password.Username, "Password":password.Password, "Shared with":password.shared_with}
 
-"""
-@app.route('/clipboard.min.js')
-def js():
-    return render_template('clipboard.min.js')
-"""
 @app.route('/add', methods=['POST'])
 @login_required
 def add():
@@ -316,27 +315,11 @@ def signin_post():
         session['current_username']='Welcome '+user.Username+'!'
 
     return success ("Logged in successfully")
-    """ 
-    except AttributeError:
-        flash('Invalid username or password', 'Error!')
-        return redirect(url_for('login'))
-    """
-"""
-@app.route('/')
-def login():
-    return render_template('signin.html')
-"""
+
 @app.route('/about')
 def about():
     return 'Developed by Egirna Technologies'
 
-"""
-@app.route('/details/<int:Id>')
-@login_required
-def details(Id):
-    record_to_update = Record.query.get_or_404(Id)
-    return render_template('details.html', record = record_to_update)
-"""
 
 @app.route('/random')
 def randomGen():
