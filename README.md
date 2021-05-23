@@ -95,4 +95,5 @@ May 19 08:20:20 ubuntu-bionic python3[12853]:  * Debugger PIN: 272-630-519
 10-Get current user id  
 11-Edit user details  
 12-Get all passwords for a user  
-13-shareWith to share a password with a user
+13-shareWith to share a password with a user  
+14-makeOwner
