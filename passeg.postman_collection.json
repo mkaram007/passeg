@@ -27,7 +27,57 @@
 				},
 				"description": "This request gets the details of the stored password"
 			},
-			"response": []
+			"response": [
+				{
+					"name": "/getPassword/<ID>",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://127.0.0.1:8000/getPassword/3",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"getPassword",
+								"3"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Content-Type",
+							"value": "application/json"
+						},
+						{
+							"key": "Content-Length",
+							"value": "171"
+						},
+						{
+							"key": "Vary",
+							"value": "Cookie"
+						},
+						{
+							"key": "Server",
+							"value": "Werkzeug/1.0.1 Python/3.6.9"
+						},
+						{
+							"key": "Date",
+							"value": "Sun, 23 May 2021 11:21:31 GMT"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"Name\": null,\n    \"Owners\": [\n        1,\n        2\n    ],\n    \"Password\": \"123\",\n    \"Shared with\": [\n        1\n    ],\n    \"Username\": \"1@2.2asd3asdasdasdasd4\",\n    \"status\": \"success\"\n}"
+				}
+			]
 		},
 		{
 			"name": "/ (Login)",
@@ -56,7 +106,66 @@
 				},
 				"description": "Post the user credentials to sign in"
 			},
-			"response": []
+			"response": [
+				{
+					"name": "/ (Login)",
+					"originalRequest": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\"Username\":\"5@5.5\", \"Password\":\"123\"}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://127.0.0.1:8000",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000"
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Content-Type",
+							"value": "application/json"
+						},
+						{
+							"key": "Content-Length",
+							"value": "63"
+						},
+						{
+							"key": "Vary",
+							"value": "Cookie"
+						},
+						{
+							"key": "Set-Cookie",
+							"value": "session=.eJwljjsOAkEMxa4CU1Nk57vhIpRokpcIJD7SwFaIu7NAaTf2Kxx92OMU9s-x2C4czwj7AE_oJtpd4caEUiiBRFznhsYoWtS6JCdWmgheiCdFalIlzo25oaA6VLK7xSyW0wpK4F4qZkxJNAvUCidnWgu1SpMcZ6YewzqyPGz8b76oyxh2e_7srV9t1Qe76P1qm5jyNrw_gAA9kA.YKo65w.YdVGzWxBcwDtpyjoCgnvuYnPnHU; HttpOnly; Path=/"
+						},
+						{
+							"key": "Server",
+							"value": "Werkzeug/1.0.1 Python/3.6.9"
+						},
+						{
+							"key": "Date",
+							"value": "Sun, 23 May 2021 11:22:15 GMT"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"data\": \"Logged in successfully\",\n    \"status\": \"success\"\n}"
+				}
+			]
 		},
 		{
 			"name": "/add",
@@ -65,7 +174,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\"Name\":\"TESTINGNAME\", \"Username\":\"TESTINGUSERNAME2\", \"Password\":\"TESTINGPASSWORD2\"}",
+					"raw": "{\"Name\":\"TESTINGNAME\", \"Username\":\"TESTINGUSERNAME2@test.test\", \"Password\":\"TESTINGPASSWORD2\"}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -88,7 +197,65 @@
 				},
 				"description": "Post a password details"
 			},
-			"response": []
+			"response": [
+				{
+					"name": "/add",
+					"originalRequest": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\"Name\":\"TESTINGNAME\", \"Username\":\"TESTINGUSERNAME2@test.test\", \"Password\":\"TESTINGPASSWORD2\"}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://127.0.0.1:8000/add",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"add"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Content-Type",
+							"value": "application/json"
+						},
+						{
+							"key": "Content-Length",
+							"value": "51"
+						},
+						{
+							"key": "Vary",
+							"value": "Cookie"
+						},
+						{
+							"key": "Server",
+							"value": "Werkzeug/1.0.1 Python/3.6.9"
+						},
+						{
+							"key": "Date",
+							"value": "Sun, 23 May 2021 11:22:35 GMT"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"data\": [\n        21\n    ],\n    \"status\": \"success\"\n}"
+				}
+			]
 		},
 		{
 			"name": "/update/<ID>",
@@ -97,7 +264,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\"Name\":\"TESTINGNAME\", \"Username\":\"TESTINGUSERNAME\", \"Password\":\"TESTINGPASSWORD\"}",
+					"raw": "{\"Name\":\"TESTINGNAME\", \"Username\":\"TESTINGUSERNAME@asd.asd\", \"Password\":\"TESTINGPASSWORD\"}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -121,7 +288,66 @@
 				},
 				"description": "Post to new password details"
 			},
-			"response": []
+			"response": [
+				{
+					"name": "/update/<ID>",
+					"originalRequest": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\"Name\":\"TESTINGNAME\", \"Username\":\"TESTINGUSERNAME@asd.asd\", \"Password\":\"TESTINGPASSWORD\"}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://127.0.0.1:8000/update/1",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"update",
+								"1"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Content-Type",
+							"value": "application/json"
+						},
+						{
+							"key": "Content-Length",
+							"value": "79"
+						},
+						{
+							"key": "Vary",
+							"value": "Cookie"
+						},
+						{
+							"key": "Server",
+							"value": "Werkzeug/1.0.1 Python/3.6.9"
+						},
+						{
+							"key": "Date",
+							"value": "Sun, 23 May 2021 11:22:55 GMT"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"data\": \"Password has been updated successfully\",\n    \"status\": \"success\"\n}"
+				}
+			]
 		},
 		{
 			"name": "/getPasswordId/<USERNAME>",
@@ -129,7 +355,7 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "http://127.0.0.1:8000/getPasswordId/testingusername2",
+					"raw": "http://127.0.0.1:8000/getPasswordId/TESTINGUSERNAME2@test.test",
 					"protocol": "http",
 					"host": [
 						"127",
@@ -140,12 +366,58 @@
 					"port": "8000",
 					"path": [
 						"getPasswordId",
-						"testingusername2"
+						"TESTINGUSERNAME2@test.test"
 					]
 				},
 				"description": "Getting the Id of a password"
 			},
-			"response": []
+			"response": [
+				{
+					"name": "/getPasswordId/<USERNAME>",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://127.0.0.1:8000/getPasswordId/TESTINGUSERNAME2@test.test",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"getPasswordId",
+								"TESTINGUSERNAME2@test.test"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Content-Type",
+							"value": "application/json"
+						},
+						{
+							"key": "Content-Length",
+							"value": "41"
+						},
+						{
+							"key": "Server",
+							"value": "Werkzeug/1.0.1 Python/3.6.9"
+						},
+						{
+							"key": "Date",
+							"value": "Sun, 23 May 2021 11:26:09 GMT"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"data\": 21,\n    \"status\": \"success\"\n}"
+				}
+			]
 		},
 		{
 			"name": "/delete/<ID>",
@@ -153,7 +425,7 @@
 				"method": "POST",
 				"header": [],
 				"url": {
-					"raw": "http://127.0.0.1:8000/delete/3",
+					"raw": "http://127.0.0.1:8000/delete/21",
 					"protocol": "http",
 					"host": [
 						"127",
@@ -164,11 +436,61 @@
 					"port": "8000",
 					"path": [
 						"delete",
-						"3"
+						"21"
 					]
 				}
 			},
-			"response": []
+			"response": [
+				{
+					"name": "/delete/<ID>",
+					"originalRequest": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "http://127.0.0.1:8000/delete/21",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"delete",
+								"21"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Content-Type",
+							"value": "application/json"
+						},
+						{
+							"key": "Content-Length",
+							"value": "41"
+						},
+						{
+							"key": "Vary",
+							"value": "Cookie"
+						},
+						{
+							"key": "Server",
+							"value": "Werkzeug/1.0.1 Python/3.6.9"
+						},
+						{
+							"key": "Date",
+							"value": "Sun, 23 May 2021 11:26:58 GMT"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"data\": 21,\n    \"status\": \"success\"\n}"
+				}
+			]
 		},
 		{
 			"name": "/random (Get random password)",
@@ -286,7 +608,60 @@
 					]
 				}
 			},
-			"response": []
+			"response": [
+				{
+					"name": "/logout",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://127.0.0.1:8000/logout",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"logout"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Content-Type",
+							"value": "application/json"
+						},
+						{
+							"key": "Content-Length",
+							"value": "64"
+						},
+						{
+							"key": "Vary",
+							"value": "Cookie"
+						},
+						{
+							"key": "Set-Cookie",
+							"value": "session=eyJjdXJyZW50X3VzZXJuYW1lIjoiV2VsY29tZSAxMjMhIn0.YKo62g.wvalfv4pTNSOWq61EF0AH8bgNAw; HttpOnly; Path=/"
+						},
+						{
+							"key": "Server",
+							"value": "Werkzeug/1.0.1 Python/3.6.9"
+						},
+						{
+							"key": "Date",
+							"value": "Sun, 23 May 2021 11:22:02 GMT"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"data\": \"Logged out successfully\",\n    \"status\": \"success\"\n}"
+				}
+			]
 		},
 		{
 			"name": "/getCurrentUser",
@@ -308,7 +683,56 @@
 					]
 				}
 			},
-			"response": []
+			"response": [
+				{
+					"name": "/getCurrentUser",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://127.0.0.1:8000/getCurrentUser",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"getCurrentUser"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Content-Type",
+							"value": "application/json"
+						},
+						{
+							"key": "Content-Length",
+							"value": "42"
+						},
+						{
+							"key": "Vary",
+							"value": "Cookie"
+						},
+						{
+							"key": "Server",
+							"value": "Werkzeug/1.0.1 Python/3.6.9"
+						},
+						{
+							"key": "Date",
+							"value": "Sun, 23 May 2021 11:27:10 GMT"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"data\": \"2\",\n    \"status\": \"success\"\n}"
+				}
+			]
 		},
 		{
 			"name": "/getPasswords",
@@ -330,7 +754,56 @@
 					]
 				}
 			},
-			"response": []
+			"response": [
+				{
+					"name": "/getPasswords",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://127.0.0.1:8000/getPasswords",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"getPasswords"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Content-Type",
+							"value": "application/json"
+						},
+						{
+							"key": "Content-Length",
+							"value": "2184"
+						},
+						{
+							"key": "Vary",
+							"value": "Cookie"
+						},
+						{
+							"key": "Server",
+							"value": "Werkzeug/1.0.1 Python/3.6.9"
+						},
+						{
+							"key": "Date",
+							"value": "Sun, 23 May 2021 11:27:21 GMT"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"data\": [\n        \"{'id': 1, 'Name': 'TESTINGNAME', 'Username': 'TESTINGUSERNAME@asd.asd', 'Password': 'TESTINGPASSWORD', 'Owner': [1, 2], 'Shared with': [1, 2, '2']}\",\n        \"{'id': 3, 'Name': None, 'Username': '1@2.2asd3asdasdasdasd4', 'Password': '123', 'Owner': [1, 2], 'Shared with': [1]}\",\n        \"{'id': 6, 'Name': None, 'Username': '1@2.2asd3asdasdasdaaasdasdsdsd4', 'Password': '123', 'Owner': [2], 'Shared with': [2]}\",\n        \"{'id': 7, 'Name': None, 'Username': '1@2.2asd3asdasdasdaaasdsdsd4', 'Password': '123', 'Owner': [2], 'Shared with': [2]}\",\n        \"{'id': 8, 'Name': None, 'Username': '1@2.2asd3asdasdasdaaasdsdsd4', 'Password': '123', 'Owner': [2], 'Shared with': [2]}\",\n        \"{'id': 9, 'Name': None, 'Username': '1@2.2asd3asdasdasdaaasdsdsd4', 'Password': '123', 'Owner': [2], 'Shared with': [2]}\",\n        \"{'id': 10, 'Name': None, 'Username': '1@2.2asd3asdasdasdaaasdsdsd4', 'Password': '123', 'Owner': [2], 'Shared with': [2]}\",\n        \"{'id': 11, 'Name': None, 'Username': '1@2.2asd3asdasdasdaaasdsdsd4', 'Password': '123', 'Owner': [2], 'Shared with': [2]}\",\n        \"{'id': 12, 'Name': None, 'Username': '1@2.2asd3asdasdasdaaasdsdsd4', 'Password': '123', 'Owner': [1, 2], 'Shared with': [1, 2]}\",\n        \"{'id': 13, 'Name': None, 'Username': '1@2.2asd3asdasdasdaaasdsdsd4', 'Password': '123', 'Owner': [2], 'Shared with': [2]}\",\n        \"{'id': 14, 'Name': None, 'Username': '1@2.2asd3asdasdasdaaasdsdsd4', 'Password': '123', 'Owner': [2], 'Shared with': [2]}\",\n        \"{'id': 15, 'Name': None, 'Username': '1@2.2asd3asdasdasdaaasdsdsd4', 'Password': '123', 'Owner': [2], 'Shared with': [2]}\",\n        \"{'id': 16, 'Name': None, 'Username': '1@2.2asd3asdasdasdaaasdsdsd4', 'Password': '123', 'Owner': [1, 2], 'Shared with': [1, 2]}\",\n        \"{'id': 17, 'Name': None, 'Username': '1@2.2asd3asdasdasdaaasasddsdsd4', 'Password': '123', 'Owner': [2], 'Shared with': [1, 2]}\",\n        \"{'id': 18, 'Name': None, 'Username': '1@2.2asd3asdasdasdaaasasasdddsdsd4', 'Password': '123', 'Owner': [1, 2], 'Shared with': []}\",\n        \"{'id': 20, 'Name': None, 'Username': '1@asd2.2asd3asdasdasdaaasasdasasdddsdsd4', 'Password': '123', 'Owner': [1], 'Shared with': [1, 2]}\"\n    ],\n    \"status\": \"success\"\n}"
+				}
+			]
 		},
 		{
 			"name": "/signup",
@@ -339,7 +812,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\"Name\":\"TESTNAME\", \"Username\":\"2@2.2\",\"Password\":\"123\"}",
+					"raw": "{\"Name\":\"TESTNAME\", \"Username\":\"admin@test.com\",\"Password\":\"123\"}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -361,27 +834,231 @@
 					]
 				}
 			},
-			"response": []
+			"response": [
+				{
+					"name": "/signup",
+					"originalRequest": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\"Name\":\"TESTNAME\", \"Username\":\"admin@test.com\",\"Password\":\"123\"}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://127.0.0.1:8000/signup",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"signup"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Content-Type",
+							"value": "application/json"
+						},
+						{
+							"key": "Content-Length",
+							"value": "75"
+						},
+						{
+							"key": "Vary",
+							"value": "Cookie"
+						},
+						{
+							"key": "Set-Cookie",
+							"value": "session=eyJfZnJlc2giOmZhbHNlLCJjdXJyZW50X3VzZXJuYW1lIjoiV2VsY29tZSAyMzQhIn0.YKo8QQ.yRf4IlyJlOmhPZVat4_pryCjT5o; HttpOnly; Path=/"
+						},
+						{
+							"key": "Server",
+							"value": "Werkzeug/1.0.1 Python/3.6.9"
+						},
+						{
+							"key": "Date",
+							"value": "Sun, 23 May 2021 11:28:01 GMT"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"data\": \"Registeration completed with ID: 5\",\n    \"status\": \"success\"\n}"
+				}
+			]
 		},
 		{
 			"name": "/editUser/<USERNAME>",
 			"request": {
-				"method": "GET",
+				"method": "POST",
 				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"Name\":\"Test Admin\", \"Password\":\"123\"}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
 				"url": {
-					"raw": ""
+					"raw": "http://127.0.0.1:8000/editUser/admin@test.com",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8000",
+					"path": [
+						"editUser",
+						"admin@test.com"
+					]
 				}
 			},
-			"response": []
+			"response": [
+				{
+					"name": "/editUser/<USERNAME>",
+					"originalRequest": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\"Name\":\"Test Admin\", \"Password\":\"123\"}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://127.0.0.1:8000/editUser/admin@test.com",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"editUser",
+								"admin@test.com"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Content-Type",
+							"value": "application/json"
+						},
+						{
+							"key": "Content-Length",
+							"value": "75"
+						},
+						{
+							"key": "Server",
+							"value": "Werkzeug/1.0.1 Python/3.6.9"
+						},
+						{
+							"key": "Date",
+							"value": "Sun, 23 May 2021 11:31:04 GMT"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"data\": \"User details modified successfully\",\n    \"status\": \"success\"\n}"
+				}
+			]
 		},
 		{
 			"name": "/shareWith/<REC_ID>/<USER_ID>",
 			"request": {
-				"method": "GET",
+				"method": "POST",
 				"header": [],
-				"url": null
+				"url": {
+					"raw": "http://127.0.0.1:8000/shareWith/21/3",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8000",
+					"path": [
+						"shareWith",
+						"21",
+						"3"
+					]
+				}
 			},
-			"response": []
+			"response": [
+				{
+					"name": "/shareWith/<REC_ID>/<USER_ID>",
+					"originalRequest": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "http://127.0.0.1:8000/shareWith/21/3",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"shareWith",
+								"21",
+								"3"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Content-Type",
+							"value": "application/json"
+						},
+						{
+							"key": "Content-Length",
+							"value": "50"
+						},
+						{
+							"key": "Vary",
+							"value": "Cookie"
+						},
+						{
+							"key": "Server",
+							"value": "Werkzeug/1.0.1 Python/3.6.9"
+						},
+						{
+							"key": "Date",
+							"value": "Sun, 23 May 2021 11:33:18 GMT"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"data\": [\n        3\n    ],\n    \"status\": \"success\"\n}"
+				}
+			]
 		},
 		{
 			"name": "/makeOwner/<REC_ID>/<USER_ID>",
@@ -389,7 +1066,7 @@
 				"method": "POST",
 				"header": [],
 				"url": {
-					"raw": "http://127.0.0.1:8000/makeOwner/1/2",
+					"raw": "http://127.0.0.1:8000/makeOwner/21/3",
 					"protocol": "http",
 					"host": [
 						"127",
@@ -400,12 +1077,213 @@
 					"port": "8000",
 					"path": [
 						"makeOwner",
-						"1",
+						"21",
+						"3"
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "/makeOwner/<REC_ID>/<USER_ID>",
+					"originalRequest": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "http://127.0.0.1:8000/makeOwner/21/3",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"makeOwner",
+								"21",
+								"3"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Content-Type",
+							"value": "application/json"
+						},
+						{
+							"key": "Content-Length",
+							"value": "58"
+						},
+						{
+							"key": "Vary",
+							"value": "Cookie"
+						},
+						{
+							"key": "Server",
+							"value": "Werkzeug/1.0.1 Python/3.6.9"
+						},
+						{
+							"key": "Date",
+							"value": "Sun, 23 May 2021 11:33:47 GMT"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"data\": [\n        2,\n        3\n    ],\n    \"status\": \"success\"\n}"
+				}
+			]
+		},
+		{
+			"name": "/revokeShare/<REC_ID>/<USER_ID>",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "http://127.0.0.1:8000/revokeShare/21/3",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8000",
+					"path": [
+						"revokeShare",
+						"21",
+						"3"
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "/revokeShare/<REC_ID>/<USER_ID>",
+					"originalRequest": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "http://127.0.0.1:8000/revokeShare/21/3",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"revokeShare",
+								"21",
+								"3"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Content-Type",
+							"value": "application/json"
+						},
+						{
+							"key": "Content-Length",
+							"value": "41"
+						},
+						{
+							"key": "Vary",
+							"value": "Cookie"
+						},
+						{
+							"key": "Server",
+							"value": "Werkzeug/1.0.1 Python/3.6.9"
+						},
+						{
+							"key": "Date",
+							"value": "Sun, 23 May 2021 11:34:08 GMT"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"data\": [],\n    \"status\": \"success\"\n}"
+				}
+			]
+		},
+		{
+			"name": "/revokeOwner/<REC_ID>/<USER_ID>",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "http://127.0.0.1:8000/revokeOwner/23/2",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8000",
+					"path": [
+						"revokeOwner",
+						"23",
 						"2"
 					]
 				}
 			},
-			"response": []
+			"response": [
+				{
+					"name": "/revokeOwner/<REC_ID>/<USER_ID>",
+					"originalRequest": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "http://127.0.0.1:8000/revokeOwner/21/3",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"revokeOwner",
+								"21",
+								"3"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Content-Type",
+							"value": "application/json"
+						},
+						{
+							"key": "Content-Length",
+							"value": "50"
+						},
+						{
+							"key": "Vary",
+							"value": "Cookie"
+						},
+						{
+							"key": "Server",
+							"value": "Werkzeug/1.0.1 Python/3.6.9"
+						},
+						{
+							"key": "Date",
+							"value": "Sun, 23 May 2021 11:34:42 GMT"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"data\": [\n        2\n    ],\n    \"status\": \"success\"\n}"
+				}
+			]
 		}
 	]
 }
