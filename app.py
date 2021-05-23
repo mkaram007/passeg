@@ -106,7 +106,7 @@ def shareWith(id, userId):
     record = Record.query.get(id)
     if not record:
         return failure("Record doesn't exists")
-    if int(current_user.get_id()) != record.Owner_Id:
+    if int(current_user.get_id()) not in record.Owner_Id:
         return failure("You're not allowed to share this password")
     shared_with = list(record.shared_with)
     shared_with.append(userId)
@@ -171,6 +171,9 @@ def sign_up():
     db.session.add(new_user)
     db.session.commit()
     user_id = User.query.filter_by(Username = username).first().id
+    if current_user.is_authenticated:
+        logout_user()
+
     return success ("Registeration completed with ID: "+ str(user_id))
     '''
     token = generate_confirmation_token(request.form['Username'])
@@ -193,7 +196,7 @@ def sign_up():
 
 class Record(UserMixin, db.Model):
     Id = db.Column(db.Integer, primary_key=True)
-    Owner_Id = db.Column(db.Integer, nullable=False)
+    Owner_Id = db.Column(db.PickleType, nullable=False)
     AccountType = db.Column(db.String(10), nullable=False)
     Name = db.Column(db.String(200), nullable= True)
     Username = db.Column(db.String(500), nullable= False)
@@ -209,7 +212,7 @@ class Record(UserMixin, db.Model):
 @login_required
 def delete(Id):
     password_to_delete = Record.query.get_or_404(Id)
-    if int(current_user.get_id()) != password_to_delete.Owner_Id:
+    if int(current_user.get_id()) not in password_to_delete.Owner_Id:
         return failure ("You're not allowed to delete this password")
     try:
         db.session.delete(password_to_delete)
@@ -252,7 +255,7 @@ def getPasswords():
 def update(id):
     record_to_update = Record.query.get_or_404(id)
     currentUser = int(current_user.get_id())
-    if record_to_update.Owner_Id != currentUser or currentUser not in record_to_update.shared_with:
+    if currentUser not in record_to_update.Owner_Id or currentUser not in record_to_update.shared_with:
         return failure("You're not allowed to update this password")
     if request.method == 'POST':
         data = request.json
@@ -278,7 +281,7 @@ def getPassword(Id):
     password = Record.query.get_or_404(Id)
     if not password:
         return failure("Password not found")
-    return {"status":"success", "Name":password.Name, "Username":password.Username, "Password":password.Password, "Shared with":password.shared_with}
+    return {"status":"success", "Name":password.Name, "Username":password.Username, "Password":password.Password, "Shared with":password.shared_with, "Owners":password.Owner_Id}
 
 @app.route('/add', methods=['POST'])
 @login_required
@@ -291,17 +294,26 @@ def add():
     password = data.get("Password")
     if data.get('Username') == None or password == None:
         return failure ("Username and password can't be empty")
-    if Record.query.filter_by(Username = username).first():
-        return failure ("This username already exists")
-    Owner_Id = int(current_user.get_id())
+    records = Record.query.filter_by(Username = username).all()
+    if records:
+        for record in records:
+            if int(current_user.get_id()) in record.Owner_Id:
+                return failure ("This username already exists")
+    currentUser = int(current_user.get_id())
+    Owner_Id = []
+    Owner_Id.append(currentUser)
     shared_with = []
-    shared_with.append(current_user.get_id())
+    shared_with.append(currentUser)
     new_record = Record(Name=name, Username=username, Password=password, Owner_Id=Owner_Id, AccountType = 'Personal', shared_with = shared_with)
 #    try:
     db.session.add(new_record)
     db.session.commit()
-    password_id = Record.query.filter_by(Username = username).first().Id
-    return success (str(password_id))
+    passwords = Record.query.filter_by(Username = username).all()
+    ids = []
+    for password in passwords:
+        ids.append(password.Id)
+
+    return success (ids)
 #    except:
 #        return failure ('There was an issue adding the new password')
 
