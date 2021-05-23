@@ -97,6 +97,45 @@ class User(UserMixin, db.Model):
     def __repr__(self):
         return ("User Created", "info")
 
+class Record(UserMixin, db.Model):
+    Id = db.Column(db.Integer, primary_key=True)
+    Owner_Id = db.Column(db.PickleType, nullable=False)
+    AccountType = db.Column(db.String(10), nullable=False)
+    Name = db.Column(db.String(200), nullable= True)
+    Username = db.Column(db.String(500), nullable= False)
+    Password = db.Column(db.String(500), nullable= False)
+    date_created = db.Column(db.DateTime, default=datetime.utcnow)
+    date_modified = db.Column(db.DateTime, default=datetime.utcnow)
+    shared_with = db.Column(db.PickleType, nullable= False)
+
+    def __repr__(self):
+        return ("Can't create password", "error")
+
+@app.route('/makeOwner/<int:passwordId>/<int:userId>', methods=['POST'])
+@login_required
+def makeOwner(passwordId, userId):
+    user = User.query.get(userId)
+    if not user:
+        return failure("User doesn't exist")
+    record = Record.query.get(passwordId)
+    if not record:
+        return failure("Record doesn't exists")
+    if int(current_user.get_id()) not in record.Owner_Id:
+        return failure("You're not allowed to make a user owner of this password")
+    owners = list(record.Owner_Id)
+    owners.append(userId)
+    record.Owner_Id = list(set(owners))
+    shared_with = list(record.shared_with)
+    shared_with.append(userId)
+    record.shared_with = list(set(shared_with))
+
+    try:
+        db.session.commit()
+        return success (record.Owner_Id)
+    except:
+        return failure("An error occured")
+
+
 @app.route('/shareWith/<int:id>/<int:userId>', methods=['POST'])
 @login_required
 def shareWith(id, userId):
@@ -194,19 +233,6 @@ def sign_up():
     '''
 
 
-class Record(UserMixin, db.Model):
-    Id = db.Column(db.Integer, primary_key=True)
-    Owner_Id = db.Column(db.PickleType, nullable=False)
-    AccountType = db.Column(db.String(10), nullable=False)
-    Name = db.Column(db.String(200), nullable= True)
-    Username = db.Column(db.String(500), nullable= False)
-    Password = db.Column(db.String(500), nullable= False)
-    date_created = db.Column(db.DateTime, default=datetime.utcnow)
-    date_modified = db.Column(db.DateTime, default=datetime.utcnow)
-    shared_with = db.Column(db.PickleType, nullable= False)
-
-    def __repr__(self):
-        return ("Can't create password", "error")
 
 @app.route('/delete/<int:Id>', methods=['POST'])
 @login_required
@@ -237,8 +263,9 @@ def getPasswords():
     ##records = Record.query.filter(Record.Owner_Id.in_([current_user.get_id(),])).all()
     records = []
     allRecords = Record.query.all()
+    currentUser = int(current_user.get_id())
     for record in allRecords:
-        if int(current_user.get_id()) in record.shared_with:
+        if currentUser in record.shared_with or currentUser in record.Owner_Id:
             records.append(record)
 
     #records = Record.query.filter_by(Record.shared_with.any_(shared_with = current_user.get_id()))
@@ -303,7 +330,6 @@ def add():
     Owner_Id = []
     Owner_Id.append(currentUser)
     shared_with = []
-    shared_with.append(currentUser)
     new_record = Record(Name=name, Username=username, Password=password, Owner_Id=Owner_Id, AccountType = 'Personal', shared_with = shared_with)
 #    try:
     db.session.add(new_record)
