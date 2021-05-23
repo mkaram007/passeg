@@ -111,6 +111,53 @@ class Record(UserMixin, db.Model):
     def __repr__(self):
         return ("Can't create password", "error")
 
+@app.route('/revokeShare/<int:id>/<int:userId>', methods=['POST'])
+@login_required
+def revokeShare(id, userId):
+    user = User.query.get(userId)
+    if not user:
+        return failure("User doesn't exist")
+    record = Record.query.get(id)
+    if not record:
+        return failure("Record doesn't exists")
+    if int(current_user.get_id()) not in record.Owner_Id:
+        return failure("You're not allowed to share this password")
+    shared_with = list(record.shared_with)
+    if userId not in shared_with:
+        return failure ("This password is already not shared with this user")
+    shared_with.remove(userId)
+    record.shared_with = shared_with
+    try:
+        db.session.commit()
+        return success (record.shared_with)
+    except:
+        return failure("An error occured")
+
+
+@app.route('/revokeOwner/<int:passwordId>/<int:userId>', methods=['POST'])
+@login_required
+def revokeOwner(passwordId, userId):
+    user = User.query.get(userId)
+    if not user:
+        return failure("User doesn't exist")
+    record = Record.query.get(passwordId)
+    if not record:
+        return failure("Record doesn't exists")
+    if int(current_user.get_id()) not in record.Owner_Id:
+        return failure("You're not allowed to make a user owner of this password")
+    owners = list(record.Owner_Id)
+    try:
+        owners.remove(userId)
+    except ValueError:
+        return failure('This user is already not an owner of this password')
+    record.Owner_Id = owners
+    try:
+        db.session.commit()
+        return success (record.Owner_Id)
+    except:
+        return failure("An error occured")
+
+
 @app.route('/makeOwner/<int:passwordId>/<int:userId>', methods=['POST'])
 @login_required
 def makeOwner(passwordId, userId):
@@ -123,8 +170,10 @@ def makeOwner(passwordId, userId):
     if int(current_user.get_id()) not in record.Owner_Id:
         return failure("You're not allowed to make a user owner of this password")
     owners = list(record.Owner_Id)
+    if userId in owners:
+        return failure ("This user is already an owner of this password")
     owners.append(userId)
-    record.Owner_Id = list(set(owners))
+    record.Owner_Id = owners
     shared_with = list(record.shared_with)
     shared_with.append(userId)
     record.shared_with = list(set(shared_with))
@@ -148,8 +197,12 @@ def shareWith(id, userId):
     if int(current_user.get_id()) not in record.Owner_Id:
         return failure("You're not allowed to share this password")
     shared_with = list(record.shared_with)
+    if userId in shared_with:
+        return failure ("This password is already shared with this user")
+    if userId in list(record.Owner_Id):
+        return failure ("You are already an owner of this password")
     shared_with.append(userId)
-    record.shared_with = list(set(shared_with))
+    record.shared_with = shared_with
     try:
         db.session.commit()
         return success (record.shared_with)
