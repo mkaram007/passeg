@@ -82,7 +82,7 @@ May 19 08:20:20 ubuntu-bionic python3[12853]:  * Debugger PIN: 272-630-519
 11-Navigation bar  
 12-Password copy button  
 13-e-mail validation  
-## 14-Current requests:  
+## 14-Current requests (Found in the postman collection file):  
 1-Signup  
 2-Login  
 3-Get Password details  
@@ -95,4 +95,5 @@ May 19 08:20:20 ubuntu-bionic python3[12853]:  * Debugger PIN: 272-630-519
 10-Get current user id  
 11-Edit user details  
 12-Get all passwords for a user  
-13-shareWith to share a password with a user
+13-shareWith to share a password with a user  
+14-makeOwner

@@ -382,6 +382,30 @@
 				"url": null
 			},
 			"response": []
+		},
+		{
+			"name": "/makeOwner/<REC_ID>/<USER_ID>",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "http://127.0.0.1:8000/makeOwner/1/2",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8000",
+					"path": [
+						"makeOwner",
+						"1",
+						"2"
+					]
+				}
+			},
+			"response": []
 		}
 	]
 }
