@@ -124,7 +124,7 @@
 			"response": []
 		},
 		{
-			"name": "/getPasswordId/<Username>",
+			"name": "/getPasswordId/<USERNAME>",
 			"request": {
 				"method": "GET",
 				"header": [],
@@ -294,7 +294,18 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": ""
+					"raw": "http://127.0.0.1:8000/getCurrentUser",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8000",
+					"path": [
+						"getCurrentUser"
+					]
 				}
 			},
 			"response": []
@@ -349,6 +360,26 @@
 						"signup"
 					]
 				}
+			},
+			"response": []
+		},
+		{
+			"name": "/editUser/<USERNAME>",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": ""
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "/shareWith/<REC_ID>/<USER_ID>",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": null
 			},
 			"response": []
 		}
