@@ -209,6 +209,8 @@ class Record(UserMixin, db.Model):
 @login_required
 def delete(Id):
     password_to_delete = Record.query.get_or_404(Id)
+    if int(current_user.get_id()) != password_to_delete.Owner_Id:
+        return failure ("You're not allowed to delete this password")
     try:
         db.session.delete(password_to_delete)
         db.session.commit()
