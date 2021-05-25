@@ -100,7 +100,7 @@ May 19 08:20:20 ubuntu-bionic python3[12853]:  * Debugger PIN: 272-630-519
 15-revokeShare  
 16-revokeOwner  
 17-createGroup  
-18-addUserToGroup
+18-addUserToGroup  
 19-addPasswordToGroup  
 20-makeGroupManager  
 21-makeGroupOwner
