@@ -93,12 +93,11 @@ class User(UserMixin, db.Model):
     Username = db.Column(db.String(500), nullable= False, unique=True)
     Master_Password = db.Column(db.String(500), nullable=False)
     Confirmed = db.Column(db.Boolean, nullable=False, default=False)
-
-    def __repr__(self):
-        return ("User Created", "info")
+    date_created = db.Column(db.DateTime, default=datetime.utcnow)
+    date_modified = db.Column(db.DateTime, default=datetime.utcnow)
 
 class Record(UserMixin, db.Model):
-    Id = db.Column(db.Integer, primary_key=True)
+    id = db.Column(db.Integer, primary_key=True)
     Owner_Id = db.Column(db.PickleType, nullable=False)
     AccountType = db.Column(db.String(10), nullable=False)
     Name = db.Column(db.String(200), nullable= True)
@@ -108,16 +107,42 @@ class Record(UserMixin, db.Model):
     date_modified = db.Column(db.DateTime, default=datetime.utcnow)
     shared_with = db.Column(db.PickleType, nullable= False)
 
-    def __repr__(self):
-        return ("Can't create password", "error")
+class Group(UserMixin, db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(200), default="New Group")
+    members = db.Column(db.PickleType)
+    shared_passwords = db.Column(db.PickleType)
+    date_created = db.Column(db.DateTime, default=datetime.utcnow)
+    date_modified = db.Column(db.DateTime, default=datetime.utcnow)
 
-@app.route('/revokeShare/<int:id>/<int:userId>', methods=['POST'])
+@app.route('/createGroup', methods=['POST'])
 @login_required
-def revokeShare(id, userId):
+def createGroup():
+    data = request.json
+    if data:
+        name = data.get('Name')
+    members = [int(current_user.get_id())]
+    shared_passwords = []
+    try:
+        newGroup = Group(name = name, members = members, shared_passwords = shared_passwords)
+    except UnboundLocalError:
+        newGroup = Group(members = members, shared_passwords = shared_passwords)
+    #try:
+    db.session.add(newGroup)
+    db.session.commit()
+    group = Group.query.order_by(Group.date_created.desc()).limit(1)[0]
+    return success ("Group created with id: "+str(group.id))
+    #except:
+    #    return failure ("An issue happened")
+
+
+@app.route('/revokeShare/<int:passwordId>/<int:userId>', methods=['POST'])
+@login_required
+def revokeShare(passwordId, userId):
     user = User.query.get(userId)
     if not user:
         return failure("User doesn't exist")
-    record = Record.query.get(id)
+    record = Record.query.get(passwordId)
     if not record:
         return failure("Record doesn't exists")
     if int(current_user.get_id()) not in record.Owner_Id:
@@ -187,13 +212,13 @@ def makeOwner(passwordId, userId):
         return failure("An error occured")
 
 
-@app.route('/shareWith/<int:id>/<int:userId>', methods=['POST'])
+@app.route('/shareWith/<int:passwordId>/<int:userId>', methods=['POST'])
 @login_required
-def shareWith(id, userId):
+def shareWith(passwordId, userId):
     user = User.query.get(userId)
     if not user:
         return failure("User doesn't exist")
-    record = Record.query.get(id)
+    record = Record.query.get(passwordId)
     if not record:
         return failure("Record doesn't exists")
     if int(current_user.get_id()) not in record.Owner_Id:
@@ -262,14 +287,14 @@ def sign_up():
     if User.query.filter_by(Username = username).first():
         return failure('This username already exists')
 
-    new_user = User(Name = name, Username = username, Master_Password = generate_password_hash(password, method='sha256'), Confirmed = False)
-    db.session.add(new_user)
+    newUser = User(Name = name, Username = username, Master_Password = generate_password_hash(password, method='sha256'), Confirmed = False)
+    db.session.add(newUser)
     db.session.commit()
-    user_id = User.query.filter_by(Username = username).first().id
+    userId = User.query.filter_by(Username = username).first().id
     if current_user.is_authenticated:
         logout_user()
 
-    return success ("Registeration completed with ID: "+ str(user_id))
+    return success ("Registeration completed with ID: "+ str(userId))
     '''
     token = generate_confirmation_token(request.form['Username'])
 #        try:
@@ -329,7 +354,7 @@ def getPasswords():
     #records = Record.query.filter(Record.shared_with.has(current_user.get_id()))
     recs = []
     for record in records:
-        recs.append(str({"id":record.Id, "Name":record.Name, "Username":record.Username, "Password":record.Password, "Owner":record.Owner_Id, "Shared with":record.shared_with}))
+        recs.append(str({"id":record.id, "Name":record.Name, "Username":record.Username, "Password":record.Password, "Owner":record.Owner_Id, "Shared with":record.shared_with}))
     ','.join(recs)
     return success (recs)
 
@@ -394,7 +419,7 @@ def add():
     passwords = Record.query.filter_by(Username = username).all()
     ids = []
     for password in passwords:
-        ids.append(password.Id)
+        ids.append(password.id)
 
     return success (ids)
 #    except:
