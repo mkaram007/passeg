@@ -112,9 +112,35 @@ class Group(UserMixin, db.Model):
     name = db.Column(db.String(200), default="New Group")
     members = db.Column(db.PickleType)
     managers = db.Column(db.PickleType)
+    owners = db.Column(db.PickleType)
     shared_passwords = db.Column(db.PickleType)
     date_created = db.Column(db.DateTime, default=datetime.utcnow)
     date_modified = db.Column(db.DateTime, default=datetime.utcnow)
+
+@app.route('/makeManager/<int:userId>/<int:groupId>', methods=['POST'])
+@login_required
+def makeManager(userId, groupId):
+    currentUser = int(current_user.get_id())
+    user = User.query.get(userId)
+    if not user:
+        return failure ("This user doesn't exist")
+    group = Group.query.get(groupId)
+    if not group:
+        return failure ("This group doesn't exist")
+    if currentUser not in group.owners:
+        return failure ("You are not an owner of this group")
+    managers = list(group.managers)
+    if userId not in group.members:
+        return failure ("This user is not a member in this group")
+    if userId in managers:
+        return failure ("This user is already a manager in this group")
+    managers.append(userId)
+    group.managers = managers
+    try:
+        db.session.commit()
+        return success("This user is now a manager of the group")
+    except:
+        return failure("An issue happened, contact the developer")
 
 @app.route('/addPasswordToGroup/<int:passwordId>/<int:groupId>', methods=['POST'])
 @login_required
@@ -179,11 +205,12 @@ def createGroup():
         name = data.get('Name')
     members = [int(current_user.get_id())]
     managers = [int(current_user.get_id())]
+    owners = [int(current_user.get_id())]
     shared_passwords = []
     try:
-        newGroup = Group(name = name, members = members, shared_passwords = shared_passwords, managers = managers)
+        newGroup = Group(name = name, members = members, shared_passwords = shared_passwords, managers = managers, owners = owners)
     except UnboundLocalError:
-        newGroup = Group(members = members, shared_passwords = shared_passwords, managers = managers)
+        newGroup = Group(members = members, shared_passwords = shared_passwords, managers = managers, owners = owners)
     try:
         db.session.add(newGroup)
         db.session.commit()
