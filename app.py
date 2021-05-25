@@ -116,6 +116,33 @@ class Group(UserMixin, db.Model):
     date_created = db.Column(db.DateTime, default=datetime.utcnow)
     date_modified = db.Column(db.DateTime, default=datetime.utcnow)
 
+@app.route('/addPasswordToGroup/<int:passwordId>/<int:groupId>', methods=['POST'])
+@login_required
+def addPasswordToGroup(passwordId, groupId):
+    group = Group.query.get(groupId)
+    currentUser = int(current_user.get_id())
+    if not group:
+        return failure ("This group doesn't exist")
+    password = Record.query.get(passwordId)
+    if not password:
+        return failure ("This password doesn't exist")
+    if currentUser not in group.members:
+        return failure ("You are not a member in this group")
+    if currentUser not in group.managers:
+        return failure ("You are not a manager in this group")
+    passwords = list(group.shared_passwords)
+    if passwordId in passwords:
+        return failure ("This password is already in this group")
+    passwords.append(passwordId)
+    group.shared_passwords = passwords
+    #try:
+    db.session.commit()
+    return success ("Password is added to the group")
+    #except:
+    #    return failure ("An issue happened")
+
+
+
 @app.route('/addUserToGroup/<int:userId>/<int:groupId>', methods=['POST'])
 @login_required
 def addUserToGroup(userId, groupId):
@@ -130,9 +157,9 @@ def addUserToGroup(userId, groupId):
         return failure ("You are not a member in this group")
     if currentUser not in group.managers:
         return failure ("You are not a manager in this group")
-    if userId in group.members:
-        return failure ("This user is already a member of this group")
     members = list(group.members)
+    if userId in members:
+        return failure ("This user is already a member of this group")
     members.append(userId)
     group.members = members
     try:
