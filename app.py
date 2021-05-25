@@ -132,9 +132,9 @@ def addUserToGroup(userId, groupId):
         return failure ("You are not a manager in this group")
     if userId in group.members:
         return failure ("This user is already a member of this group")
-    members = group.members
+    members = list(group.members)
     members.append(userId)
-    group.members = list(members)
+    group.members = members
     try:
         db.session.commit()
         return success ("User has been added to the group")
