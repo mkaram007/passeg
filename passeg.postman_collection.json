@@ -86,7 +86,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\"Username\":\"5@5.5\", \"Password\":\"123\"}",
+					"raw": "{\"Username\":\"3@3.3\", \"Password\":\"123\"}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -168,7 +168,7 @@
 			]
 		},
 		{
-			"name": "/add",
+			"name": "/addPassword",
 			"request": {
 				"method": "POST",
 				"header": [],
@@ -182,7 +182,7 @@
 					}
 				},
 				"url": {
-					"raw": "http://127.0.0.1:8000/add",
+					"raw": "http://127.0.0.1:8000/addPassword",
 					"protocol": "http",
 					"host": [
 						"127",
@@ -192,7 +192,7 @@
 					],
 					"port": "8000",
 					"path": [
-						"add"
+						"addPassword"
 					]
 				},
 				"description": "Post a password details"
@@ -905,7 +905,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\"Name\":\"Test Admin\", \"Password\":\"123\"}",
+					"raw": "{\"Name\":\"TestasdAdmin\", \"Username\":\"admin@test.com\",\"Password\":\"123\"}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -1282,6 +1282,245 @@
 					],
 					"cookie": [],
 					"body": "{\n    \"data\": [\n        2\n    ],\n    \"status\": \"success\"\n}"
+				}
+			]
+		},
+		{
+			"name": "/createGroup",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"Name\":\"Test Group\"}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://127.0.0.1:8000/createGroup",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8000",
+					"path": [
+						"createGroup"
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "/createGroup",
+					"originalRequest": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\"Name\":\"Test Group\"}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://127.0.0.1:8000/createGroup",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"createGroup"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Content-Type",
+							"value": "application/json"
+						},
+						{
+							"key": "Content-Length",
+							"value": "66"
+						},
+						{
+							"key": "Vary",
+							"value": "Cookie"
+						},
+						{
+							"key": "Server",
+							"value": "Werkzeug/1.0.1 Python/3.6.9"
+						},
+						{
+							"key": "Date",
+							"value": "Tue, 25 May 2021 11:11:45 GMT"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"data\": \"Group created with id: 18\",\n    \"status\": \"success\"\n}"
+				}
+			]
+		},
+		{
+			"name": "/addUserToGroup/<userId>/<groupId>",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "http://127.0.0.1:8000/addUserToGroup/2/3",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8000",
+					"path": [
+						"addUserToGroup",
+						"2",
+						"3"
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "/addUserToGroup/<userId>/<groupId>",
+					"originalRequest": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "http://127.0.0.1:8000/addUserToGroup/2/3",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"addUserToGroup",
+								"2",
+								"3"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Content-Type",
+							"value": "application/json"
+						},
+						{
+							"key": "Content-Length",
+							"value": "73"
+						},
+						{
+							"key": "Vary",
+							"value": "Cookie"
+						},
+						{
+							"key": "Server",
+							"value": "Werkzeug/1.0.1 Python/3.6.9"
+						},
+						{
+							"key": "Date",
+							"value": "Tue, 25 May 2021 11:32:43 GMT"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"data\": \"User has been added to the group\",\n    \"status\": \"success\"\n}"
+				}
+			]
+		},
+		{
+			"name": "/addPasswordToGroup/<passwordId>/<groupId>",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "http://127.0.0.1:8000/addPasswordToGroup/2/3",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8000",
+					"path": [
+						"addPasswordToGroup",
+						"2",
+						"3"
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "/addPasswordToGroup/<passwordId>/<groupId>",
+					"originalRequest": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "http://127.0.0.1:8000/addPasswordToGroup/2/3",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"addPasswordToGroup",
+								"2",
+								"3"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Content-Type",
+							"value": "application/json"
+						},
+						{
+							"key": "Content-Length",
+							"value": "71"
+						},
+						{
+							"key": "Vary",
+							"value": "Cookie"
+						},
+						{
+							"key": "Server",
+							"value": "Werkzeug/1.0.1 Python/3.6.9"
+						},
+						{
+							"key": "Date",
+							"value": "Tue, 25 May 2021 11:51:38 GMT"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"data\": \"Password is added to the group\",\n    \"status\": \"success\"\n}"
 				}
 			]
 		}
