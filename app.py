@@ -135,11 +135,11 @@ def addPasswordToGroup(passwordId, groupId):
         return failure ("This password is already in this group")
     passwords.append(passwordId)
     group.shared_passwords = passwords
-    #try:
-    db.session.commit()
-    return success ("Password is added to the group")
-    #except:
-    #    return failure ("An issue happened")
+    try:
+        db.session.commit()
+        return success ("Password is added to the group")
+    except:
+        return failure ("An issue happened")
 
 
 
@@ -311,9 +311,12 @@ def editUser(username):
     if not userToEdit:
         return failure ("This user doesn't exist")
     if check_password_hash(userToEdit.Master_Password, password):
+        if (not newUsername or userToEdit.Username == newUsername)and (not newName or userToEdit.Name == newName):
+            return failure ("No changes to apply")
         if newUsername:
             userToEdit.Username = newUsername
-        userToEdit.Name = newName
+        if newName:
+            userToEdit.Name = newName
         try:
             db.session.commit()
             return success("User details modified successfully")
@@ -372,25 +375,25 @@ def sign_up():
 
 
 
-@app.route('/delete/<int:Id>', methods=['POST'])
+@app.route('/delete/<int:id>', methods=['POST'])
 @login_required
-def delete(Id):
-    password_to_delete = Record.query.get_or_404(Id)
+def delete(id):
+    password_to_delete = Record.query.get_or_404(id)
     if int(current_user.get_id()) not in password_to_delete.Owner_Id:
         return failure ("You're not allowed to delete this password")
     try:
         db.session.delete(password_to_delete)
         db.session.commit()
-        return success (Id)
+        return success (id)
     except:
         return failure('There was a problem deleting this password')
 
-@app.route('/getPasswordId/<string:username>')
+@app.route('/getPasswordId/<username>')
 def getPasswordId(username):
     username = func.lower(username)
     record = Record.query.filter_by(Username = username).first()
     if record:
-        return success (record.Id)
+        return success (record.id)
     else:
         return failure ("Password not found")
 
@@ -440,18 +443,18 @@ def update(id):
     else:
         return success ("Password exists")
 
-@app.route('/getPassword/<int:Id>')
+@app.route('/getPassword/<int:id>')
 @login_required
-def getPassword(Id):
+def getPassword(id):
 
-    password = Record.query.get_or_404(Id)
+    password = Record.query.get_or_404(id)
     if not password:
         return failure("Password not found")
     return {"status":"success", "Name":password.Name, "Username":password.Username, "Password":password.Password, "Shared with":password.shared_with, "Owners":password.Owner_Id}
 
-@app.route('/add', methods=['POST'])
+@app.route('/addPassword', methods=['POST'])
 @login_required
-def add():
+def addPassword():
     data = request.json
     name = data.get('Name')
     username = func.lower(data.get('Username'))
@@ -470,17 +473,17 @@ def add():
     Owner_Id.append(currentUser)
     shared_with = []
     new_record = Record(Name=name, Username=username, Password=password, Owner_Id=Owner_Id, AccountType = 'Personal', shared_with = shared_with)
-#    try:
-    db.session.add(new_record)
-    db.session.commit()
-    passwords = Record.query.filter_by(Username = username).all()
-    ids = []
-    for password in passwords:
-        ids.append(password.id)
+    try:
+        db.session.add(new_record)
+        db.session.commit()
+        passwords = Record.query.filter_by(Username = username).all()
+        ids = []
+        for password in passwords:
+            ids.append(password.id)
 
-    return success (ids)
-#    except:
-#        return failure ('There was an issue adding the new password')
+        return success (ids)
+    except:
+        return failure ('There was an issue adding the new password')
 
 @app.route('/', methods=['POST'])
 def signin_post():
@@ -490,21 +493,10 @@ def signin_post():
     username = func.lower(data.get('Username'))
     password = data.get('Password')
     user = User.query.filter_by(Username = username).first()
-    #try:
     if not user or not check_password_hash(user.Master_Password, password):
         return failure('Invalid username or password')
     login_user(user)
-    if user.Name:
-        session['current_username']='Welcome '+user.Name+'!'
-    else:
-        session['current_username']='Welcome '+user.Username+'!'
-
     return success ("Logged in successfully")
-
-@app.route('/about')
-def about():
-    return 'Developed by Egirna Technologies'
-
 
 @app.route('/random')
 def randomGen():
