@@ -117,9 +117,38 @@ class Group(UserMixin, db.Model):
     date_created = db.Column(db.DateTime, default=datetime.utcnow)
     date_modified = db.Column(db.DateTime, default=datetime.utcnow)
 
+
+@app.route('/makeGroupOwner/<int:userId>/<int:groupId>', methods=['POST'])
+@login_required
+def makeGroupOwner(userId, groupId):
+    currentUser = int(current_user.get_id())
+    user = User.query.get(userId)
+    if not user:
+        return failure ("This user doesn't exist")
+    group = Group.query.get(groupId)
+    if not group:
+        return failure ("This group doesn't exist")
+    if currentUser not in group.owners:
+        return failure ("You are not an owner of this group")
+    owners = list(group.owners)
+    managers = list(group.managers)
+    if userId not in group.members:
+        return failure ("This user is not a member in this group")
+    if userId in owners:
+        return failure ("This user is already an owner in this group")
+    managers.append(userId)
+    owners.append(userId)
+    group.managers = managers
+    group.owners = owners
+    try:
+        db.session.commit()
+        return success("This user is now an owner of the group")
+    except:
+        return failure("An issue happened, contact the developer")
+
 @app.route('/makeManager/<int:userId>/<int:groupId>', methods=['POST'])
 @login_required
-def makeManager(userId, groupId):
+def makeGroupManager(userId, groupId):
     currentUser = int(current_user.get_id())
     user = User.query.get(userId)
     if not user:
@@ -269,9 +298,9 @@ def revokeOwner(passwordId, userId):
         return failure("An error occured")
 
 
-@app.route('/makeOwner/<int:passwordId>/<int:userId>', methods=['POST'])
+@app.route('/makePasswordOwner/<int:passwordId>/<int:userId>', methods=['POST'])
 @login_required
-def makeOwner(passwordId, userId):
+def makePasswordOwner(passwordId, userId):
     user = User.query.get(userId)
     if not user:
         return failure("User doesn't exist")
