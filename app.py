@@ -111,9 +111,38 @@ class Group(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(200), default="New Group")
     members = db.Column(db.PickleType)
+    managers = db.Column(db.PickleType)
     shared_passwords = db.Column(db.PickleType)
     date_created = db.Column(db.DateTime, default=datetime.utcnow)
     date_modified = db.Column(db.DateTime, default=datetime.utcnow)
+
+@app.route('/addUserToGroup/<int:userId>/<int:groupId>', methods=['POST'])
+@login_required
+def addUserToGroup(userId, groupId):
+    currentUser = int(current_user.get_id())
+    group = Group.query.get(groupId)
+    if not group:
+        return failure ("This group doesn't exist")
+    user = User.query.get(userId)
+    if not user:
+        return failure ("This user doesn't exist")
+    if currentUser not in group.members:
+        return failure ("You are not a member in this group")
+    if currentUser not in group.managers:
+        return failure ("You are not a manager in this group")
+    if userId in group.members:
+        return failure ("This user is already a member of this group")
+    members = group.members
+    members.append(userId)
+    group.members = list(members)
+    try:
+        db.session.commit()
+        return success ("User has been added to the group")
+    except:
+        return failure ("An issue happened")
+
+
+
 
 @app.route('/createGroup', methods=['POST'])
 @login_required
@@ -122,18 +151,19 @@ def createGroup():
     if data:
         name = data.get('Name')
     members = [int(current_user.get_id())]
+    managers = [int(current_user.get_id())]
     shared_passwords = []
     try:
-        newGroup = Group(name = name, members = members, shared_passwords = shared_passwords)
+        newGroup = Group(name = name, members = members, shared_passwords = shared_passwords, managers = managers)
     except UnboundLocalError:
-        newGroup = Group(members = members, shared_passwords = shared_passwords)
-    #try:
-    db.session.add(newGroup)
-    db.session.commit()
-    group = Group.query.order_by(Group.date_created.desc()).limit(1)[0]
-    return success ("Group created with id: "+str(group.id))
-    #except:
-    #    return failure ("An issue happened")
+        newGroup = Group(members = members, shared_passwords = shared_passwords, managers = managers)
+    try:
+        db.session.add(newGroup)
+        db.session.commit()
+        group = Group.query.order_by(Group.date_created.desc()).limit(1)[0]
+        return success ("Group created with id: "+str(group.id))
+    except:
+        return failure ("An issue happened")
 
 
 @app.route('/revokeShare/<int:passwordId>/<int:userId>', methods=['POST'])
