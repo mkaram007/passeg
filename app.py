@@ -544,7 +544,7 @@ def addPassword():
 @app.route('/login', methods=['POST'])
 def login():
     if current_user.is_authenticated:
-        return failure ("Already logged in")
+        return failure ("Already logged in: "+current_user.get_id())
     data = request.json
     username = func.lower(data.get('Username'))
     password = data.get('Password')
