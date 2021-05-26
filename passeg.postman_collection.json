@@ -905,7 +905,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\"Name\":\"TestasdAdmin\", \"Username\":\"admin@test.com\",\"Password\":\"123\"}",
+					"raw": "{\"Username\":\"3@3.3\",\"Password\":\"123\"}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -913,7 +913,7 @@
 					}
 				},
 				"url": {
-					"raw": "http://127.0.0.1:8000/editUser/admin@test.com",
+					"raw": "http://127.0.0.1:8000/editUser/3@3.33",
 					"protocol": "http",
 					"host": [
 						"127",
@@ -924,7 +924,7 @@
 					"port": "8000",
 					"path": [
 						"editUser",
-						"admin@test.com"
+						"3@3.33"
 					]
 				}
 			},
@@ -1061,12 +1061,12 @@
 			]
 		},
 		{
-			"name": "/makeOwner/<REC_ID>/<USER_ID>",
+			"name": "/makePasswordOwner/<REC_ID>/<USER_ID>",
 			"request": {
 				"method": "POST",
 				"header": [],
 				"url": {
-					"raw": "http://127.0.0.1:8000/makeOwner/21/3",
+					"raw": "http://127.0.0.1:8000/makePasswordOwner/21/3",
 					"protocol": "http",
 					"host": [
 						"127",
@@ -1076,7 +1076,7 @@
 					],
 					"port": "8000",
 					"path": [
-						"makeOwner",
+						"makePasswordOwner",
 						"21",
 						"3"
 					]
@@ -1084,12 +1084,12 @@
 			},
 			"response": [
 				{
-					"name": "/makeOwner/<REC_ID>/<USER_ID>",
+					"name": "/makePasswordOwner/<REC_ID>/<USER_ID>",
 					"originalRequest": {
 						"method": "POST",
 						"header": [],
 						"url": {
-							"raw": "http://127.0.0.1:8000/makeOwner/21/3",
+							"raw": "http://127.0.0.1:8000/makePasswordOwner/21/3",
 							"protocol": "http",
 							"host": [
 								"127",
@@ -1099,7 +1099,7 @@
 							],
 							"port": "8000",
 							"path": [
-								"makeOwner",
+								"makePasswordOwner",
 								"21",
 								"3"
 							]
@@ -1380,7 +1380,7 @@
 				"method": "POST",
 				"header": [],
 				"url": {
-					"raw": "http://127.0.0.1:8000/addUserToGroup/2/3",
+					"raw": "http://127.0.0.1:8000/addUserToGroup/3/3",
 					"protocol": "http",
 					"host": [
 						"127",
@@ -1391,7 +1391,7 @@
 					"port": "8000",
 					"path": [
 						"addUserToGroup",
-						"2",
+						"3",
 						"3"
 					]
 				}
@@ -1521,6 +1521,156 @@
 					],
 					"cookie": [],
 					"body": "{\n    \"data\": \"Password is added to the group\",\n    \"status\": \"success\"\n}"
+				}
+			]
+		},
+		{
+			"name": "/makeGroupManager/<userId>/<groupId>",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "http://127.0.0.1:8000/makeManager/3/3",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8000",
+					"path": [
+						"makeManager",
+						"3",
+						"3"
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "/makeGroupManager/<userId>/<groupId>",
+					"originalRequest": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "http://127.0.0.1:8000/makeManager/3/3",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"makeManager",
+								"3",
+								"3"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Content-Type",
+							"value": "application/json"
+						},
+						{
+							"key": "Content-Length",
+							"value": "80"
+						},
+						{
+							"key": "Vary",
+							"value": "Cookie"
+						},
+						{
+							"key": "Server",
+							"value": "Werkzeug/1.0.1 Python/3.6.9"
+						},
+						{
+							"key": "Date",
+							"value": "Tue, 25 May 2021 13:00:02 GMT"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"data\": \"This user is now a manager of the group\",\n    \"status\": \"success\"\n}"
+				}
+			]
+		},
+		{
+			"name": "/makeGroupOwner/<userId>/<groupId>",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "http://127.0.0.1:8000/makeGroupOwner/1/3",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8000",
+					"path": [
+						"makeGroupOwner",
+						"1",
+						"3"
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "/makeGroupOwner/<userId>/<groupId>",
+					"originalRequest": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "http://127.0.0.1:8000/makeGroupOwner/1/3",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"makeGroupOwner",
+								"1",
+								"3"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Content-Type",
+							"value": "application/json"
+						},
+						{
+							"key": "Content-Length",
+							"value": "79"
+						},
+						{
+							"key": "Vary",
+							"value": "Cookie"
+						},
+						{
+							"key": "Server",
+							"value": "Werkzeug/1.0.1 Python/3.6.9"
+						},
+						{
+							"key": "Date",
+							"value": "Tue, 25 May 2021 12:59:16 GMT"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"data\": \"This user is now an owner of the group\",\n    \"status\": \"success\"\n}"
 				}
 			]
 		}
