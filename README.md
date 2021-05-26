@@ -66,9 +66,9 @@ May 19 08:20:20 ubuntu-bionic python3[12853]:  * Debugger PIN: 272-630-519
   You should get a "Method Not Allowed" Message, don't worry that means it's working correctly
   
 # To test the requests:
-   Considering testing on a machine with IP address 165.227.235.228  
+   Considering testing on a vm with IP address 165.227.235.228  
    and running the application on port 8000   
-   ssh on the machine using the following command:  
+   ssh on the vm from a linux machine using the following command:  
    ```ssh root@165.227.235.228 -L 8000:localhost:8000```  
    enter the password  
    
