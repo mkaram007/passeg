@@ -65,7 +65,35 @@ May 19 08:20:20 ubuntu-bionic python3[12853]:  * Debugger PIN: 272-630-519
   localhost:8000  
   You should get a "Method Not Allowed" Message, don't worry that means it's working correctly
   
-
+# To test the requests:
+## 1-Open postman application:  
+   You can download postman application for linux here:  
+   https://dl-agent.pstmn.io/download/latest/linux  
+   For windows:  
+   https://dl-agent.pstmn.io/download/latest/win64  
+   For Mac:  
+   https://dl-agent.pstmn.io/download/latest/osx  
+   
+## 2-Click on the import button:  
+   Click upload files, choose the file named:  
+   ```passeg.postman_collection.json```  
+   
+## 3-Start by signing up:  
+   -Choose the /signup request from the collection  
+   -Click on the body tab  
+   -Choose whatever name, username and password you want  
+   -Click send  
+   -You should get the following response:  
+    ```{
+    "data": "Registeration completed with ID: 1",
+    "status": "success"
+   }```  
+   -That means you're successfully signed up  
+   
+## 4-Now you can login 
+   Using the /login request in the same way by opening the body tab, enter your credentials and click send
+   
+## 5-For any question, please contact the developer
 
 
 # Progress steps in passeg project:
@@ -83,24 +111,28 @@ May 19 08:20:20 ubuntu-bionic python3[12853]:  * Debugger PIN: 272-630-519
 12-Password copy button  
 13-e-mail validation  
 ## 14-Current requests (Found in the postman collection file):  
-1-Signup  
-2-Login  
-3-Get Password details  
-4-Add a password  
-5-Update a password  
-6-Get password id  
-7-Delete a password  
-8-Get a random password  
-9-Logout  
-10-Get current user id  
-11-Edit user details  
-12-Get all passwords for a user  
-13-shareWith to share a password with a user  
-14-makePasswordOwner  
-15-revokeShare  
-16-revokeOwner  
-17-createGroup  
-18-addUserToGroup  
-19-addPasswordToGroup  
-20-makeGroupManager  
-21-makeGroupOwner
+1-/signup  
+2-/login  
+3-/getPassword/<PASSWORD_ID>  
+4-/addPassword  
+5-/updatePassword/<PASSWORD_ID>  
+6-/getPasswordId/<PASSWORD_USERNAME>  
+7-/deletePassword/<PASSWORD_ID>  
+8-/generateRandomPassword  
+9-/logout  
+10-/getCurrentUser  
+11-/updateUser/<USERNAME>  
+12-/getPasswords  
+13-/sharePasswordWith/<PASSWORD_ID>/<USER_ID>  
+14-/makePasswordOwner/<PASSWORD_ID>/<USER_ID>  
+15-/revokePasswordShare/<PASSWORD_ID>/<USER_ID>  
+16-/revokePasswordOwner/<PASSWORD_ID>/<USER_ID>  
+17-/createGroup  
+18-/addUserToGroup/<USER_ID>/<GROUP_ID>  
+19-/addPasswordToGroup/<PASSWORD_ID>/<GROUP_ID>  
+20-/makeGroupManager/<USER_ID>/<GROUP_ID>  
+21-/makeGroupOwner/<USER_ID>/<GROUP_ID>
+   
+   
+
+   
