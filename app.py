@@ -480,16 +480,23 @@ def getPasswords():
 def updatePassword(id):
     record_to_update = Record.query.get_or_404(id)
     currentUser = int(current_user.get_id())
-    if currentUser not in record_to_update.Owner_Id or currentUser not in record_to_update.shared_with:
+    if currentUser not in record_to_update.Owner_Id and currentUser not in record_to_update.shared_with:
         return failure("You're not allowed to update this password")
     if request.method == 'POST':
         data = request.json
-        record_to_update.Name = data.get('Name')
+        name = data.get('Name')
         username = data.get('Username')
+        password = data.get('Password')
+        if (not name and not username and not password) or (record_to_update.Name == name and record_to_update.Username == username and record_to_update.Password==password):
+            return failure ("No change to apply")
+        if name:
+            record_to_update.Name = name
         if not verify_email(username):
             return failure ("Invalid username, example username: username@example.com")
-        record_to_update.Username = username
-        record_to_update.Password = data.get('Password')
+        if username:
+            record_to_update.Username = username
+        if password:
+            record_to_update.Password = password
         record_to_update.date_modified = datetime.utcnow()
         try:
             db.session.commit()
