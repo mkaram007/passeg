@@ -554,8 +554,8 @@ def login():
     login_user(user)
     return success ("Logged in successfully: "+str(user.id))
 
-@app.route('/getRandomPassword')
-def getRandomPassword():
+@app.route('/generateRandomPassword')
+def generateRandomPassword():
     chars = 'AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz!@#$%^&*()*/-+.1234567890{}]['
     password = ''
     for c in range(16):
