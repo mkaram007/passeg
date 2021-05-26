@@ -146,7 +146,7 @@ def makeGroupOwner(userId, groupId):
     except:
         return failure("An issue happened, contact the developer")
 
-@app.route('/makeManager/<int:userId>/<int:groupId>', methods=['POST'])
+@app.route('/makeGroupManager/<int:userId>/<int:groupId>', methods=['POST'])
 @login_required
 def makeGroupManager(userId, groupId):
     currentUser = int(current_user.get_id())
@@ -249,9 +249,9 @@ def createGroup():
         return failure ("An issue happened")
 
 
-@app.route('/revokeShare/<int:passwordId>/<int:userId>', methods=['POST'])
+@app.route('/revokePasswordShare/<int:passwordId>/<int:userId>', methods=['POST'])
 @login_required
-def revokeShare(passwordId, userId):
+def revokePasswordShare(passwordId, userId):
     user = User.query.get(userId)
     if not user:
         return failure("User doesn't exist")
@@ -272,9 +272,9 @@ def revokeShare(passwordId, userId):
         return failure("An error occured")
 
 
-@app.route('/revokeOwner/<int:passwordId>/<int:userId>', methods=['POST'])
+@app.route('/revokePasswordOwner/<int:passwordId>/<int:userId>', methods=['POST'])
 @login_required
-def revokeOwner(passwordId, userId):
+def revokePasswordOwner(passwordId, userId):
     user = User.query.get(userId)
     if not user:
         return failure("User doesn't exist")
@@ -325,9 +325,9 @@ def makePasswordOwner(passwordId, userId):
         return failure("An error occured")
 
 
-@app.route('/shareWith/<int:passwordId>/<int:userId>', methods=['POST'])
+@app.route('/sharePasswordWith/<int:passwordId>/<int:userId>', methods=['POST'])
 @login_required
-def shareWith(passwordId, userId):
+def sharePasswordWith(passwordId, userId):
     user = User.query.get(userId)
     if not user:
         return failure("User doesn't exist")
@@ -356,8 +356,8 @@ def shareWith(passwordId, userId):
 def getCurrentUser():
     return success(current_user.get_id())
 
-@app.route('/editUser/<string:username>', methods = ['POST'])
-def editUser(username):
+@app.route('/updateUser/<username>', methods = ['POST'])
+def updateUser(username):
     data = request.json
     newName = data.get('Name')
     newUsername = data.get('Username')
@@ -384,7 +384,7 @@ def editUser(username):
 
 
 @app.route('/signup', methods=['POST'])
-def sign_up():
+def signup():
     if current_user.is_authenticated:
         return failure("Logout to register a new user")
     data = request.json
@@ -431,9 +431,9 @@ def sign_up():
 
 
 
-@app.route('/delete/<int:id>', methods=['POST'])
+@app.route('/deletePassword/<int:id>', methods=['POST'])
 @login_required
-def delete(id):
+def deletePassword(id):
     password_to_delete = Record.query.get_or_404(id)
     if int(current_user.get_id()) not in password_to_delete.Owner_Id:
         return failure ("You're not allowed to delete this password")
@@ -475,9 +475,9 @@ def getPasswords():
     return success (recs)
 
 
-@app.route('/update/<int:id>', methods=['GET', 'POST'])
+@app.route('/updatePassword/<int:id>', methods=['GET', 'POST'])
 @login_required
-def update(id):
+def updatePassword(id):
     record_to_update = Record.query.get_or_404(id)
     currentUser = int(current_user.get_id())
     if currentUser not in record_to_update.Owner_Id or currentUser not in record_to_update.shared_with:
@@ -541,8 +541,8 @@ def addPassword():
     except:
         return failure ('There was an issue adding the new password')
 
-@app.route('/', methods=['POST'])
-def signin_post():
+@app.route('/login', methods=['POST'])
+def login():
     if current_user.is_authenticated:
         return failure ("Already logged in")
     data = request.json
@@ -552,10 +552,10 @@ def signin_post():
     if not user or not check_password_hash(user.Master_Password, password):
         return failure('Invalid username or password')
     login_user(user)
-    return success ("Logged in successfully")
+    return success ("Logged in successfully: "+str(user.id))
 
-@app.route('/random')
-def randomGen():
+@app.route('/getRandomPassword')
+def getRandomPassword():
     chars = 'AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz!@#$%^&*()*/-+.1234567890{}]['
     password = ''
     for c in range(16):
