@@ -80,7 +80,7 @@
 			]
 		},
 		{
-			"name": "/ (Login)",
+			"name": "/login",
 			"request": {
 				"method": "POST",
 				"header": [],
@@ -94,7 +94,7 @@
 					}
 				},
 				"url": {
-					"raw": "http://127.0.0.1:8000",
+					"raw": "http://127.0.0.1:8000/login",
 					"protocol": "http",
 					"host": [
 						"127",
@@ -102,19 +102,22 @@
 						"0",
 						"1"
 					],
-					"port": "8000"
+					"port": "8000",
+					"path": [
+						"login"
+					]
 				},
 				"description": "Post the user credentials to sign in"
 			},
 			"response": [
 				{
-					"name": "/ (Login)",
+					"name": "/login",
 					"originalRequest": {
 						"method": "POST",
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\"Username\":\"5@5.5\", \"Password\":\"123\"}",
+							"raw": "{\"Username\":\"3@3.3\", \"Password\":\"123\"}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -122,7 +125,7 @@
 							}
 						},
 						"url": {
-							"raw": "http://127.0.0.1:8000",
+							"raw": "http://127.0.0.1:8000/login",
 							"protocol": "http",
 							"host": [
 								"127",
@@ -130,7 +133,10 @@
 								"0",
 								"1"
 							],
-							"port": "8000"
+							"port": "8000",
+							"path": [
+								"login"
+							]
 						}
 					},
 					"status": "OK",
@@ -143,7 +149,7 @@
 						},
 						{
 							"key": "Content-Length",
-							"value": "63"
+							"value": "66"
 						},
 						{
 							"key": "Vary",
@@ -151,7 +157,7 @@
 						},
 						{
 							"key": "Set-Cookie",
-							"value": "session=.eJwljjsOAkEMxa4CU1Nk57vhIpRokpcIJD7SwFaIu7NAaTf2Kxx92OMU9s-x2C4czwj7AE_oJtpd4caEUiiBRFznhsYoWtS6JCdWmgheiCdFalIlzo25oaA6VLK7xSyW0wpK4F4qZkxJNAvUCidnWgu1SpMcZ6YewzqyPGz8b76oyxh2e_7srV9t1Qe76P1qm5jyNrw_gAA9kA.YKo65w.YdVGzWxBcwDtpyjoCgnvuYnPnHU; HttpOnly; Path=/"
+							"value": "session=.eJwljjsOAkEMxa4CU1Nk57vhIpRokpcIJD7SwFaIu7NAaTf2Kxx92OMU9s-x2C4czwj7AE_oJtpd4caEUiiBRFznhsYoWtS6JCdWmgheiCdFalIlzo25oaA6VLK7xSyW0wpK4F4qZkxJNAvUCidnWgu1SpMcZ6YewzqyPGz8b76oyxh2e_7srV9t1Qe76P1qm5jyNrw_gAA9kA.YK3qag.1wBuL7LJi1Rv0ZL8V1pL-LDy0BQ; HttpOnly; Path=/"
 						},
 						{
 							"key": "Server",
@@ -159,11 +165,11 @@
 						},
 						{
 							"key": "Date",
-							"value": "Sun, 23 May 2021 11:22:15 GMT"
+							"value": "Wed, 26 May 2021 06:27:54 GMT"
 						}
 					],
 					"cookie": [],
-					"body": "{\n    \"data\": \"Logged in successfully\",\n    \"status\": \"success\"\n}"
+					"body": "{\n    \"data\": \"Logged in successfully: 2\",\n    \"status\": \"success\"\n}"
 				}
 			]
 		},
@@ -199,7 +205,7 @@
 			},
 			"response": [
 				{
-					"name": "/add",
+					"name": "/addPassword",
 					"originalRequest": {
 						"method": "POST",
 						"header": [],
@@ -213,7 +219,7 @@
 							}
 						},
 						"url": {
-							"raw": "http://127.0.0.1:8000/add",
+							"raw": "http://127.0.0.1:8000/addPassword",
 							"protocol": "http",
 							"host": [
 								"127",
@@ -223,7 +229,7 @@
 							],
 							"port": "8000",
 							"path": [
-								"add"
+								"addPassword"
 							]
 						}
 					},
@@ -258,7 +264,7 @@
 			]
 		},
 		{
-			"name": "/update/<ID>",
+			"name": "/updatePassword/<ID>",
 			"request": {
 				"method": "POST",
 				"header": [],
@@ -272,7 +278,7 @@
 					}
 				},
 				"url": {
-					"raw": "http://127.0.0.1:8000/update/1",
+					"raw": "http://127.0.0.1:8000/updatePassword/1",
 					"protocol": "http",
 					"host": [
 						"127",
@@ -282,7 +288,7 @@
 					],
 					"port": "8000",
 					"path": [
-						"update",
+						"updatePassword",
 						"1"
 					]
 				},
@@ -290,7 +296,7 @@
 			},
 			"response": [
 				{
-					"name": "/update/<ID>",
+					"name": "/updatePassword/<ID>",
 					"originalRequest": {
 						"method": "POST",
 						"header": [],
@@ -420,12 +426,12 @@
 			]
 		},
 		{
-			"name": "/delete/<ID>",
+			"name": "/deletePassword/<ID>",
 			"request": {
 				"method": "POST",
 				"header": [],
 				"url": {
-					"raw": "http://127.0.0.1:8000/delete/21",
+					"raw": "http://127.0.0.1:8000/deletePassword/21",
 					"protocol": "http",
 					"host": [
 						"127",
@@ -435,19 +441,19 @@
 					],
 					"port": "8000",
 					"path": [
-						"delete",
+						"deletePassword",
 						"21"
 					]
 				}
 			},
 			"response": [
 				{
-					"name": "/delete/<ID>",
+					"name": "/deletePassword/<ID>",
 					"originalRequest": {
 						"method": "POST",
 						"header": [],
 						"url": {
-							"raw": "http://127.0.0.1:8000/delete/21",
+							"raw": "http://127.0.0.1:8000/deletePassword/21",
 							"protocol": "http",
 							"host": [
 								"127",
@@ -457,7 +463,7 @@
 							],
 							"port": "8000",
 							"path": [
-								"delete",
+								"deletePassword",
 								"21"
 							]
 						}
@@ -493,7 +499,7 @@
 			]
 		},
 		{
-			"name": "/random (Get random password)",
+			"name": "/getRandomPassword",
 			"protocolProfileBehavior": {
 				"disableBodyPruning": true
 			},
@@ -517,20 +523,20 @@
 					}
 				},
 				"url": {
-					"raw": "http://localhost:8000/random",
+					"raw": "http://localhost:8000/getRandomPassword",
 					"protocol": "http",
 					"host": [
 						"localhost"
 					],
 					"port": "8000",
 					"path": [
-						"random"
+						"getRandomPassword"
 					]
 				}
 			},
 			"response": [
 				{
-					"name": "/random (Get random password)",
+					"name": "/getRandomPassword",
 					"originalRequest": {
 						"method": "GET",
 						"header": [
@@ -551,14 +557,14 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:8000/random",
+							"raw": "http://localhost:8000/getRandomPassword",
 							"protocol": "http",
 							"host": [
 								"localhost"
 							],
 							"port": "8000",
 							"path": [
-								"random"
+								"getRandomPassword"
 							]
 						}
 					},
@@ -899,7 +905,7 @@
 			]
 		},
 		{
-			"name": "/editUser/<USERNAME>",
+			"name": "/updateUser/<USERNAME>",
 			"request": {
 				"method": "POST",
 				"header": [],
@@ -913,7 +919,7 @@
 					}
 				},
 				"url": {
-					"raw": "http://127.0.0.1:8000/editUser/3@3.33",
+					"raw": "http://127.0.0.1:8000/updateUser/3@3.33",
 					"protocol": "http",
 					"host": [
 						"127",
@@ -923,14 +929,14 @@
 					],
 					"port": "8000",
 					"path": [
-						"editUser",
+						"updateUser",
 						"3@3.33"
 					]
 				}
 			},
 			"response": [
 				{
-					"name": "/editUser/<USERNAME>",
+					"name": "/updateUser/<USERNAME>",
 					"originalRequest": {
 						"method": "POST",
 						"header": [],
@@ -944,7 +950,7 @@
 							}
 						},
 						"url": {
-							"raw": "http://127.0.0.1:8000/editUser/admin@test.com",
+							"raw": "http://127.0.0.1:8000/updateUser/admin@test.com",
 							"protocol": "http",
 							"host": [
 								"127",
@@ -954,7 +960,7 @@
 							],
 							"port": "8000",
 							"path": [
-								"editUser",
+								"updateUser",
 								"admin@test.com"
 							]
 						}
@@ -986,12 +992,12 @@
 			]
 		},
 		{
-			"name": "/shareWith/<REC_ID>/<USER_ID>",
+			"name": "/sharePasswordWith/<REC_ID>/<USER_ID>",
 			"request": {
 				"method": "POST",
 				"header": [],
 				"url": {
-					"raw": "http://127.0.0.1:8000/shareWith/21/3",
+					"raw": "http://127.0.0.1:8000/sharePasswordWith/21/3",
 					"protocol": "http",
 					"host": [
 						"127",
@@ -1001,7 +1007,7 @@
 					],
 					"port": "8000",
 					"path": [
-						"shareWith",
+						"sharePasswordWith",
 						"21",
 						"3"
 					]
@@ -1009,12 +1015,12 @@
 			},
 			"response": [
 				{
-					"name": "/shareWith/<REC_ID>/<USER_ID>",
+					"name": "/sharePasswordWith/<REC_ID>/<USER_ID>",
 					"originalRequest": {
 						"method": "POST",
 						"header": [],
 						"url": {
-							"raw": "http://127.0.0.1:8000/shareWith/21/3",
+							"raw": "http://127.0.0.1:8000/sharePasswordWith/21/3",
 							"protocol": "http",
 							"host": [
 								"127",
@@ -1024,7 +1030,7 @@
 							],
 							"port": "8000",
 							"path": [
-								"shareWith",
+								"sharePasswordWith",
 								"21",
 								"3"
 							]
@@ -1136,12 +1142,12 @@
 			]
 		},
 		{
-			"name": "/revokeShare/<REC_ID>/<USER_ID>",
+			"name": "/revokePasswordShare/<REC_ID>/<USER_ID>",
 			"request": {
 				"method": "POST",
 				"header": [],
 				"url": {
-					"raw": "http://127.0.0.1:8000/revokeShare/21/3",
+					"raw": "http://127.0.0.1:8000/revokePasswordShare/21/3",
 					"protocol": "http",
 					"host": [
 						"127",
@@ -1151,7 +1157,7 @@
 					],
 					"port": "8000",
 					"path": [
-						"revokeShare",
+						"revokePasswordShare",
 						"21",
 						"3"
 					]
@@ -1159,12 +1165,12 @@
 			},
 			"response": [
 				{
-					"name": "/revokeShare/<REC_ID>/<USER_ID>",
+					"name": "/revokePasswordShare/<REC_ID>/<USER_ID>",
 					"originalRequest": {
 						"method": "POST",
 						"header": [],
 						"url": {
-							"raw": "http://127.0.0.1:8000/revokeShare/21/3",
+							"raw": "http://127.0.0.1:8000/revokePasswordShare/21/3",
 							"protocol": "http",
 							"host": [
 								"127",
@@ -1174,7 +1180,7 @@
 							],
 							"port": "8000",
 							"path": [
-								"revokeShare",
+								"revokePasswordShare",
 								"21",
 								"3"
 							]
@@ -1211,12 +1217,12 @@
 			]
 		},
 		{
-			"name": "/revokeOwner/<REC_ID>/<USER_ID>",
+			"name": "/revokePasswordOwner/<PASSWORD_ID>/<USER_ID>",
 			"request": {
 				"method": "POST",
 				"header": [],
 				"url": {
-					"raw": "http://127.0.0.1:8000/revokeOwner/23/2",
+					"raw": "http://127.0.0.1:8000/revokePasswordOwner/23/2",
 					"protocol": "http",
 					"host": [
 						"127",
@@ -1226,7 +1232,7 @@
 					],
 					"port": "8000",
 					"path": [
-						"revokeOwner",
+						"revokePasswordOwner",
 						"23",
 						"2"
 					]
@@ -1234,12 +1240,12 @@
 			},
 			"response": [
 				{
-					"name": "/revokeOwner/<REC_ID>/<USER_ID>",
+					"name": "/revokePasswordOwner/<PASSWORD_ID>/<USER_ID>",
 					"originalRequest": {
 						"method": "POST",
 						"header": [],
 						"url": {
-							"raw": "http://127.0.0.1:8000/revokeOwner/21/3",
+							"raw": "http://127.0.0.1:8000/revokePasswordOwner/21/3",
 							"protocol": "http",
 							"host": [
 								"127",
@@ -1249,7 +1255,7 @@
 							],
 							"port": "8000",
 							"path": [
-								"revokeOwner",
+								"revokePasswordOwner",
 								"21",
 								"3"
 							]
