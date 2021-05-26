@@ -3,7 +3,7 @@ import os
 from flask import Flask, render_template, url_for, request, redirect, flash, Response, session
 import json
 from flask_sqlalchemy import SQLAlchemy
-from sqlalchemy import func, exc
+from sqlalchemy import exc
 from datetime import datetime
 from flask_login import LoginManager, login_required, current_user, UserMixin, login_user, logout_user
 from lib.main_settings import *
@@ -253,16 +253,19 @@ def createGroup():
 @login_required
 def revokePasswordShare(passwordId, userId):
     user = User.query.get(userId)
+    currentUser = int(current_user.get_id())
     if not user:
         return failure("User doesn't exist")
     record = Record.query.get(passwordId)
     if not record:
         return failure("Record doesn't exists")
-    if int(current_user.get_id()) not in record.Owner_Id:
+    if currentUser not in record.Owner_Id:
         return failure("You're not allowed to share this password")
     shared_with = list(record.shared_with)
+    if userId == currentUser:
+        return failure ("You are an owner of this password")
     if userId not in shared_with:
-        return failure ("This password is already not shared with this user")
+        return failure ("This password is not even shared with this user")
     shared_with.remove(userId)
     record.shared_with = shared_with
     try:
@@ -340,7 +343,7 @@ def sharePasswordWith(passwordId, userId):
     if userId in shared_with:
         return failure ("This password is already shared with this user")
     if userId in list(record.Owner_Id):
-        return failure ("You are already an owner of this password")
+        return failure ("This user is already an owner of this password")
     shared_with.append(userId)
     record.shared_with = shared_with
     try:
@@ -389,7 +392,7 @@ def signup():
         return failure("Logout to register a new user")
     data = request.json
     name = data.get('Name')
-    username = data.get('Username')
+    username = data.get('Username').lower()
     #if len(username.split('@')) == 1 or len(username.split('@')[1].split('.')) ==1:
     if not verify_email(username):
         return failure ("Invalid username, example username: username@example.com")
@@ -399,7 +402,6 @@ def signup():
             return failure("Inproper username or password")
     except TypeError:
         return failure("Inproper username or password")
-    username = func.lower(username)
     if User.query.filter_by(Username = username).first():
         return failure('This username already exists')
 
@@ -446,7 +448,7 @@ def deletePassword(id):
 
 @app.route('/getPasswordId/<username>')
 def getPasswordId(username):
-    username = func.lower(username)
+    username = username.lower()
     record = Record.query.filter_by(Username = username).first()
     if record:
         return success (record.id)
@@ -487,14 +489,14 @@ def updatePassword(id):
         name = data.get('Name')
         username = data.get('Username')
         password = data.get('Password')
-        if (not name and not username and not password) or (record_to_update.Name == name and record_to_update.Username == username and record_to_update.Password==password):
+        if (not name and not username and not password) or (record_to_update.Name == name and record_to_update.Username == username.lower() and record_to_update.Password==password):
             return failure ("No change to apply")
         if name:
             record_to_update.Name = name
         if not verify_email(username):
             return failure ("Invalid username, example username: username@example.com")
         if username:
-            record_to_update.Username = username
+            record_to_update.Username = username.lower()
         if password:
             record_to_update.Password = password
         record_to_update.date_modified = datetime.utcnow()
@@ -520,8 +522,8 @@ def getPassword(id):
 def addPassword():
     data = request.json
     name = data.get('Name')
-    username = func.lower(data.get('Username'))
-    if not verify_email(data.get('Username')):
+    username = data.get('Username').lower()
+    if not verify_email(username):
         return failure ("Invalid username, example username: username@example.com")
     password = data.get("Password")
     if data.get('Username') == None or password == None:
@@ -553,7 +555,7 @@ def login():
     if current_user.is_authenticated:
         return failure ("Already logged in: "+current_user.get_id())
     data = request.json
-    username = func.lower(data.get('Username'))
+    username = data.get('Username').lower()
     password = data.get('Password')
     user = User.query.filter_by(Username = username).first()
     if not user or not check_password_hash(user.Master_Password, password):
