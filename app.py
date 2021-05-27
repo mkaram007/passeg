@@ -130,6 +130,7 @@ class Record(UserMixin, db.Model):
     date_created = db.Column(db.DateTime, default=datetime.utcnow)
     date_modified = db.Column(db.DateTime, default=datetime.utcnow)
     shared_with = db.Column(db.PickleType, nullable= False)
+    modifications = db.Column(db.PickleType, nullable=True)
 
 class Group(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -436,12 +437,10 @@ def updateUser(username):
 @app.route('/changeUserPassword', methods=['POST'])
 @login_required
 def changeUserPassword():
-    currentUser = current_user.get_id()
+    currentUser = int(current_user.get_id())
     data = request.json
     current_password = data.get('Current_Password')
-    print(current_password)
     new_password = data.get('New_Password')
-    print(new_password)
     user = User.query.get(currentUser)
     if check_password_hash(user.Master_Password, current_password):
         user.Master_Password = generate_password_hash(new_password, method='pbkdf2:sha256', salt_length=8)
@@ -590,7 +589,41 @@ def getPassword(id):
         return failure ("You don't have access to this password")
     creatorKey = User.query.get(password.Creator_Id).UserKey
     passwd = decrypt(password.Nonce, password.Password, password.Tag, creatorKey)
-    return {"status":"success", "Name":password.Name, "Username":password.Username, "Password":passwd, "Shared with":password.shared_with, "Owners":password.Owner_Id}
+    return {"status":"success", "Name":password.Name, "Username":password.Username, "Password":passwd, "Shared with":password.shared_with, "Owners":password.Owner_Id,"Creator":password.Creator_Id}
+
+@app.route('/changeRecordPassword/<int:recordId>', methods=['POST'])
+@login_required
+def changeRecordPassword(recordId):
+    data = request.json
+    currentUser = int(current_user.get_id())
+    record = Record.query.get(recordId)
+    if not record:
+        return failure ("This record doesn't exist")
+    if currentUser not in record.Owner_Id:
+        return failure ("Only an owner of the record can change it")
+    current_password = data.get('Current_Password')
+    new_password = data.get('New_Password')
+    nonce = record.Nonce
+    tag = record.Tag
+    creator_key = User.query.get(record.Creator_Id).UserKey
+
+    if current_password != decrypt(nonce, record.Password, tag, creator_key):
+        return failure ("Incorrect password")
+    newNonce, newCipherPassword, newTag = encrypt(new_password, creator_key)
+    record.date_modified = datetime.utcnow()
+    record.Nonce = newNonce
+    record.Password = newCipherPassword
+    record.Tag = newTag
+    modifications = list(record.modifications)
+    modifications.append(currentUser)
+    record.modifications = modifications
+    try:
+        db.session.commit()
+        return success ("Password has been updated successfully")
+    except:
+        return faulure ("An issue occured, please contact the developer")
+
+    
 
 @app.route('/addPassword', methods=['POST'])
 @login_required
@@ -614,7 +647,8 @@ def addPassword():
     Owner_Id.append(currentUser)
     shared_with = []
     nonce, cipherPassword, tag = encrypt(password, userKey)
-    new_record = Record(Name=name, Username=username, Password=cipherPassword, Owner_Id=Owner_Id, AccountType = 'Personal', shared_with = shared_with, Nonce = nonce, Tag = tag, Creator_Id = currentUser)
+    modifications = []
+    new_record = Record(Name=name, Username=username, Password=cipherPassword, Owner_Id=Owner_Id, AccountType = 'Personal', shared_with = shared_with, Nonce = nonce, Tag = tag, Creator_Id = currentUser, modifications = modifications)
     try:
         db.session.add(new_record)
         db.session.commit()
