@@ -432,7 +432,7 @@ def signup():
     publicKey, privateKey = rsa.newkeys(512)
     userKey = token_bytes(16)
 
-    newUser = User(Name = name, Username = username, Master_Password = generate_password_hash(password, method='sha256'), Confirmed = False, PublicKey = str(publicKey), PrivateKey = str(privateKey), UserKey = userKey)
+    newUser = User(Name = name, Username = username, Master_Password = generate_password_hash(password, method='pbkdf2:sha256', salt_length=8), Confirmed = False, PublicKey = str(publicKey), PrivateKey = str(privateKey), UserKey = userKey)
     db.session.add(newUser)
     db.session.commit()
     userId = User.query.filter_by(Username = username).first().id
