@@ -118,7 +118,11 @@ May 19 08:20:20 ubuntu-bionic python3[12853]:  * Debugger PIN: 272-630-519
 11-Navigation bar  
 12-Password copy button  
 13-e-mail validation  
-## 14-Current requests (Found in the postman collection file):  
+14-Group feature  
+15-Encryption and decryption of the stored password  
+16-Hashing user password
+
+## 17-Current requests (Found in the postman collection file):  
 1-/signup  
 2-/login  
 3-/getPassword/<PASSWORD_ID>  
