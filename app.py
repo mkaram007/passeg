@@ -433,6 +433,24 @@ def updateUser(username):
         return failure("Password is incorrect")
 
 
+@app.route('/changeUserPassword', methods=['POST'])
+@login_required
+def changeUserPassword():
+    currentUser = current_user.get_id()
+    data = request.json
+    current_password = data.get('Current_Password')
+    print(current_password)
+    new_password = data.get('New_Password')
+    print(new_password)
+    user = User.query.get(currentUser)
+    if check_password_hash(user.Master_Password, current_password):
+        user.Master_Password = generate_password_hash(new_password, method='pbkdf2:sha256', salt_length=8)
+    try:
+        db.session.commit()
+        return success ("Password has been changed successfully")
+    except:
+        return failure ("An issue occured, please contact the developer")
+
 
 @app.route('/signup', methods=['POST'])
 def signup():
