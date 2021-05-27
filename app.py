@@ -14,6 +14,9 @@ from itsdangerous import URLSafeTimedSerializer
 #from flask_mail import Message, Mail
 #from flask_bcrypt import Bcrypt
 import re
+import rsa
+from Crypto.Cipher import AES
+from secrets import token_bytes
 
 
 success  = lambda resp: {'status':'success','data':resp}
@@ -86,6 +89,21 @@ def send_email(to, subject, template):
         )
         mail.send(msg)
 
+def encrypt(plainPassword, userKey):
+    cipher = AES.new(userKey, AES.MODE_EAX)
+    nonce = cipher.nonce
+    cipherPassword, tag= cipher.encrypt_and_digest(plainPassword.encode("ascii"))
+    return nonce, cipherPassword, tag
+
+def decrypt(nonce, cipherPassword, tag, userKey):
+    cipher = AES.new(userKey,  AES.MODE_EAX, nonce=nonce)
+    plainPassword = cipher.decrypt(cipherPassword)
+    try:
+
+        cipher.verify(tag)
+        return plainPassword.decode('ascii')
+    except ValueError:
+        return False
 
 class User(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -93,6 +111,9 @@ class User(UserMixin, db.Model):
     Username = db.Column(db.String(500), nullable= False, unique=True)
     Master_Password = db.Column(db.String(500), nullable=False)
     Confirmed = db.Column(db.Boolean, nullable=False, default=False)
+    UserKey = db.Column(db.String(1000), nullable=False, unique=True)
+    PublicKey = db.Column(db.String(1000), nullable=False, unique=True)
+    PrivateKey = db.Column(db.String(1000), nullable=False, unique=True)
     date_created = db.Column(db.DateTime, default=datetime.utcnow)
     date_modified = db.Column(db.DateTime, default=datetime.utcnow)
 
@@ -103,6 +124,9 @@ class Record(UserMixin, db.Model):
     Name = db.Column(db.String(200), nullable= True)
     Username = db.Column(db.String(500), nullable= False)
     Password = db.Column(db.String(500), nullable= False)
+    Nonce = db.Column(db.String(500), nullable = False)
+    Tag = db.Column(db.String(500), nullable = False)
+    Creator_Id = db.Column(db.Integer, nullable = False)
     date_created = db.Column(db.DateTime, default=datetime.utcnow)
     date_modified = db.Column(db.DateTime, default=datetime.utcnow)
     shared_with = db.Column(db.PickleType, nullable= False)
@@ -405,7 +429,10 @@ def signup():
     if User.query.filter_by(Username = username).first():
         return failure('This username already exists')
 
-    newUser = User(Name = name, Username = username, Master_Password = generate_password_hash(password, method='sha256'), Confirmed = False)
+    publicKey, privateKey = rsa.newkeys(512)
+    userKey = token_bytes(16)
+
+    newUser = User(Name = name, Username = username, Master_Password = generate_password_hash(password, method='sha256'), Confirmed = False, PublicKey = str(publicKey), PrivateKey = str(privateKey), UserKey = userKey)
     db.session.add(newUser)
     db.session.commit()
     userId = User.query.filter_by(Username = username).first().id
@@ -472,7 +499,9 @@ def getPasswords():
     #records = Record.query.filter(Record.shared_with.has(current_user.get_id()))
     recs = []
     for record in records:
-        recs.append(str({"id":record.id, "Name":record.Name, "Username":record.Username, "Password":record.Password, "Owner":record.Owner_Id, "Shared with":record.shared_with}))
+        creatorKey = User.query.get(record.Creator_Id).UserKey
+        passwd = decrypt(record.Nonce, record.Password, record.Tag, creatorKey)
+        recs.append(str({"id":record.id, "Name":record.Name, "Username":record.Username, "Password":passwd, "Owner":record.Owner_Id, "Shared with":record.shared_with}))
     ','.join(recs)
     return success (recs)
 
@@ -511,11 +540,15 @@ def updatePassword(id):
 @app.route('/getPassword/<int:id>')
 @login_required
 def getPassword(id):
-
     password = Record.query.get_or_404(id)
     if not password:
         return failure("Password not found")
-    return {"status":"success", "Name":password.Name, "Username":password.Username, "Password":password.Password, "Shared with":password.shared_with, "Owners":password.Owner_Id}
+    currentUser = int(current_user.get_id())
+    if not currentUser in password.Owner_Id and not currentUser in password.shared_with:
+        return failure ("You don't have access to this password")
+    creatorKey = User.query.get(password.Creator_Id).UserKey
+    passwd = decrypt(password.Nonce, password.Password, password.Tag, creatorKey)
+    return {"status":"success", "Name":password.Name, "Username":password.Username, "Password":passwd, "Shared with":password.shared_with, "Owners":password.Owner_Id}
 
 @app.route('/addPassword', methods=['POST'])
 @login_required
@@ -534,10 +567,12 @@ def addPassword():
             if int(current_user.get_id()) in record.Owner_Id:
                 return failure ("This username already exists")
     currentUser = int(current_user.get_id())
+    userKey = User.query.get(currentUser).UserKey
     Owner_Id = []
     Owner_Id.append(currentUser)
     shared_with = []
-    new_record = Record(Name=name, Username=username, Password=password, Owner_Id=Owner_Id, AccountType = 'Personal', shared_with = shared_with)
+    nonce, cipherPassword, tag = encrypt(password, userKey)
+    new_record = Record(Name=name, Username=username, Password=cipherPassword, Owner_Id=Owner_Id, AccountType = 'Personal', shared_with = shared_with, Nonce = nonce, Tag = tag, Creator_Id = currentUser)
     try:
         db.session.add(new_record)
         db.session.commit()
