@@ -141,6 +141,30 @@ class Group(UserMixin, db.Model):
     date_created = db.Column(db.DateTime, default=datetime.utcnow)
     date_modified = db.Column(db.DateTime, default=datetime.utcnow)
 
+@app.route('/deleteMemberFromGroup/<int:userId>/<int:groupId>', methods=['POST'])
+@login_required
+def deleteMemberFromGroup(userId, groupId):
+    currentUser = int(current_user.get_id())
+    user = User.query.get(userId)
+    if not user:
+        return failure ("This user doesn't exist")
+    group = Group.query.get(groupId)
+    if not group:
+        return failure ("This group doesn't exist")
+    if currentUser not in group.managers:
+        return failure ("You are not a manager of this group")
+    if userId not in group.members:
+        return failure ("This user is already not a member in this group")
+    if userId in group.owners and currentUser not in group.owners:
+        return failure ("A manager can't remove an owner from the group")
+    members = list(group.members)
+    members.remove(userId)
+    group.members = members
+    try:
+        db.session.commit()
+        return success(group.members)
+    except:
+        return failure("An issue happened, please contact the developer")
 
 @app.route('/makeGroupOwner/<int:userId>/<int:groupId>', methods=['POST'])
 @login_required
