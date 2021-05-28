@@ -146,8 +146,8 @@ May 19 08:20:20 ubuntu-bionic python3[12853]:  * Debugger PIN: 272-630-519
 21-/makeGroupOwner/<USER_ID>/<GROUP_ID>  
 22-/deleteMemberFromGroup/<USER_ID>/<GROUP_ID>  
 23-/changeUserPassword  
-24-/changeRecordPassword/<RECORD_ID>
-   
-   
-
-   
+24-/changeRecordPassword/<RECORD_ID>  
+25-/revokeManagerOfGroup/<MANAGER_ID>/<GROUP_ID>  
+26-/revokeOwnerOfGroup/<OWNER_ID>/<GROUP_ID>  
+27-/deletePasswordFromGroup/<PASSWORD_ID>/<GROUP_ID>  
+28-/deleteGroup/<GROUP_ID>
