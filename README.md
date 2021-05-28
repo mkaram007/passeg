@@ -122,7 +122,7 @@ May 19 08:20:20 ubuntu-bionic python3[12853]:  * Debugger PIN: 272-630-519
 15-Encryption and decryption of the stored password  
 16-Hashing user password
 
-## 17-Current requests (Found in the postman collection file):  
+## Current requests (Found in the postman collection file):  
 1-/signup  
 2-/login  
 3-/getPassword/<PASSWORD_ID>  
@@ -143,7 +143,10 @@ May 19 08:20:20 ubuntu-bionic python3[12853]:  * Debugger PIN: 272-630-519
 18-/addUserToGroup/<USER_ID>/<GROUP_ID>  
 19-/addPasswordToGroup/<PASSWORD_ID>/<GROUP_ID>  
 20-/makeGroupManager/<USER_ID>/<GROUP_ID>  
-21-/makeGroupOwner/<USER_ID>/<GROUP_ID>
+21-/makeGroupOwner/<USER_ID>/<GROUP_ID>  
+22-/deleteMemberFromGroup/<USER_ID>/<GROUP_ID>  
+23-/changeUserPassword  
+24-/changeRecordPassword/<RECORD_ID>
    
    
 
