@@ -142,11 +142,63 @@ class Group(UserMixin, db.Model):
     date_created = db.Column(db.DateTime, default=datetime.utcnow)
     date_modified = db.Column(db.DateTime, default=datetime.utcnow)
 
-@app.route('/deleteMemberFromGroup/<int:userId>/<int:groupId>', methods=['POST'])
+@app.route('/revokeOwnerOfGroup/<int:ownerId>/<int:groupId>', methods=['POST'])
 @login_required
-def deleteMemberFromGroup(userId, groupId):
+def revokeOwnerOfGroup(ownerId, groupId):
     currentUser = int(current_user.get_id())
-    user = User.query.get(userId)
+    owner = User.query.get(ownerId)
+    if not owner:
+        return failure ("This user doesn't exist")
+    group = Group.query.get(groupId)
+    if not group:
+        return failure ("This group doesn't exist")
+    if currentUser not in group.owners:
+        return failure ("You are not an owner of this group")
+    if ownerId not in group.owners:
+        return failure ("This user is already not an owner in this group")
+    owners = list(group.owners)
+    owners.remove(ownerId)
+    if len(owners)==0:
+        return failure ("You're the only owner of this group")
+    group.owners = owners
+    try:
+        db.session.commit()
+        return success(group.owners)
+    except:
+        return failure("An issue happened, please contact the developer")
+
+
+@app.route('/revokeManagerOfGroup/<int:managerId>/<int:groupId>', methods=['POST'])
+@login_required
+def revokeManagerOfGroup(managerId, groupId):
+    currentUser = int(current_user.get_id())
+    manager = User.query.get(managerId)
+    if not manager:
+        return failure ("This manager doesn't exist")
+    group = Group.query.get(groupId)
+    if not group:
+        return failure ("This group doesn't exist")
+    if currentUser not in group.managers and currentUser not in group.owners:
+        return failure ("You are nerither a manager nor an owner of this group")
+    if managerId not in group.managers:
+        return failure ("This user is already not a manager in this group")
+    if managerId in group.owners:
+        return failure ("Can't revoke manager from an owner")
+    managers = list(group.managers)
+    managers.remove(managerId)
+    group.managers = managers
+    try:
+        db.session.commit()
+        return success(group.managers)
+    except:
+        return failure("An issue happened, please contact the developer")
+
+
+@app.route('/deleteMemberFromGroup/<int:memberId>/<int:groupId>', methods=['POST'])
+@login_required
+def deleteMemberFromGroup(memberId, groupId):
+    currentUser = int(current_user.get_id())
+    user = User.query.get(memberId)
     if not user:
         return failure ("This user doesn't exist")
     group = Group.query.get(groupId)
@@ -154,12 +206,12 @@ def deleteMemberFromGroup(userId, groupId):
         return failure ("This group doesn't exist")
     if currentUser not in group.managers:
         return failure ("You are not a manager of this group")
-    if userId not in group.members:
+    if memberId not in group.members:
         return failure ("This user is already not a member in this group")
-    if userId in group.owners and currentUser not in group.owners:
+    if memberId in group.owners and currentUser not in group.owners:
         return failure ("A manager can't remove an owner from the group")
     members = list(group.members)
-    members.remove(userId)
+    members.remove(memberId)
     group.members = members
     try:
         db.session.commit()
