@@ -130,7 +130,8 @@ class Record(UserMixin, db.Model):
     date_created = db.Column(db.DateTime, default=datetime.utcnow)
     date_modified = db.Column(db.DateTime, default=datetime.utcnow)
     shared_with = db.Column(db.PickleType, nullable= False)
-    modifications = db.Column(db.PickleType, nullable=True)
+    shared_in = db.Column(db.PickleType)
+    modified_by = db.Column(db.PickleType, nullable=True)
 
 class Group(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -141,6 +142,25 @@ class Group(UserMixin, db.Model):
     shared_passwords = db.Column(db.PickleType)
     date_created = db.Column(db.DateTime, default=datetime.utcnow)
     date_modified = db.Column(db.DateTime, default=datetime.utcnow)
+
+@app.route('/deleteGroup/<int:groupId>', methods=['POST'])
+@login_required
+def deleteGroup(groupId):
+    currentUser = int(current_user.get_id())
+    group = Group.query.get(groupId)
+    if not group:
+        return failure ("This group doesn't exist")
+    if currentUser not in group.owners:
+        return failure ("You are not an owner of this group")
+    if len(group.shared_passwords) != 0:
+        return failure ('This group is not empty')
+    try:
+        db.session.delete(group)
+        db.session.commit()
+        return success("Group deleted")
+    except:
+        return failure("An issue happened, please contact the developer")
+
 
 @app.route('/deletePasswordFromGroup/<int:passwordId>/<int:groupId>', methods=['POST'])
 @login_required
@@ -159,6 +179,9 @@ def deletePasswordFromGroup(passwordId, groupId):
     passwords = list(group.shared_passwords)
     passwords.remove(passwordId)
     group.shared_passwords = passwords
+    shared_in = list(password.shared_in)
+    shared_in.remove(groupId)
+    password.shared_in = shared_in
     try:
         db.session.commit()
         return success(group.shared_passwords)
@@ -315,6 +338,9 @@ def addPasswordToGroup(passwordId, groupId):
         return failure ("This password is already in this group")
     passwords.append(passwordId)
     group.shared_passwords = passwords
+    shared_in = list(password.shared_in)
+    shared_in.append(groupId)
+    password.shared_in = shared_in
     try:
         db.session.commit()
         return success ("Password has been added to the group")
@@ -616,11 +642,25 @@ def getPasswords():
     ##records = Record.query.filter(Record.Owner_Id.in_([current_user.get_id(),])).all()
     records = []
     allRecords = Record.query.all()
+    shared_in = []
     currentUser = int(current_user.get_id())
     for record in allRecords:
         if currentUser in record.shared_with or currentUser in record.Owner_Id:
             records.append(record)
+        shared_in = record.shared_in
+        for group in shared_in:
+            members = Group.query.get(group).members
+            if currentUser in members:
+                records.append(record)
+            managers = Group.query.get(group).managers
+            if currentUser in managers:
+                records.append(record)
+            owners = Group.query.get(group).owners
+            if currentUser in owners:
+                records.append(record)
+        records = list(set(records))
 
+        
     #records = Record.query.filter_by(Record.shared_with.any_(shared_with = current_user.get_id()))
     #records = Record.query.filter(Record.shared_with.has(current_user.get_id()))
     recs = []
@@ -705,9 +745,9 @@ def changeRecordPassword(recordId):
     record.Nonce = newNonce
     record.Password = newCipherPassword
     record.Tag = newTag
-    modifications = list(record.modifications)
-    modifications.append(currentUser)
-    record.modifications = modifications
+    modified_by = list(record.modified_by)
+    modified_by.append(currentUser)
+    record.modified_by = modified_by
     try:
         db.session.commit()
         return success ("Password has been updated successfully")
@@ -737,9 +777,11 @@ def addPassword():
     Owner_Id = []
     Owner_Id.append(currentUser)
     shared_with = []
+    shared_in = []
     nonce, cipherPassword, tag = encrypt(password, userKey)
-    modifications = []
-    new_record = Record(Name=name, Username=username, Password=cipherPassword, Owner_Id=Owner_Id, AccountType = 'Personal', shared_with = shared_with, Nonce = nonce, Tag = tag, Creator_Id = currentUser, modifications = modifications)
+    modified_by = []
+    
+    new_record = Record(Name=name, Username=username, Password=cipherPassword, Owner_Id=Owner_Id, AccountType = 'Personal', shared_with = shared_with, Nonce = nonce, Tag = tag, Creator_Id = currentUser, modified_by = modified_by, shared_in = shared_in)
     try:
         db.session.add(new_record)
         db.session.commit()
