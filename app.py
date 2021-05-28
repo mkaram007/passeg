@@ -724,8 +724,16 @@ def changeRecordPassword(recordId):
     record = Record.query.get(recordId)
     if not record:
         return failure ("This record doesn't exist")
-    if currentUser not in record.Owner_Id:
-        return failure ("Only an owner of the record can change it")
+    can_change = False
+    if currentUser in record.Owner_Id:
+        can_change = True
+    for i in record.shared_in:
+        group = Group.query.get(i)
+        for j in group.owners:
+            if currentUser == j:
+                can_change = True
+    if not can_change:
+        return failure ("You're not allowed to change this record")
     try:
         current_password = data.get('Current_Password')
         new_password = data.get('New_Password')
