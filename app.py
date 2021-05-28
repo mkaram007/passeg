@@ -142,6 +142,30 @@ class Group(UserMixin, db.Model):
     date_created = db.Column(db.DateTime, default=datetime.utcnow)
     date_modified = db.Column(db.DateTime, default=datetime.utcnow)
 
+@app.route('/deletePasswordFromGroup/<int:passwordId>/<int:groupId>', methods=['POST'])
+@login_required
+def deletePasswordFromGroup(passwordId, groupId):
+    currentUser = int(current_user.get_id())
+    password = Record.query.get(passwordId)
+    if not password:
+        return failure ("This password doesn't exist")
+    group = Group.query.get(groupId)
+    if not group:
+        return failure ("This group doesn't exist")
+    if currentUser not in group.owners and currentUser not in group.managers:
+        return failure ("You are neither a manager nor an owner of this group")
+    if passwordId not in group.shared_passwords:
+        return failure ("This password is already not shared in this group")
+    passwords = list(group.shared_passwords)
+    passwords.remove(passwordId)
+    group.shared_passwords = passwords
+    try:
+        db.session.commit()
+        return success(group.shared_passwords)
+    except:
+        return failure("An issue happened, please contact the developer")
+
+
 @app.route('/revokeOwnerOfGroup/<int:ownerId>/<int:groupId>', methods=['POST'])
 @login_required
 def revokeOwnerOfGroup(ownerId, groupId):
@@ -293,7 +317,7 @@ def addPasswordToGroup(passwordId, groupId):
     group.shared_passwords = passwords
     try:
         db.session.commit()
-        return success ("Password is added to the group")
+        return success ("Password has been added to the group")
     except:
         return failure ("An issue happened")
 
