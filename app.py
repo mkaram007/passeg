@@ -439,16 +439,25 @@ def updateUser(username):
 def changeUserPassword():
     currentUser = int(current_user.get_id())
     data = request.json
-    current_password = data.get('Current_Password')
-    new_password = data.get('New_Password')
+    try:
+        current_password = data.get('Current_Password')
+        new_password = data.get('New_Password')
+    except AttributeError:
+        return failure ("Wrong request format")
     user = User.query.get(currentUser)
     if check_password_hash(user.Master_Password, current_password):
-        user.Master_Password = generate_password_hash(new_password, method='pbkdf2:sha256', salt_length=8)
-    try:
-        db.session.commit()
-        return success ("Password has been changed successfully")
-    except:
-        return failure ("An issue occured, please contact the developer")
+        newPasswordHash =  generate_password_hash(new_password, method='pbkdf2:sha256', salt_length=8)
+        if check_password_hash(user.Master_Password, new_password):
+            return failure ("No change to apply")
+
+        user.Master_Password = newPasswordHash
+        try:
+            db.session.commit()
+            return success ("Password has been changed successfully")
+        except:
+            return failure ("An issue occured, please contact the developer")
+    else:
+        return failure ("Incorrect password")
 
 
 @app.route('/signup', methods=['POST'])
@@ -601,14 +610,20 @@ def changeRecordPassword(recordId):
         return failure ("This record doesn't exist")
     if currentUser not in record.Owner_Id:
         return failure ("Only an owner of the record can change it")
-    current_password = data.get('Current_Password')
-    new_password = data.get('New_Password')
+    try:
+        current_password = data.get('Current_Password')
+        new_password = data.get('New_Password')
+    except AttributeError:
+        return failure ("Wrong request format")
     nonce = record.Nonce
     tag = record.Tag
     creator_key = User.query.get(record.Creator_Id).UserKey
 
     if current_password != decrypt(nonce, record.Password, tag, creator_key):
         return failure ("Incorrect password")
+
+    elif new_password == decrypt(nonce, record.Password, tag, creator_key):
+        return failure ("No changes to apply")
     newNonce, newCipherPassword, newTag = encrypt(new_password, creator_key)
     record.date_modified = datetime.utcnow()
     record.Nonce = newNonce
