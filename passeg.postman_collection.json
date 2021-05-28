@@ -1386,7 +1386,7 @@
 				"method": "POST",
 				"header": [],
 				"url": {
-					"raw": "http://127.0.0.1:8000/addUserToGroup/3/3",
+					"raw": "http://127.0.0.1:8000/addUserToGroup/2/1",
 					"protocol": "http",
 					"host": [
 						"127",
@@ -1397,8 +1397,8 @@
 					"port": "8000",
 					"path": [
 						"addUserToGroup",
-						"3",
-						"3"
+						"2",
+						"1"
 					]
 				}
 			},
@@ -1677,6 +1677,263 @@
 					],
 					"cookie": [],
 					"body": "{\n    \"data\": \"This user is now an owner of the group\",\n    \"status\": \"success\"\n}"
+				}
+			]
+		},
+		{
+			"name": "/changeRecordPassword/<RECORD_ID>",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"Current_Password\":\"1223\", \"New_Password\":\"123\"}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://127.0.0.1:8000/changeRecordPassword/3",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8000",
+					"path": [
+						"changeRecordPassword",
+						"3"
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "/changeRecordPassword/<RECORD_ID>",
+					"originalRequest": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\"Current_Password\":\"1223\", \"New_Password\":\"123\"}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://127.0.0.1:8000/changeRecordPassword/3",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"changeRecordPassword",
+								"3"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Content-Type",
+							"value": "application/json"
+						},
+						{
+							"key": "Content-Length",
+							"value": "79"
+						},
+						{
+							"key": "Vary",
+							"value": "Cookie"
+						},
+						{
+							"key": "Server",
+							"value": "Werkzeug/1.0.1 Python/3.6.9"
+						},
+						{
+							"key": "Date",
+							"value": "Fri, 28 May 2021 20:53:30 GMT"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"data\": \"Password has been updated successfully\",\n    \"status\": \"success\"\n}"
+				}
+			]
+		},
+		{
+			"name": "/changeUserPassword",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"Current_Password\":\"12345\", \"New_Password\":\"123\"}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://127.0.0.1:8000/changeRecordPassword/3",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8000",
+					"path": [
+						"changeRecordPassword",
+						"3"
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "/changeUserPassword",
+					"originalRequest": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\"Current_Password\":\"12345\", \"New_Password\":\"123\"}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://127.0.0.1:8000/changeRecordPassword/3",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"changeRecordPassword",
+								"3"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Content-Type",
+							"value": "application/json"
+						},
+						{
+							"key": "Content-Length",
+							"value": "79"
+						},
+						{
+							"key": "Vary",
+							"value": "Cookie"
+						},
+						{
+							"key": "Server",
+							"value": "Werkzeug/1.0.1 Python/3.6.9"
+						},
+						{
+							"key": "Date",
+							"value": "Fri, 28 May 2021 21:09:19 GMT"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"data\": \"Password has been updated successfully\",\n    \"status\": \"success\"\n}"
+				}
+			]
+		},
+		{
+			"name": "/deleteMemberFromGroup/<USER_ID>/<GROUP_ID>",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "http://127.0.0.1:8000/deleteMemberFromGroup/2/1",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8000",
+					"path": [
+						"deleteMemberFromGroup",
+						"2",
+						"1"
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "/deleteMemberFromGroup/<USER_ID>/<GROUP_ID>",
+					"originalRequest": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "http://127.0.0.1:8000/deleteMemberFromGroup/2/1",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"deleteMemberFromGroup",
+								"2",
+								"1"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Content-Type",
+							"value": "application/json"
+						},
+						{
+							"key": "Content-Length",
+							"value": "50"
+						},
+						{
+							"key": "Vary",
+							"value": "Cookie"
+						},
+						{
+							"key": "Server",
+							"value": "Werkzeug/1.0.1 Python/3.6.9"
+						},
+						{
+							"key": "Date",
+							"value": "Fri, 28 May 2021 21:13:08 GMT"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"data\": [\n        3\n    ],\n    \"status\": \"success\"\n}"
 				}
 			]
 		}
