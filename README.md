@@ -16,6 +16,18 @@ apt install python3-pip
 apt-get install python3-venv
 ```
 
+## Create your virtual environment
+```
+python3 -m venv venv  
+source venv/bin/activate  
+```
+
+## Run the following command to install the python requirements:
+```
+/opt/passeg/venv/bin/pip3 install -r /opt/passeg/lib/requirements.txt  
+```
+
+
 ## Return back to your user
 Press CTRL + D
 
