@@ -130,7 +130,8 @@ class Record(UserMixin, db.Model):
     date_created = db.Column(db.DateTime, default=datetime.utcnow)
     date_modified = db.Column(db.DateTime, default=datetime.utcnow)
     shared_with = db.Column(db.PickleType, nullable= False)
-    modifications = db.Column(db.PickleType, nullable=True)
+    shared_in = db.Column(db.PickleType)
+    modified_by = db.Column(db.PickleType, nullable=True)
 
 class Group(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -142,11 +143,109 @@ class Group(UserMixin, db.Model):
     date_created = db.Column(db.DateTime, default=datetime.utcnow)
     date_modified = db.Column(db.DateTime, default=datetime.utcnow)
 
-@app.route('/deleteMemberFromGroup/<int:userId>/<int:groupId>', methods=['POST'])
+@app.route('/deleteGroup/<int:groupId>', methods=['POST'])
 @login_required
-def deleteMemberFromGroup(userId, groupId):
+def deleteGroup(groupId):
     currentUser = int(current_user.get_id())
-    user = User.query.get(userId)
+    group = Group.query.get(groupId)
+    if not group:
+        return failure ("This group doesn't exist")
+    if currentUser not in group.owners:
+        return failure ("You are not an owner of this group")
+    if len(group.shared_passwords) != 0:
+        return failure ('This group is not empty')
+    try:
+        db.session.delete(group)
+        db.session.commit()
+        return success("Group deleted")
+    except:
+        return failure("An issue happened, please contact the developer")
+
+
+@app.route('/deletePasswordFromGroup/<int:passwordId>/<int:groupId>', methods=['POST'])
+@login_required
+def deletePasswordFromGroup(passwordId, groupId):
+    currentUser = int(current_user.get_id())
+    password = Record.query.get(passwordId)
+    if not password:
+        return failure ("This password doesn't exist")
+    group = Group.query.get(groupId)
+    if not group:
+        return failure ("This group doesn't exist")
+    if currentUser not in group.owners and currentUser not in group.managers:
+        return failure ("You are neither a manager nor an owner of this group")
+    if passwordId not in group.shared_passwords:
+        return failure ("This password is already not shared in this group")
+    passwords = list(group.shared_passwords)
+    passwords.remove(passwordId)
+    group.shared_passwords = passwords
+    shared_in = list(password.shared_in)
+    shared_in.remove(groupId)
+    password.shared_in = shared_in
+    try:
+        db.session.commit()
+        return success(group.shared_passwords)
+    except:
+        return failure("An issue happened, please contact the developer")
+
+
+@app.route('/revokeOwnerOfGroup/<int:ownerId>/<int:groupId>', methods=['POST'])
+@login_required
+def revokeOwnerOfGroup(ownerId, groupId):
+    currentUser = int(current_user.get_id())
+    owner = User.query.get(ownerId)
+    if not owner:
+        return failure ("This user doesn't exist")
+    group = Group.query.get(groupId)
+    if not group:
+        return failure ("This group doesn't exist")
+    if currentUser not in group.owners:
+        return failure ("You are not an owner of this group")
+    if ownerId not in group.owners:
+        return failure ("This user is already not an owner in this group")
+    owners = list(group.owners)
+    owners.remove(ownerId)
+    if len(owners)==0:
+        return failure ("You're the only owner of this group")
+    group.owners = owners
+    try:
+        db.session.commit()
+        return success(group.owners)
+    except:
+        return failure("An issue happened, please contact the developer")
+
+
+@app.route('/revokeManagerOfGroup/<int:managerId>/<int:groupId>', methods=['POST'])
+@login_required
+def revokeManagerOfGroup(managerId, groupId):
+    currentUser = int(current_user.get_id())
+    manager = User.query.get(managerId)
+    if not manager:
+        return failure ("This manager doesn't exist")
+    group = Group.query.get(groupId)
+    if not group:
+        return failure ("This group doesn't exist")
+    if currentUser not in group.managers and currentUser not in group.owners:
+        return failure ("You are nerither a manager nor an owner of this group")
+    if managerId not in group.managers:
+        return failure ("This user is already not a manager in this group")
+    if managerId in group.owners:
+        return failure ("Can't revoke manager from an owner")
+    managers = list(group.managers)
+    managers.remove(managerId)
+    group.managers = managers
+    try:
+        db.session.commit()
+        return success(group.managers)
+    except:
+        return failure("An issue happened, please contact the developer")
+
+
+@app.route('/deleteMemberFromGroup/<int:memberId>/<int:groupId>', methods=['POST'])
+@login_required
+def deleteMemberFromGroup(memberId, groupId):
+    currentUser = int(current_user.get_id())
+    user = User.query.get(memberId)
     if not user:
         return failure ("This user doesn't exist")
     group = Group.query.get(groupId)
@@ -154,12 +253,12 @@ def deleteMemberFromGroup(userId, groupId):
         return failure ("This group doesn't exist")
     if currentUser not in group.managers:
         return failure ("You are not a manager of this group")
-    if userId not in group.members:
+    if memberId not in group.members:
         return failure ("This user is already not a member in this group")
-    if userId in group.owners and currentUser not in group.owners:
+    if memberId in group.owners and currentUser not in group.owners:
         return failure ("A manager can't remove an owner from the group")
     members = list(group.members)
-    members.remove(userId)
+    members.remove(memberId)
     group.members = members
     try:
         db.session.commit()
@@ -239,9 +338,12 @@ def addPasswordToGroup(passwordId, groupId):
         return failure ("This password is already in this group")
     passwords.append(passwordId)
     group.shared_passwords = passwords
+    shared_in = list(password.shared_in)
+    shared_in.append(groupId)
+    password.shared_in = shared_in
     try:
         db.session.commit()
-        return success ("Password is added to the group")
+        return success ("Password has been added to the group")
     except:
         return failure ("An issue happened")
 
@@ -439,16 +541,25 @@ def updateUser(username):
 def changeUserPassword():
     currentUser = int(current_user.get_id())
     data = request.json
-    current_password = data.get('Current_Password')
-    new_password = data.get('New_Password')
+    try:
+        current_password = data.get('Current_Password')
+        new_password = data.get('New_Password')
+    except AttributeError:
+        return failure ("Wrong request format")
     user = User.query.get(currentUser)
     if check_password_hash(user.Master_Password, current_password):
-        user.Master_Password = generate_password_hash(new_password, method='pbkdf2:sha256', salt_length=8)
-    try:
-        db.session.commit()
-        return success ("Password has been changed successfully")
-    except:
-        return failure ("An issue occured, please contact the developer")
+        newPasswordHash =  generate_password_hash(new_password, method='pbkdf2:sha256', salt_length=8)
+        if check_password_hash(user.Master_Password, new_password):
+            return failure ("No change to apply")
+
+        user.Master_Password = newPasswordHash
+        try:
+            db.session.commit()
+            return success ("Password has been changed successfully")
+        except:
+            return failure ("An issue occured, please contact the developer")
+    else:
+        return failure ("Incorrect password")
 
 
 @app.route('/signup', methods=['POST'])
@@ -531,11 +642,25 @@ def getPasswords():
     ##records = Record.query.filter(Record.Owner_Id.in_([current_user.get_id(),])).all()
     records = []
     allRecords = Record.query.all()
+    shared_in = []
     currentUser = int(current_user.get_id())
     for record in allRecords:
         if currentUser in record.shared_with or currentUser in record.Owner_Id:
             records.append(record)
+        shared_in = record.shared_in
+        for group in shared_in:
+            members = Group.query.get(group).members
+            if currentUser in members:
+                records.append(record)
+            managers = Group.query.get(group).managers
+            if currentUser in managers:
+                records.append(record)
+            owners = Group.query.get(group).owners
+            if currentUser in owners:
+                records.append(record)
+        records = list(set(records))
 
+        
     #records = Record.query.filter_by(Record.shared_with.any_(shared_with = current_user.get_id()))
     #records = Record.query.filter(Record.shared_with.has(current_user.get_id()))
     recs = []
@@ -599,24 +724,38 @@ def changeRecordPassword(recordId):
     record = Record.query.get(recordId)
     if not record:
         return failure ("This record doesn't exist")
-    if currentUser not in record.Owner_Id:
-        return failure ("Only an owner of the record can change it")
-    current_password = data.get('Current_Password')
-    new_password = data.get('New_Password')
+    can_change = False
+    if currentUser in record.Owner_Id:
+        can_change = True
+    for i in record.shared_in:
+        group = Group.query.get(i)
+        for j in group.owners:
+            if currentUser == j:
+                can_change = True
+    if not can_change:
+        return failure ("You're not allowed to change this record")
+    try:
+        current_password = data.get('Current_Password')
+        new_password = data.get('New_Password')
+    except AttributeError:
+        return failure ("Wrong request format")
     nonce = record.Nonce
     tag = record.Tag
     creator_key = User.query.get(record.Creator_Id).UserKey
 
     if current_password != decrypt(nonce, record.Password, tag, creator_key):
         return failure ("Incorrect password")
+
+    elif new_password == decrypt(nonce, record.Password, tag, creator_key):
+        return failure ("No changes to apply")
     newNonce, newCipherPassword, newTag = encrypt(new_password, creator_key)
     record.date_modified = datetime.utcnow()
     record.Nonce = newNonce
     record.Password = newCipherPassword
     record.Tag = newTag
-    modifications = list(record.modifications)
-    modifications.append(currentUser)
-    record.modifications = modifications
+    modified_by = list(record.modified_by)
+    modified_by.append(currentUser)
+    record.modified_by = modified_by
     try:
         db.session.commit()
         return success ("Password has been updated successfully")
@@ -646,9 +785,11 @@ def addPassword():
     Owner_Id = []
     Owner_Id.append(currentUser)
     shared_with = []
+    shared_in = []
     nonce, cipherPassword, tag = encrypt(password, userKey)
-    modifications = []
-    new_record = Record(Name=name, Username=username, Password=cipherPassword, Owner_Id=Owner_Id, AccountType = 'Personal', shared_with = shared_with, Nonce = nonce, Tag = tag, Creator_Id = currentUser, modifications = modifications)
+    modified_by = []
+    
+    new_record = Record(Name=name, Username=username, Password=cipherPassword, Owner_Id=Owner_Id, AccountType = 'Personal', shared_with = shared_with, Nonce = nonce, Tag = tag, Creator_Id = currentUser, modified_by = modified_by, shared_in = shared_in)
     try:
         db.session.add(new_record)
         db.session.commit()
