@@ -16,3 +16,4 @@ coverage
 PyCryptodome
 rsa
 validate_email
+requests
