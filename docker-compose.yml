@@ -1,0 +1,9 @@
+version: "3"
+services:
+        web:
+                build: .
+                ports:
+                        - "8000:8000"
+                volumes:
+                        - ./records.db:/opt/records.db
+                container_name: egirna.passeg
