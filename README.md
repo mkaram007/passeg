@@ -180,6 +180,9 @@ May 19 08:20:20 ubuntu-bionic python3[12853]:  * Debugger PIN: 272-630-519
 14-Group feature  
 15-Encryption and decryption of the stored password  
 16-Hashing user password
+17-Creating Dockerfile for passeg
+18-Creating docker-compose file for passeg
+19-Working on strenghtening the security system of passeg
 
 ## Current requests (Found in the postman collection file):  
 1-/signup  
