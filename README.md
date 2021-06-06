@@ -1,6 +1,7 @@
 # passeg
 # Installation
 
+
 ## Switch to the root user
 ```sudo su -```  
 
@@ -15,6 +16,55 @@ apt install python3
 apt install python3-pip  
 apt-get install python3-venv
 ```
+
+# There are two methods of installing passeg:
+
+# Method 1: With docker
+## Install docker:
+``` sudo curl https://get.docker.com | bash ```
+
+## Start docker service and make sure it’s active and running.
+``` sudo systemctl start docker.service```
+```sudo systemctl status docker.service```
+
+## It should provide a result like this:
+```
+● docker.service - Docker Application Container Engine
+     Loaded: loaded (/lib/systemd/system/docker.service; enabled; vendor preset: enabled)
+    Drop-In: /etc/systemd/system/docker.service.d
+             └─override.conf
+     Active: active (running) since Wed 2021-06-02 02:42:23 UTC; 4 days ago
+TriggeredBy: ● docker.socket
+       Docs: https://docs.docker.com
+   Main PID: 157751 (dockerd)
+      Tasks: 24
+     Memory: 159.3M
+     CGroup: /system.slice/docker.service
+             ├─157751 /usr/bin/dockerd -H fd:// --containerd=/run/containerd/containerd.sock
+             ├─245719 /usr/bin/docker-proxy -proto tcp -host-ip 0.0.0.0 -host-port 8000 -container-ip 172.18.0.2 -container-port 8000
+             └─245725 /usr/bin/docker-proxy -proto tcp -host-ip :: -host-port 8000 -container-ip 172.18.0.2 -container-port 8000
+             
+ ```
+## Run this command to add your user to the docker group, replace \<Username> with your username
+``` sudo usermod -aG docker <Username> ```
+
+## logout from the user and login again to apply the docker group permissions
+
+
+## Install docker-compose using the following commands:
+``` sudo curl -L "https://github.com/docker/compose/releases/download/1.25.4/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose ```
+
+## Apply executable permissions to the binary:
+```sudo chmod +x /usr/local/bin/docker-compose```
+
+## To start with the docker image build process, run the following commands:
+``` cd /opt/passeg ```
+``` docker-compose build ```
+``` docker-compose run -d ```
+
+# Now passeg should be working, you can move to the "To test the requests" step below
+   
+# Method 2: without docker
 
 ## Create your virtual environment
 ```
@@ -70,12 +120,9 @@ May 19 08:20:20 ubuntu-bionic python3[12853]:   'SQLALCHEMY_TRACK_MODIFICATIONS 
 May 19 08:20:20 ubuntu-bionic python3[12853]:  * Debugger is active!
 May 19 08:20:20 ubuntu-bionic python3[12853]:  * Debugger PIN: 272-630-519
 
-
 ```
 
-## Now open the browser and enter the following URL (If passeg has been installed on your local machine):  
-  localhost:8000  
-  You should get a "Method Not Allowed" Message, don't worry that means it's working correctly
+# Now passeg should be working
   
 # To test the requests:
    Considering testing on a vm with IP address 165.227.235.228  
