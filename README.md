@@ -20,11 +20,15 @@ apt-get install python3-venv
 # There are two methods of installing passeg:
 
 # Method 1: With docker
+
+## Install curl:
+``` sudo apt install curl ```
+
 ## Install docker:
 ``` sudo curl https://get.docker.com | bash ```
 
 ## Start docker service and make sure it’s active and running.
-``` sudo systemctl start docker.service```
+``` sudo systemctl start docker.service```   
 ```sudo systemctl status docker.service```
 
 ## It should provide a result like this:
