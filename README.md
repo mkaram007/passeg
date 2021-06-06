@@ -125,10 +125,10 @@ May 19 08:20:20 ubuntu-bionic python3[12853]:  * Debugger PIN: 272-630-519
 # Now passeg should be working
   
 # To test the requests:
-   Considering testing on a vm with IP address 165.227.235.228  
+   Considering testing on a vm with IP address 1.2.3.4  
    and running the application on port 8000   
    ssh on the vm from a linux machine using the following command:  
-   ```ssh root@165.227.235.228 -L 8000:localhost:8000```  
+   ```ssh root@1.2.3.4 -L 8000:localhost:8000```  
    enter the password  
    
 # Now follow the following steps:  
