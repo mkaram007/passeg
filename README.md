@@ -62,8 +62,8 @@ TriggeredBy: ● docker.socket
 ```sudo chmod +x /usr/local/bin/docker-compose```
 
 ## To start with the docker image build process, run the following commands:
-``` cd /opt/passeg ```
-``` docker-compose build ```
+``` cd /opt/passeg ```  
+``` docker-compose build ```  
 ``` docker-compose run -d ```
 
 # Now passeg should be working, you can move to the "To test the requests" step below
