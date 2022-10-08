@@ -1,0 +1,12 @@
+[Unit]
+Description=Password manager service
+After=syslog.target network-online.target remote-fs.target nss-lookup.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+ExecStart=/opt/passman/venv/bin/python3 /opt/passman/app.py
+
+[Install]
+WantedBy=multi-user.target
+
